@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS planning.user_goal (
     CONSTRAINT fk_user_id FOREIGN KEY (user_id)
         REFERENCES auth.user(user_id)
         ON DELETE CASCADE
-        ON UPDATE NO ACTION
+        ON UPDATE NO ACTION,
+    CONSTRAINT unique_goal UNIQUE (user_id)
 );
 
 -- SUBJECTS | SCHEDULES
@@ -128,7 +129,7 @@ CREATE TABLE IF NOT EXISTS content.question (
     subject_id uuid,
     posted_by_id uuid not null,
     api_index integer not null,
-    language development.language default null,
+    language content.language default null,
     content jsonb not null,
     updated_at timestamptz default now() not null,
     created_at timestamptz default now() not null,
