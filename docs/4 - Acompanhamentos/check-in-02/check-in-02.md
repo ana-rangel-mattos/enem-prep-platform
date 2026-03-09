@@ -7,7 +7,7 @@
 ## 1. O que foi desenvolvido durante este período?
 
 - **Refinamento da Modelagem de Dados:** Evolução do MER para uma estrutura multi-schema (auth, content, planning, tracking), garantindo a separação de responsabilidades e organização lógica.
-- **Implementação de Scripts DDL:** ECriação dos scripts de criação de tabelas com tipos de dados otimizados, como UUID para chaves primárias e JSONB para armazenamento de questões flexíveis.
+- **Implementação de Scripts DDL:** Criação dos scripts de criação de tabelas com tipos de dados otimizados, como UUID para chaves primárias e JSONB para armazenamento de questões flexíveis.
 - **Automação via Triggers e Functions:** Desenvolvimento de triggers em plpgsql para atualização automática da coluna (updated_at) ao houver atualização na tabela diretamente no banco de dados.
 - **Sistema de Gamificação:** Implementação da lógica de Daily Streak com funções e triggers do PostgreSQL, garantindo a integridade dos dados independente do backend.
 - **Segurança e Privilégios:** Estruturação de Roles e Users de banco de dados seguindo o princípio de Menor Privilégio para proteger o sistema contra ataques.
