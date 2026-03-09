@@ -49,3 +49,7 @@ CREATE TRIGGER exam_question_updated_at
 CREATE TRIGGER solved_question_updated_at
     BEFORE UPDATE ON tracking.solved_question
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER user_profile_updated_at
+    BEFORE UPDATE ON tracking.user_profile
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
