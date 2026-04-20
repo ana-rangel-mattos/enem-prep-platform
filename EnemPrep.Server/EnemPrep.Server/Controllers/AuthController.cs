@@ -1,4 +1,4 @@
-using EnemPrep.EntityModels.DTOS;
+using EnemPrep.Domain.DTOS;
 using EnemPrep.Server.Authorization;
 using EnemPrep.ServicesContracts;
 using Microsoft.AspNetCore.Authorization;
@@ -17,8 +17,7 @@ public class AuthController : Controller
         _authService = authService;
     }
     
-    [HttpPost]
-    [Route("[action]")]
+    [HttpPost("[action]")] 
     public async Task<IActionResult> Login([FromForm] LoginUserRequest request)
     {
         AuthResponse response = await _authService.LoginAsync(request);
@@ -28,10 +27,9 @@ public class AuthController : Controller
         
         return Ok(response);
     }
-
-    [HasPermission(Permission.AccessQuestions)]
-    [HttpPost]
-    [Route("[action]")]
+    
+    [Authorize]
+    [HttpPost("[action]")]
     public IActionResult Logout()
     {
         AuthResponse response = _authService.Logout();
@@ -42,8 +40,7 @@ public class AuthController : Controller
         return RedirectToAction("Login", "Auth");
     }
 
-    [HttpPost]
-    [Route("[action]")]
+    [HttpPost("[action]")]
     public async Task<IActionResult> Register([FromForm] CreateUserRequest request)
     {
         AuthResponse response = await _authService.RegisterAsync(request);

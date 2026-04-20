@@ -1,10 +1,8 @@
-using EnemPrep.EntityModels.DTOS;
-using EnemPrep.EntityModels.Enums;
-using EnemPrep.EntityModels.Models;
-using EnemPrep.Server.Authorization;
+using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Models;
 using EnemPrep.ServicesContracts;
+using EnemPrep.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Permission = EnemPrep.Server.Authorization.Permission;
 
 namespace EnemPrep.Services;
 
@@ -42,8 +40,7 @@ public class AuthService : IAuthService
 
         return new AuthResponse(true, "Successfully logged in.");
     }
-
-    [HasPermission(Permission.AccessQuestions)]
+    
     public AuthResponse Logout()
     {
         _sessionService.RemoveUserSession();
@@ -74,7 +71,7 @@ public class AuthService : IAuthService
 
         User newUser = request.ConvertToUser();
         newUser.HashPassword = hashPassword;
-        newUser.UserRole = UserRole.Admin;
+        // newUser.UserRole = UserRole.Admin;
         
         await _context.Users.AddAsync(newUser);
         await _context.SaveChangesAsync();

@@ -1,17 +1,20 @@
 using Community.Microsoft.Extensions.Caching.PostgreSql;
-using EnemPrep.EntityModels.Enums;
-using EnemPrep.EntityModels.Models;
+using EnemPrep.Domain.Enums;
+using EnemPrep.Infrastructure.Authorization;
+using EnemPrep.Persistence;
 using EnemPrep.Services;
 using EnemPrep.ServicesContracts;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-AppContext.SetSwitch("Npgsql.EnableStoredProcedureCompatMode", true);
-
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddAuthorization();
+builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+builder.Services.AddSingleton<ISessionService, SessionService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
@@ -41,7 +44,7 @@ builder.Services.AddDbContext<EnemContext>(options =>
 {
     options.UseNpgsql(dataSource, opts =>
     {
-        opts.MigrationsAssembly("EnemPrep.EntityModels");
+        opts.MigrationsAssembly("EnemPrep.Persistence");
         opts.MigrationsHistoryTable("__EFMigrationsHistory", "auth");
     });
 });
@@ -63,6 +66,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseStaticFiles();
 app.UseRouting();

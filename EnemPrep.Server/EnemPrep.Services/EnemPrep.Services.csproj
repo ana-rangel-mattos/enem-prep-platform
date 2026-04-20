@@ -7,8 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EnemPrep.EntityModels\EnemPrep.EntityModels.csproj" />
+      <ProjectReference Include="..\EnemPrep.Domain\EnemPrep.Domain.csproj" />
       <ProjectReference Include="..\EnemPrep.Infrastructure\EnemPrep.Infrastructure.csproj" />
+      <ProjectReference Include="..\EnemPrep.Persistence\EnemPrep.Persistence.csproj" />
       <ProjectReference Include="..\EnemPrep.ServicesContracts\EnemPrep.ServicesContracts.csproj" />
     </ItemGroup>
     

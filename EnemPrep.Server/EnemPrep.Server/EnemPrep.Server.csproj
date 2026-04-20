@@ -16,10 +16,13 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="9.0.6" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="9.0.6" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EnemPrep.EntityModels\EnemPrep.EntityModels.csproj" />
+      <ProjectReference Include="..\EnemPrep.Domain\EnemPrep.Domain.csproj" />
+      <ProjectReference Include="..\EnemPrep.Persistence\EnemPrep.Persistence.csproj" />
       <ProjectReference Include="..\EnemPrep.ServicesContracts\EnemPrep.ServicesContracts.csproj" />
       <ProjectReference Include="..\EnemPrep.Services\EnemPrep.Services.csproj" />
     </ItemGroup>

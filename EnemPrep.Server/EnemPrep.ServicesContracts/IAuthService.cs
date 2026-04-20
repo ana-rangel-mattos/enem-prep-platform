@@ -1,5 +1,5 @@
 using System.Text.Json;
-using EnemPrep.EntityModels.DTOS;
+using EnemPrep.Domain.DTOS;
 
 namespace EnemPrep.ServicesContracts;
 

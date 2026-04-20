@@ -7,15 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Constants\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\EnemPrep.EntityModels\EnemPrep.EntityModels.csproj" />
+      <ProjectReference Include="..\EnemPrep.Domain\EnemPrep.Domain.csproj" />
     </ItemGroup>
 
 </Project>

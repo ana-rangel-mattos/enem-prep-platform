@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnemPrep.Services", "EnemPr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnemPrep.ServicesContracts", "EnemPrep.ServicesContracts\EnemPrep.ServicesContracts.csproj", "{9304239F-E510-4646-8BD2-7106B570C9B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnemPrep.EntityModels", "EnemPrep.EntityModels\EnemPrep.EntityModels.csproj", "{AFE07FE5-C3FE-4965-832E-97B07E959E81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnemPrep.Domain", "EnemPrep.Domain\EnemPrep.Domain.csproj", "{AFE07FE5-C3FE-4965-832E-97B07E959E81}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnemPrep.Infrastructure", "EnemPrep.Infrastructure\EnemPrep.Infrastructure.csproj", "{4891FEC2-6CB1-4FC1-9943-0C7CEE9047A9}"
 EndProject
