@@ -33,7 +33,6 @@
 
 - **Incompatibilidade de Tipos EF Core vs. Postgres**: O mapeamento nativo de Enums do C# apresentou falhas na conversão para tipos enumerados do PostgreSQL. A solução exigiu a implementação de Casts manuais em nível de banco de dados e ajustes na Fluent API para garantir a integridade dos dados.
 - **Complexidade de Ciclo de Vida (Lifetimes)**: Dificuldades na gestão de dependências (Scoped vs Singleton) dentro do middleware de autorização, resolvidas através do uso de IServiceScopeFactory para acessar serviços de sessão com segurança.
-- **Navegação de Salto (Skip Navigations):** Erros de configuração de chaves estrangeiras no relacionamento Muitos-para-Muitos do Entity Framework, solucionados com o mapeamento explícito via UsingEntity.
 
 ## 6. O que planeja fazer até o próximo check-in?
 
