@@ -4,7 +4,6 @@ CREATE SCHEMA IF NOT EXISTS tracking;
 CREATE SCHEMA IF NOT EXISTS planning;
 
 -- ENUMS
-CREATE TYPE auth.user_role AS ENUM('STUDENT', 'ADMIN');
 CREATE TYPE planning.day_of_the_week AS ENUM('MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SUNDAY', 'SATURDAY');
 CREATE TYPE content.language AS ENUM('INGLES', 'ESPANHOL');
 CREATE TYPE tracking.exam_status AS ENUM('NOT_STARTED', 'IN_PROGRESS', 'FINISHED', 'CANCELED');
@@ -26,8 +25,17 @@ CREATE TABLE IF NOT EXISTS auth.user (
     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
-ALTER TABLE auth.user DROP COLUMN streak_count;
-ALTER TABLE auth.user DROP COLUMN last_login_date;
+-- ALTER TABLE auth.user DROP COLUMN role;
+-- ALTER TABLE auth.user DROP COLUMN streak_count;
+-- ALTER TABLE auth.user DROP COLUMN last_login_date;
+
+CREATE TABLE IF NOT EXISTS auth.sessions (
+    "Id" TEXT PRIMARY KEY,
+    "Value" BYTEA NOT NULL,
+    "ExpiresAtTime" TIMESTAMPTZ NOT NULL,
+    "SlidingExpirationInSeconds" BIGINT NULL,
+    "AbsoluteExpiration" TIMESTAMPTZ NULL
+);
 
 CREATE TABLE IF NOT EXISTS tracking.user_profile (
     user_id UUID PRIMARY KEY REFERENCES auth.user(user_id) ON DELETE CASCADE,
