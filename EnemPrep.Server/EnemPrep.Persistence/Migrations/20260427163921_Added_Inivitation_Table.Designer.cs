@@ -3,6 +3,7 @@ using System;
 using EnemPrep.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EnemPrep.Persistence.Migrations
 {
     [DbContext(typeof(EnemContext))]
-    partial class EnemContextModelSnapshot : ModelSnapshot
+    [Migration("20260427163921_Added_Inivitation_Table")]
+    partial class Added_Inivitation_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -215,9 +218,6 @@ namespace EnemPrep.Persistence.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_used");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -231,8 +231,6 @@ namespace EnemPrep.Persistence.Migrations
                         .IsUnique();
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("RoleId");
 
                     b.ToTable("invitation_code", "auth");
                 });
@@ -859,16 +857,7 @@ namespace EnemPrep.Persistence.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_created_by_id");
 
-                    b.HasOne("EnemPrep.Domain.Models.Role", "InviteRole")
-                        .WithMany("InvitationCodes")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_role_id");
-
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("InviteRole");
                 });
 
             modelBuilder.Entity("EnemPrep.Domain.Models.Question", b =>
@@ -1023,11 +1012,6 @@ namespace EnemPrep.Persistence.Migrations
                     b.Navigation("ExamQuestions");
 
                     b.Navigation("SolvedQuestions");
-                });
-
-            modelBuilder.Entity("EnemPrep.Domain.Models.Role", b =>
-                {
-                    b.Navigation("InvitationCodes");
                 });
 
             modelBuilder.Entity("EnemPrep.Domain.Models.Schedule", b =>

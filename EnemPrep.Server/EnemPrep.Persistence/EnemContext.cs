@@ -43,6 +43,7 @@ public partial class EnemContext : DbContext
     public virtual DbSet<Role> Roles { get; set; }
     
     public virtual DbSet<Permission> Permissions { get; set; }
+    public virtual DbSet<InvitationCode> InvitationCodes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

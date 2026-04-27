@@ -55,11 +55,23 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponse> RegisterAsync(CreateUserRequest request)
     {
-        User? existentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username || u.Email == request.Email);
-
-        if (existentUser is not null)
+        if (await UserExists(request.Username, request.Email))
         {
             return new AuthResponse(false, "User already exists, try using another username or email.");
+        }
+        
+        Role targetRole = Role.Student;
+        if (!string.IsNullOrEmpty(request.Code))
+        {
+            InvitationCode? invite = await _context.InvitationCodes
+                .Include(invitationCode => invitationCode.InviteRole)
+                .FirstOrDefaultAsync(c => c.Code == request.Code && !c.IsUsed && c.ExpiresAt > DateTime.UtcNow);
+
+            if (invite is null)
+                return new AuthResponse(false, "Invalid invitation code.");
+
+            targetRole = invite.InviteRole;
+            invite.IsUsed = true;
         }
 
         string? hashPassword = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
@@ -71,19 +83,19 @@ public class AuthService : IAuthService
 
         User newUser = request.ConvertToUser();
         newUser.HashPassword = hashPassword;
-        // newUser.UserRole = UserRole.Admin;
+        newUser.Roles.Add(targetRole);
         
         await _context.Users.AddAsync(newUser);
         await _context.SaveChangesAsync();
 
-        User? newlyCreatedUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-
-        if (newlyCreatedUser is null)
-        {
-            return GeneralFailedRegisterResponse();
-        }
-
         return new AuthResponse(true, "User was successfully registered.");
+    }
+
+    private async Task<bool> UserExists(string username, string email)
+    {
+        User? existentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == username || u.Email == email);
+
+        return existentUser is not null;
     }
 
     private AuthResponse GeneralFailedRegisterResponse()

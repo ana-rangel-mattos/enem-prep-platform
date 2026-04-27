@@ -7,6 +7,9 @@ namespace EnemPrep.Domain.DTOS;
 
 public class CreateUserRequest
 {
+    [MaxLength(50, ErrorMessage = "Invitation Code must be less than 51 characters.")]
+    public string Code { get; set; }
+    
     [Required(ErrorMessage = "Full name is required")]
     public string FullName { get; set; }
     
