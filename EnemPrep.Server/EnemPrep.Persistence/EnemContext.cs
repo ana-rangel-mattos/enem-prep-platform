@@ -49,8 +49,6 @@ public partial class EnemContext : DbContext
     {
         modelBuilder.HasPostgresEnum<ColorScheme>
             (SchemaNames.Auth, "color_scheme");
-        modelBuilder.HasPostgresEnum<UserRole>
-            (SchemaNames.Auth, "user_role");
         modelBuilder.HasPostgresEnum<Language>
             (SchemaNames.Content, "language");
         modelBuilder.HasPostgresEnum<SubjectName>
