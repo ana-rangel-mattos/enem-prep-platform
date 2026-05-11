@@ -4,12 +4,15 @@ public static class TableNames
 {
     public const string Roles = "roles";
     public const string Permissions = "permissions";
+    public const string RolePermissions = "RolePermissions";
     
     public const string Users = "user";
     public const string UserPreferences = "user_preferences";
     public const string UserGoal = "user_goal";
     public const string UserProfile = "user_profile";
+    public const string UserRoles = "RoleUser";
 
+    public const string Sessions = "sessions";
     public const string InvitationCode = "invitation_code";
     
     public const string Exams = "exam";

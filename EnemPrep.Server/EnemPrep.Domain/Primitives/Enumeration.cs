@@ -5,7 +5,7 @@ namespace EnemPrep.Domain.Primitives;
 public abstract class Enumeration<TEnum> : IEquatable<Enumeration<TEnum>>
 where TEnum : Enumeration<TEnum>
 {
-    private static readonly Dictionary<int, TEnum> Enumerations = CreateEnumerations();
+    private static readonly Lazy<Dictionary<int, TEnum>> Enumerations = new (CreateEnumerations);
     protected Enumeration(int id, string name)
     {
         Id = id;
@@ -17,19 +17,24 @@ where TEnum : Enumeration<TEnum>
 
     public static TEnum? FromId(int value)
     {
-        return Enumerations.GetValueOrDefault(value);
+        return Enumerations.Value.GetValueOrDefault(value);
     }
 
     public static TEnum? FromName(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return null;
+        }
+        
         return Enumerations
-            .Values
-            .SingleOrDefault(e => e.Name.Equals(name));
+            .Value.Values
+            .SingleOrDefault(e => string.Equals(e.Name, name, StringComparison.OrdinalIgnoreCase));
     }
 
     public static ICollection<TEnum> GetValues()
     {
-        return Enumerations.Values.ToList();
+        return Enumerations.Value.Values.ToList();
     }
     
     public bool Equals(Enumeration<TEnum>? other)
@@ -58,14 +63,22 @@ where TEnum : Enumeration<TEnum>
     private static Dictionary<int, TEnum> CreateEnumerations()
     {
         var enumerationType = typeof(TEnum);
-        var fieldsForType = enumerationType
-            .GetFields(
-                BindingFlags.Public | 
-                BindingFlags.Static | 
-                BindingFlags.FlattenHierarchy)
+
+        var fields = enumerationType
+            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Where(fieldInfo => enumerationType.IsAssignableFrom(fieldInfo.FieldType))
-            .Select(fieldInfo => (TEnum)fieldInfo.GetValue(default)!);
+            .Select(fieldInfo => fieldInfo.GetValue(null))
+            .OfType<TEnum>();
+
+        var properties = enumerationType
+            .GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            .Where(propertyInfo => enumerationType.IsAssignableFrom(propertyInfo.PropertyType))
+            .Select(propertyInfo => propertyInfo.GetValue(null))
+            .OfType<TEnum>();
         
-        return fieldsForType.ToDictionary(x => x.Id);
+        return fields
+            .Concat(properties)
+            .GroupBy(enumeration => enumeration.Id)
+            .ToDictionary(group => group.Key, group => group.First());
     }
 }

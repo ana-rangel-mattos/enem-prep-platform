@@ -1,11 +1,12 @@
 using System.Text.Json;
 using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Result;
 
 namespace EnemPrep.ServicesContracts;
 
 public interface IAuthService
 {
-    Task<AuthResponse> LoginAsync(LoginUserRequest request);
-    AuthResponse Logout();
-    Task<AuthResponse> RegisterAsync(CreateUserRequest request);
+    Task<Result> LoginAsync(LoginUserRequest request);
+    Result Logout();
+    Task<Result> RegisterAsync(CreateUserRequest request);
 }

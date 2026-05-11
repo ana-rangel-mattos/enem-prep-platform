@@ -12,9 +12,13 @@ using Npgsql;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthorization();
-builder.Services.AddSingleton<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
-builder.Services.AddSingleton<ISessionService, SessionService>();
+
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+
 builder.Services.AddTransient<IAuthService, AuthService>();
 
 builder.Services.AddControllers();
@@ -23,7 +27,6 @@ string? connectionString = builder.Configuration.GetConnectionString("DefaultCon
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(connectionString);
 
-dataSourceBuilder.MapEnum<UserRole>("auth.user_role");
 dataSourceBuilder.MapEnum<ColorScheme>("auth.color_scheme");
 dataSourceBuilder.MapEnum<DayOfTheWeek>("planning.day_of_the_week");
 dataSourceBuilder.MapEnum<ExamStatus>("tracking.exam_status");
@@ -66,20 +69,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// if (app.Environment.IsDevelopment())
+// {
+//     app.UseSwagger();
+//     app.UseSwaggerUI();
+// }
 
 app.UseStaticFiles();
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
-
 app.MapControllers();
 
 app.Run();
+
+public partial class Program {}

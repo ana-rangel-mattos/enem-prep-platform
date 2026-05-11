@@ -3,6 +3,7 @@ using System;
 using EnemPrep.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EnemPrep.Persistence.Migrations
 {
     [DbContext(typeof(EnemContext))]
-    partial class EnemContextModelSnapshot : ModelSnapshot
+    [Migration("20260509222345_Add_Sessions_Table")]
+    partial class Add_Sessions_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

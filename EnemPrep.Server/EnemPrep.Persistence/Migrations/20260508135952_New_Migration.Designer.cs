@@ -3,6 +3,7 @@ using System;
 using EnemPrep.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EnemPrep.Persistence.Migrations
 {
     [DbContext(typeof(EnemContext))]
-    partial class EnemContextModelSnapshot : ModelSnapshot
+    [Migration("20260508135952_New_Migration")]
+    partial class New_Migration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -478,33 +481,6 @@ namespace EnemPrep.Persistence.Migrations
                     b.HasIndex("SubjectId");
 
                     b.ToTable("schedule_subject", "planning");
-                });
-
-            modelBuilder.Entity("EnemPrep.Domain.Models.Session", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<DateTimeOffset?>("AbsoluteExpiration")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("AbsoluteExpiration");
-
-                    b.Property<DateTimeOffset>("ExpiresAtTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("ExpiresAtTime");
-
-                    b.Property<long?>("SlidingExpirationInSeconds")
-                        .HasColumnType("bigint")
-                        .HasColumnName("SlidingExpirationInSeconds");
-
-                    b.Property<byte[]>("Value")
-                        .IsRequired()
-                        .HasColumnType("bytea")
-                        .HasColumnName("Value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("sessions", "auth");
                 });
 
             modelBuilder.Entity("EnemPrep.Domain.Models.SolvedQuestion", b =>

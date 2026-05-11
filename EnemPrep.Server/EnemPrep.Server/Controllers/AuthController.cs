@@ -1,7 +1,10 @@
 using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Result;
+using EnemPrep.Persistence.Constants;
 using EnemPrep.Server.Authorization;
 using EnemPrep.ServicesContracts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,37 +20,70 @@ public class AuthController : Controller
         _authService = authService;
     }
     
-    [HttpPost("[action]")] 
-    public async Task<IActionResult> Login([FromForm] LoginUserRequest request)
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
-        AuthResponse response = await _authService.LoginAsync(request);
+        var result = await _authService.LoginAsync(request);
 
-        if (!response.Success)
-            return BadRequest(response);
-        
-        return Ok(response);
+        return result.Match<IActionResult>(
+            onSuccess: Ok,
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.LoginUserNotFound => BadRequest(error.Description),
+                    ErrorNames.LoginInvalidPassword => Unauthorized(error.Description),
+                    _ => Problem(
+                        title: "Internal Server Error",
+                        detail: "Unexpected error occured while logging in user.",
+                        statusCode: StatusCodes.Status500InternalServerError
+                    )
+                };
+            });
     }
     
     [Authorize]
     [HttpPost("[action]")]
     public IActionResult Logout()
     {
-        AuthResponse response = _authService.Logout();
+        var result = _authService.Logout();
 
-        if (!response.Success) 
-            return BadRequest(response);
-        
-        return RedirectToAction("Login", "Auth");
+        return result.Match<IActionResult>(
+            onSuccess: Ok,
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.LogoutFailedToLogout => StatusCode(500, error.Description),
+                    _ => Problem(
+                        title: "Internal Server Error",
+                        detail: "Unexpected error occured while logging out user.",
+                        statusCode: StatusCodes.Status500InternalServerError
+                    )
+                };
+            });
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Register([FromForm] CreateUserRequest request)
+    public async Task<IActionResult> Register([FromBody] CreateUserRequest request)
     {
-        AuthResponse response = await _authService.RegisterAsync(request);
+        var result = await _authService.RegisterAsync(request);
 
-        if (!response.Success)
-            return BadRequest(response);
-
-        return StatusCode(201, response);
+        return result.Match<IActionResult>(
+            onSuccess: Ok,
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.RegisterUserAlreadyExists => BadRequest(error.Description),
+                    ErrorNames.RegisterInvalidInvitationCode => Forbid(error.Description),
+                    ErrorNames.RegisterFailedRegister => StatusCode(500, error.Description),
+                    _ => Problem(
+                        title: "Internal Server Error",
+                        detail: "Unexpected error occured while registering user.",
+                        statusCode: StatusCodes.Status500InternalServerError
+                    )
+                };
+            });
     }
 }
