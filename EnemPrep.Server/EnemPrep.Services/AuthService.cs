@@ -67,10 +67,12 @@ public class AuthService : IAuthService
             InvitationCode? invite = await _context.InvitationCodes
                 .Include(invitationCode => invitationCode.InviteRole)
                 .FirstOrDefaultAsync(c => c.Code == request.Code && !c.IsUsed && c.ExpiresAt > DateTime.UtcNow);
+            Console.WriteLine("CODE Block");
 
             if (invite is null)
                 return Result.Failure(AuthErrors.InvalidInvitationCode);
 
+            Console.WriteLine("VALID CODE Block");
             targetRole = invite.InviteRole;
             invite.IsUsed = true;
         }

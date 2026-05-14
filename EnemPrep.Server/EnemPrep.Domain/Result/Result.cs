@@ -9,6 +9,9 @@ public class Result
         { 
             throw new ArgumentException("Invalid error", nameof(error));
         }
+
+        IsSuccess = isSuccess;
+        Error = error;
     }
   
     public bool IsSuccess { get; }

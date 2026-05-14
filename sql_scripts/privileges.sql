@@ -10,6 +10,13 @@ GRANT SELECT, UPDATE ON auth."user" TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON auth.user_preferences TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA tracking TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE auth.sessions TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE ON TABLE auth."RoleUser" TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE ON TABLE auth."RolePermission" TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE ON TABLE auth.invitation_code TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE ON TABLE auth.permissions TO enem_user_role;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA auth
+    GRANT SELECT, INSERT, UPDATE ON TABLES TO enem_user_role;
 
 -- Admin Role
 GRANT enem_user_role TO enem_admin_role;

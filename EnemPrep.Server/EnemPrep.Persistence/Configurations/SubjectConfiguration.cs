@@ -1,3 +1,4 @@
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;

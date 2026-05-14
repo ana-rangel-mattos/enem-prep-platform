@@ -11,6 +11,18 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string frontEndCorsPolicy = "FrontEndCorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(frontEndCorsPolicy, policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
@@ -20,7 +32,7 @@ builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services.AddTransient<IAuthService, AuthService>();
-
+builder.Services.AddTransient<IQuestionService, QuestionsService>();
 builder.Services.AddControllers();
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -34,6 +46,7 @@ dataSourceBuilder.MapEnum<Language>("content.language");
 dataSourceBuilder.MapEnum<SubjectName>("content.subject_name");
 
 var dataSource = dataSourceBuilder.Build();
+builder.Services.AddSingleton(dataSource);
 
 builder.Services.AddDistributedPostgreSqlCache(options =>
 {
@@ -77,6 +90,7 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors(frontEndCorsPolicy);
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();

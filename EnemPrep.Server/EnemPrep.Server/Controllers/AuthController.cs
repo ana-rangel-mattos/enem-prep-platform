@@ -1,17 +1,17 @@
 using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Result;
 using EnemPrep.Persistence.Constants;
 using EnemPrep.Server.Authorization;
 using EnemPrep.ServicesContracts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EnemPrep.Server.Controllers;
 
-[Route("/api/[controller]")]
-public class AuthController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
 
@@ -42,7 +42,6 @@ public class AuthController : Controller
             });
     }
     
-    [Authorize]
     [HttpPost("[action]")]
     public IActionResult Logout()
     {
@@ -76,7 +75,7 @@ public class AuthController : Controller
                 return error.Code switch
                 {
                     ErrorNames.RegisterUserAlreadyExists => BadRequest(error.Description),
-                    ErrorNames.RegisterInvalidInvitationCode => Forbid(error.Description),
+                    ErrorNames.RegisterInvalidInvitationCode => StatusCode(StatusCodes.Status403Forbidden, error.Description),
                     ErrorNames.RegisterFailedRegister => StatusCode(500, error.Description),
                     _ => Problem(
                         title: "Internal Server Error",
