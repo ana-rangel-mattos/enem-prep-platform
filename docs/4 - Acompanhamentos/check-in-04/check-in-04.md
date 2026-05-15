@@ -21,7 +21,7 @@
 
 ## 2. Quantidade de horas
 
-- **Ana Beatriz:** Total 58:25 horas
+- **Ana Beatriz:** Total 59:00 horas
 
 ## 3. Evidências de Progresso
 
