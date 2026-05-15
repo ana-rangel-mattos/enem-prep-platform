@@ -42,6 +42,7 @@ public class AuthController : ControllerBase
             });
     }
     
+    [Authorize]
     [HttpPost("[action]")]
     public IActionResult Logout()
     {

@@ -1,7 +1,6 @@
 using System.Text.Json;
 using EnemPrep.Domain.Common;
 using EnemPrep.Domain.DTOS;
-using EnemPrep.Domain.Models;
 using EnemPrep.Persistence;
 using EnemPrep.ServicesContracts;
 using Microsoft.EntityFrameworkCore;

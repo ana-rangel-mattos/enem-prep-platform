@@ -9,6 +9,7 @@ namespace EnemPrep.Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class QuestionsController : ControllerBase
 {
     private readonly IQuestionService _questionService;

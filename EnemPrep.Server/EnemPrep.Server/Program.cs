@@ -4,7 +4,7 @@ using EnemPrep.Infrastructure.Authorization;
 using EnemPrep.Persistence;
 using EnemPrep.Services;
 using EnemPrep.ServicesContracts;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyHeader()
+            .AllowAnyMethod()
             .AllowCredentials();
     });
 });
@@ -30,6 +30,14 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizat
 
 builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = SessionAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = SessionAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultForbidScheme = SessionAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddScheme<AuthenticationSchemeOptions, SessionAuthenticationHandler>(SessionAuthenticationDefaults.AuthenticationScheme, options => {});
 
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IQuestionService, QuestionsService>();
@@ -71,13 +79,6 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-         options.LoginPath = "/api/auth/login";
-         options.LogoutPath = "/api/auth/logout";
-    });
 
 builder.Services.AddHttpContextAccessor();
 
