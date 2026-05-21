@@ -33,7 +33,7 @@ public partial class EnemContext : DbContext
     public virtual DbSet<Subject> Subjects { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
+    
     public virtual DbSet<UserGoal> UserGoals { get; set; }
 
     public virtual DbSet<UserPreference> UserPreferences { get; set; }
@@ -44,6 +44,7 @@ public partial class EnemContext : DbContext
     
     public virtual DbSet<Permission> Permissions { get; set; }
     public virtual DbSet<InvitationCode> InvitationCodes { get; set; }
+    public virtual DbSet<SavedQuestion> SavedQuestions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
