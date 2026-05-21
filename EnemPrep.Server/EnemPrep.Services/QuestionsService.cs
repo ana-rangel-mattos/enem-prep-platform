@@ -1,6 +1,8 @@
 using System.Text.Json;
 using EnemPrep.Domain.Common;
 using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Models;
+using EnemPrep.Domain.Result;
 using EnemPrep.Persistence;
 using EnemPrep.ServicesContracts;
 using Microsoft.EntityFrameworkCore;
@@ -10,18 +12,27 @@ namespace EnemPrep.Services;
 public class QuestionsService : IQuestionService
 {
     private EnemContext _context;
+    private readonly ISessionService _sessionService;
 
-    public QuestionsService(EnemContext context)
+    public QuestionsService(EnemContext context, ISessionService sessionService)
     {
         _context = context;
+        _sessionService = sessionService;
     }
     
-    public async Task<QuestionDto?> FetchQuestionByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<Result<QuestionDto>> FetchQuestionByIdAsync(Guid? id, CancellationToken cancellationToken = default)
     {
+        if (id is null)
+        {
+            return Result.Failure<QuestionDto>(QuestionErrors.QuestionNullId);
+        }
+        
         var foundQuestion = await _context.Questions.FirstOrDefaultAsync(q => q.QuestionId == id, cancellationToken);
 
         if (foundQuestion is null)
-            return null;
+        {
+            return Result.Failure<QuestionDto>(QuestionErrors.QuestionNotFound(id));
+        }
 
         QuestionDto question = new QuestionDto
         {
@@ -33,7 +44,7 @@ public class QuestionsService : IQuestionService
             Content = ParseJsonElement(foundQuestion.Content)
         };
 
-        return question;
+        return Result.Success(question);
     }
 
     public async Task<PagedResponse<QuestionDto>> FetchQuestionsAsync(QuestionQueryFilter filter, CancellationToken cancellationToken = default)
@@ -44,6 +55,7 @@ public class QuestionsService : IQuestionService
         var query = _context.Questions.AsNoTracking().AsQueryable();
 
         query = query.ApplySearch(filter.SearchTerm);
+        query = query.ApplySubjectFilter(filter.SubjectId);
 
         var totalRecords = await query.CountAsync(cancellationToken);
 
@@ -82,6 +94,46 @@ public class QuestionsService : IQuestionService
             TotalRecords = totalRecords,
             TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
         };
+    }
+
+    public async Task<Result> CreateQuestionAsync(CreateQuestionDto request, CancellationToken cancellationToken = default)
+    {
+        if (_sessionService.GetUserId() != request.UploadedById)
+        {
+            return Result.Failure(QuestionErrors.PublisherIdDoesNotMatchLoggedUserId);
+        }
+        
+        if (!request.UploadedById.HasValue)
+        {
+            return Result.Failure(QuestionErrors.NullPublisherId);
+        }
+        
+        Question question = request.ToQuestion();
+        question.PostedById = request.UploadedById.Value;
+
+        await _context.Questions
+            .AddAsync(question, cancellationToken);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> RemoveQuestionAsync(Guid? id, CancellationToken cancellationToken = default)
+    {
+        if (id is null)
+        {
+            return Result.Failure(QuestionErrors.QuestionNullId);
+        }
+        
+        int deletedRows = await _context.Questions
+            .Where(q => q.QuestionId == id)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        if (deletedRows == 0)
+        {
+            return Result.Failure(QuestionErrors.QuestionNotFound(id));
+        }
+
+        return Result.Success();
     }
 
     private static JsonElement ParseJsonElement(string? json)

@@ -52,4 +52,12 @@ public static class QueryableExtensions
         return query.Where(q =>
             EF.Functions.ILike(q.Content, $"%{search}%"));
     }
+
+    public static IQueryable<Question> ApplySubjectFilter(this IQueryable<Question> query, Guid? subjectId)
+    {
+        if (subjectId is null)
+            return query;
+
+        return query.Where(q => q.SubjectId == subjectId);
+    }
 }

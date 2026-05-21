@@ -59,8 +59,6 @@ public partial class EnemContext : DbContext
             (SchemaNames.Tracking, "exam_status");
         
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(EnemContext).Assembly);
-
-        OnModelCreatingPartial(modelBuilder);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

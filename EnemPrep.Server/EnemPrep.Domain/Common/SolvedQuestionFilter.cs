@@ -1,10 +1,8 @@
 namespace EnemPrep.Domain.Common;
 
-public class QuestionQueryFilter
+public class SolvedQuestionFilter
 {
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 10;
     public string? SortBy { get; set; }
-    public string? SearchTerm { get; set; }
-    public Guid? SubjectId { get; set; }
 }

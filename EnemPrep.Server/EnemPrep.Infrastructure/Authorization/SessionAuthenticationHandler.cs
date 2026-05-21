@@ -54,5 +54,4 @@ public class SessionAuthenticationHandler : AuthenticationHandler<Authentication
         Response.StatusCode = StatusCodes.Status403Forbidden;
         return Task.CompletedTask;
     }
-
 }

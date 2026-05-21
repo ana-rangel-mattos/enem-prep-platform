@@ -67,7 +67,7 @@ public class AuthControllerTests(CustomWebApplicationFactory factory)
 
         response.EnsureSuccessStatusCode();
         
-        var protectedRouteResponse = await Client.GetAsync("/api/questions/admin-dashboard");
+        var protectedRouteResponse = await Client.GetAsync("/api/questions/6bdcce1f-aa3b-4a21-9ad1-9c5bf07dfc58");
         Assert.Equal(HttpStatusCode.Unauthorized, protectedRouteResponse.StatusCode);
     }
 
@@ -91,7 +91,7 @@ public class AuthControllerTests(CustomWebApplicationFactory factory)
             loginRequest
         );
 
-        var response = await Client.PostAsJsonAsync("/api/questions/create", new { });
+        var response = await Client.DeleteAsync("/api/questions/6bdcce1f-aa3b-4a21-9ad1-9c5bf07dfc58");
         
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }

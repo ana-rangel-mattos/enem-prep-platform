@@ -44,4 +44,6 @@ public partial class User
     public virtual UserProfile? UserProfile { get; set; }
 
     public virtual ICollection<InvitationCode> CreatedInvitations { get; set; } = new List<InvitationCode>();
+
+    public virtual ICollection<SavedQuestion> SavedQuestions { get; set; } = new List<SavedQuestion>();
 }

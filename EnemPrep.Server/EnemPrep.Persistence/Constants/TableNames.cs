@@ -23,6 +23,7 @@ public static class TableNames
 
     public const string Questions = "question";
     public const string SolvedQuestions = "solved_question";
+    public const string SavedQuestions = "saved_question";
     
     public const string Schedule = "schedule";
     public const string ScheduleSubjects = "schedule_subject";
