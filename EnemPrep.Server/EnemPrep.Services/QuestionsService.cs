@@ -136,14 +136,55 @@ public class QuestionsService : IQuestionService
         return Result.Success();
     }
 
-    public Task<Result> SaveQuestionAsync(PostSavedQuestionDto request, CancellationToken cancellationToken = default)
+    public async Task<Result> SaveQuestionAsync(PostSavedQuestionDto request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        Guid? userId = _sessionService.GetUserId();
+
+        if (userId is null)
+        {
+            return Result.Failure(SavedQuestionErrors.UserIsNotLoggedIn);
+        }
+
+        Question? question = await _context.Questions.Where(q => q.QuestionId == request.QuestionId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (question is null)
+        {
+            return Result.Failure(SavedQuestionErrors.QuestionNotFound(request.QuestionId));
+        }
+
+        await _context.SavedQuestions.AddAsync(new SavedQuestion
+        {
+            QuestionId = request.QuestionId,
+            UserId = userId.Value,
+            Notes = request.Notes
+        }, cancellationToken);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 
-    public Task<Result> DeleteSavedQuestionAsync(Guid? savedQuestionId, CancellationToken cancellationToken = default)
+    public async Task<Result> DeleteSavedQuestionAsync(Guid? savedQuestionId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        Guid? userId = _sessionService.GetUserId();
+        
+        if (userId is null)
+        {
+            return Result.Failure(SavedQuestionErrors.UserIsNotLoggedIn);
+        }
+
+        int deletedRows = await _context.SavedQuestions.Where(q => q.QuestionId == savedQuestionId && q.UserId == userId.Value)
+            .ExecuteDeleteAsync(cancellationToken);
+
+        if (deletedRows == 0)
+        {
+            return Result.Failure(SavedQuestionErrors.SavedQuestionNotFound(savedQuestionId));
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 
     public async Task<PagedResponse<GetSavedQuestionDto>> FetchSavedQuestions(SavedQuestionFilter filter,

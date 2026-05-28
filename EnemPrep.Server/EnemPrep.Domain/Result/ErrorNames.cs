@@ -33,4 +33,8 @@ public static class ErrorNames
     public const string UserGoalUserNotFound = "UserGoal.UserNotFound";
     public const string UserGoalNotFound = "UserGoal.UserGoalNotFound";
     public const string UserGoalAlreadyExists = "UserGoal.UserGoalAlreadyExists";
+
+    public const string SavedQuestionUserIsNotLoggedIn = "SavedQuestion.UserIsNotLoggedIn";
+    public const string SavedQuestionQuestionNotFound = "SavedQuestion.QuestionNotFound";
+    public const string SavedQuestionSavedQuestionNotFound = "SavedQuestion.SavedQuestionNotFound";
 }

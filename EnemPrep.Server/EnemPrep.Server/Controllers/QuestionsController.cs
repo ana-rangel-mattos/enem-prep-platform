@@ -44,9 +44,9 @@ public class QuestionsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> FetchQuestions([FromQuery] QuestionQueryFilter filter, CancellationToken cancellationToken)
     {
-        var result = await _questionService.FetchQuestionsAsync(filter, cancellationToken);
+        var response = await _questionService.FetchQuestionsAsync(filter, cancellationToken);
 
-        return Ok(result);
+        return Ok(response);
     }
 
     [HasPermission(Permission.CreateQuestions)]
@@ -84,6 +84,50 @@ public class QuestionsController : ControllerBase
                     ErrorNames.QuestionNotFound => NotFound(error.Description),
                     ErrorNames.QuestionNullId => BadRequest(error.Description),
                     ErrorNames.QuestionPublisherIsNotLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                };
+            });
+    }
+
+    [HttpGet("/saved")]
+    public async Task<IActionResult> FetchSavedQuestions([FromQuery] SavedQuestionFilter filter, CancellationToken cancellationToken)
+    {
+        var response = await _questionService.FetchSavedQuestions(filter, cancellationToken);
+
+        return Ok(response);
+    }
+
+    [HttpPost("/save")]
+    public async Task<IActionResult> SaveQuestion([FromBody] PostSavedQuestionDto request, CancellationToken cancellationToken)
+    {
+        var result = await _questionService.SaveQuestionAsync(request, cancellationToken);
+
+        return result.Match<IActionResult>(
+            onSuccess: Ok,
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.SavedQuestionUserIsNotLoggedIn => Unauthorized(error.Description),
+                    ErrorNames.SavedQuestionQuestionNotFound => NotFound(error.Description),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                };
+            });
+    }
+    
+    [HttpDelete("/{id:guid}/unsave")]
+    public async Task<IActionResult> DeleteSavedQuestion(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _questionService.DeleteSavedQuestionAsync(id, cancellationToken);
+
+        return result.Match<IActionResult>(
+            onSuccess: Ok,
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.SavedQuestionUserIsNotLoggedIn => Unauthorized(error.Description),
+                    ErrorNames.SavedQuestionSavedQuestionNotFound => NotFound(error.Description),
                     _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
                 };
             });
