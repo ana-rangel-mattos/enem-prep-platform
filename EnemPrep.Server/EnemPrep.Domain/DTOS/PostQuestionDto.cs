@@ -4,7 +4,7 @@ using EnemPrep.Domain.Models;
 
 namespace EnemPrep.Domain.DTOS;
 
-public class CreateQuestionDto
+public class PostQuestionDto
 {
     public int? ApiIndex { get; init; }
     public JsonElement Content { get; init; }

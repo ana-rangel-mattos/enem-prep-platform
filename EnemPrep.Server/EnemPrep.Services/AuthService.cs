@@ -54,7 +54,7 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public async Task<Result> RegisterAsync(CreateUserRequest request)
+    public async Task<Result> RegisterAsync(PostUserRequest request)
     {
         if (await UserExists(request.Username, request.Email))
         {

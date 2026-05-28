@@ -9,7 +9,7 @@ public class AuthControllerTests(CustomWebApplicationFactory factory)
     [Fact]
     public async Task Login_WithValidCredentials_ShouldCreateSessionAndReturnOk()
     {
-        CreateUserRequest registerRequest = new CreateUserRequest();
+        PostUserRequest registerRequest = new PostUserRequest();
         
         registerRequest.Password = "Password0123";
         registerRequest.Email = "user@login.com";
@@ -37,7 +37,7 @@ public class AuthControllerTests(CustomWebApplicationFactory factory)
     [Fact]
     public async Task Login_WithWrongPassword_ShouldReturnUnauthorized()
     {
-        CreateUserRequest registerRequest = new CreateUserRequest();
+        PostUserRequest registerRequest = new PostUserRequest();
         
         registerRequest.Password = "wrong_pass_user";
         registerRequest.Email = "wrong@pass.com";
@@ -74,7 +74,7 @@ public class AuthControllerTests(CustomWebApplicationFactory factory)
     [Fact]
     public async Task AccessAdminRoute_WithStudentRole_ShouldReturnForbidden()
     {
-        CreateUserRequest registerRequest = new CreateUserRequest();
+        PostUserRequest registerRequest = new PostUserRequest();
         registerRequest.Password = "student-pass";
         registerRequest.Email = "student@test.com";
         registerRequest.FullName = "Student Test User Full Name";

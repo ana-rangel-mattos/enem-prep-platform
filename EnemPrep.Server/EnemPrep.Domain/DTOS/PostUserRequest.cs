@@ -5,7 +5,7 @@ using EnemPrep.Domain.Enums;
 
 namespace EnemPrep.Domain.DTOS;
 
-public class CreateUserRequest
+public class PostUserRequest
 {
     [MaxLength(50, ErrorMessage = "Invitation Code must be less than 51 characters.")]
     public string Code { get; set; }

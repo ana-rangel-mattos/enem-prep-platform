@@ -39,7 +39,7 @@ public class UserGoalController : ControllerBase
     }
 
     [HttpPost("new")]
-    public async Task<IActionResult> Create([FromBody] CreateUserGoalDto request,
+    public async Task<IActionResult> Create([FromBody] PostUserGoalDto request,
         CancellationToken cancellationToken)
     {
         var result = await _userGoalService.CreateUserGoalAsync(request, cancellationToken);

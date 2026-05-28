@@ -47,7 +47,7 @@ public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFa
         }
     }
 
-    protected async Task<User> SeedUserAsync(CreateUserRequest request)
+    protected async Task<User> SeedUserAsync(PostUserRequest request)
     {
         using (var scope = Factory.Services.CreateScope())
         {

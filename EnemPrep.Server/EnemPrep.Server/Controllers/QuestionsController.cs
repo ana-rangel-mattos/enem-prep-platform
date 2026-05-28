@@ -51,7 +51,7 @@ public class QuestionsController : ControllerBase
 
     [HasPermission(Permission.CreateQuestions)]
     [HttpPost("/new")]
-    public async Task<IActionResult> Create([FromBody] CreateQuestionDto request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] PostQuestionDto request, CancellationToken cancellationToken)
     {
         var result = await _questionService.CreateQuestionAsync(request, cancellationToken);
 

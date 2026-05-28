@@ -2,7 +2,7 @@ using EnemPrep.Domain.Models;
 
 namespace EnemPrep.Domain.DTOS;
 
-public class CreateSolvedQuestionDto
+public class PostSolvedQuestionDto
 {
     public Guid QuestionId { get; set; }
     public int QuestionYear { get; set; }

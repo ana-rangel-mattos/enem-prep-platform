@@ -65,7 +65,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Register([FromBody] CreateUserRequest request)
+    public async Task<IActionResult> Register([FromBody] PostUserRequest request)
     {
         var result = await _authService.RegisterAsync(request);
 

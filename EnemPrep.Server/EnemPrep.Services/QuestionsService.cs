@@ -96,7 +96,7 @@ public class QuestionsService : IQuestionService
         };
     }
 
-    public async Task<Result> CreateQuestionAsync(CreateQuestionDto request, CancellationToken cancellationToken = default)
+    public async Task<Result> CreateQuestionAsync(PostQuestionDto request, CancellationToken cancellationToken = default)
     {
         if (_sessionService.GetUserId() != request.UploadedById)
         {
@@ -134,6 +134,58 @@ public class QuestionsService : IQuestionService
         }
 
         return Result.Success();
+    }
+
+    public Task<Result> SaveQuestionAsync(PostSavedQuestionDto request, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Result> DeleteSavedQuestionAsync(Guid? savedQuestionId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<PagedResponse<GetSavedQuestionDto>> FetchSavedQuestions(SavedQuestionFilter filter,
+        CancellationToken cancellationToken = default)
+    {
+        var pageNumber = Math.Max(1, filter.PageNumber);
+        var pageSize = Math.Clamp(filter.PageSize, 1, 50);
+
+        var query = _context.SavedQuestions.AsNoTracking().AsQueryable();
+
+        query.ApplySearch(filter.SearchTerm);
+
+        var totalRecords = await query.CountAsync(cancellationToken);
+
+        query = query.ApplySort(string.IsNullOrWhiteSpace(filter.SortBy) ? "CreatedAt" : filter.SortBy);
+
+        var savedQuestions = await query
+            .ApplyPagination(pageNumber, pageSize)
+            .Select(q => new GetSavedQuestionDto
+            {
+                SavedQuestionId = q.QuestionId,
+                QuestionId = q.Question.QuestionId,
+                Notes = q.Notes,
+                QuestionText = GetQuestionText(q.Question.Content)
+            })
+            .ToListAsync(cancellationToken);
+
+        return new PagedResponse<GetSavedQuestionDto>
+        {
+            Data = savedQuestions,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
+        };
+    }
+    
+    private static string? GetQuestionText(string content)
+    {
+        return ParseJsonElement(content).TryGetProperty("context", out JsonElement enunciation)
+            ? enunciation.GetString()
+            : string.Empty;
     }
 
     private static JsonElement ParseJsonElement(string? json)

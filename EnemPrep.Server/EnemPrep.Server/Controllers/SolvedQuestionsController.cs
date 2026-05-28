@@ -61,7 +61,7 @@ public class SolvedQuestionsController : ControllerBase
     }
 
     [HttpPost("solve")]
-    public async Task<IActionResult> SolveQuestion([FromBody] CreateSolvedQuestionDto request, CancellationToken cancellationToken)
+    public async Task<IActionResult> SolveQuestion([FromBody] PostSolvedQuestionDto request, CancellationToken cancellationToken)
     {
         var result = await _solvedQuestionsService.SolveQuestionAsync(request, cancellationToken);
 

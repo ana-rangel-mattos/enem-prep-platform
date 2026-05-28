@@ -2,7 +2,7 @@ using EnemPrep.Domain.Models;
 
 namespace EnemPrep.Domain.DTOS;
 
-public class CreateUserGoalDto
+public class PostUserGoalDto
 {
     public string UniversityName { get; set; }
     public string CourseName { get; set; }

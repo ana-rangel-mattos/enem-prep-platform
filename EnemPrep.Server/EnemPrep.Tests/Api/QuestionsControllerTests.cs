@@ -24,7 +24,7 @@ public class QuestionsControllerTests(CustomWebApplicationFactory factory) : Int
     {
         await AuthenticateAsAdminAsync();
 
-        var questionDto = new CreateQuestionDto
+        var questionDto = new PostQuestionDto
         {
             ApiIndex = null,
             Language = Language.Ingles,

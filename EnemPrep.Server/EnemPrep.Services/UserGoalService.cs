@@ -52,7 +52,7 @@ public class UserGoalService : IUserGoalService
         });
     }
 
-    public async Task<Result> CreateUserGoalAsync(CreateUserGoalDto request, CancellationToken cancellationToken = default)
+    public async Task<Result> CreateUserGoalAsync(PostUserGoalDto request, CancellationToken cancellationToken = default)
     {
         Guid? userId = _sessionService.GetUserId();
 
