@@ -84,7 +84,7 @@ public class SubjectsServices : ISubjectsService
         return subject switch
         {
             SubjectName.Languages => "Linguagens",
-            SubjectName.HumanSciences => "Ciências Humanas",
+            SubjectName.Humanities => "Ciências Humanas",
             SubjectName.Mathematics => "Matemática",
             SubjectName.NaturalSciences => "Ciências da Natureza",
             _ => throw new ArgumentOutOfRangeException(

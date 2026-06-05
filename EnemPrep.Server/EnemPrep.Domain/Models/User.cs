@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using EnemPrep.Domain.DTOS;
 using EnemPrep.Domain.Enums;
 
 namespace EnemPrep.Domain.Models;
@@ -46,4 +47,17 @@ public partial class User
     public virtual ICollection<InvitationCode> CreatedInvitations { get; set; } = new List<InvitationCode>();
 
     public virtual ICollection<SavedQuestion> SavedQuestions { get; set; } = new List<SavedQuestion>();
+
+    public GetUserDto ToGetUserDto()
+    {
+        return new GetUserDto
+        {
+            UserId = UserId,
+            FullName = FullName,
+            Username = Username,
+            Email = Email,
+            DateOfBirth = DateOfBirth,
+            Roles = Roles.Select(r => r.Name).ToList()
+        };
+    }
 }

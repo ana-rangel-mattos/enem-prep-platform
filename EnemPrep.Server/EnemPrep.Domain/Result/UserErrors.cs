@@ -13,4 +13,8 @@ public static class UserErrors
         ErrorNames.UserNullUserId,
         $"User ID cannot be null."
     );
+
+    public static Error PrivateUser => new Error(
+        ErrorNames.UserPrivateUser,
+        $"This user is private.");
 }

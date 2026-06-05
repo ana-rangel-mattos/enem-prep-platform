@@ -28,6 +28,7 @@ public static class ErrorNames
     
     public const string UserUserNotFound = "User.UserNotFound";
     public const string UserNullUserId = "User.NullUserId";
+    public const string UserPrivateUser = "User.PrivateUser";
 
     public const string UserGoalNullUserId = "UserGoal.NullUserId";
     public const string UserGoalUserNotFound = "UserGoal.UserNotFound";
@@ -37,4 +38,18 @@ public static class ErrorNames
     public const string SavedQuestionUserIsNotLoggedIn = "SavedQuestion.UserIsNotLoggedIn";
     public const string SavedQuestionQuestionNotFound = "SavedQuestion.QuestionNotFound";
     public const string SavedQuestionSavedQuestionNotFound = "SavedQuestion.SavedQuestionNotFound";
+
+    public const string ExamInvalidSubjects = "Exam.InvalidSubjects";
+    public const string ExamNoEnoughQuestionsForSubject = "Exam.NoEnoughQuestionsForSubject";
+    public const string ExamExamWasNotFound = "Exam.ExamWasNotFound";
+    public const string ExamInvalidNewStatus = "Exam.InvalidNewStatus";
+    public const string ExamFailedToUpdateExamStatus = "Exam.FailedToUpdateExamStatus";
+    public const string ExamExamDoesNotBelongToLoggedUser = "Exam.ExamDoesNotBelongToLoggedUser";
+    public const string ExamExamQuestionWasNotFound = "Exam.ExamQuestionWasNotFound";
+    public const string ExamFailedToSubmitQuestionAnswer = "Exam.FailedToSubmitQuestionAnswer";
+    public const string ExamFailedToCompleteExam = "Exam.FailedToCompleteExam";
+
+    public const string UserPreferencesFailedToUpdateUserPreferences = "UserPreferences.FailedToUpdateUserPreferences";
+    public const string UserPreferencesFailedToResetUserPreferences = "UserPreferences.FailedToResetUserPreferences";
+    public const string UserPreferencesUserPreferenceWasNotFound = "UserPreferences.UserPreferenceWasNotFound";
 }

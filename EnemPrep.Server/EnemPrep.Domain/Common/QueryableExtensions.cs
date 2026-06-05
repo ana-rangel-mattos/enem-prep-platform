@@ -62,6 +62,15 @@ public static class QueryableExtensions
             EF.Functions.ILike(q.Question.Content, $"%{search}%"));
     }
 
+    public static IQueryable<Exam> ApplySearch(this IQueryable<Exam> query, string? search)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return query;
+        
+        return query.Where(e => 
+            EF.Functions.ILike(e.Title, $"%{search}%"));
+    }
+
     public static IQueryable<Question> ApplySubjectFilter(this IQueryable<Question> query, Guid? subjectId)
     {
         if (subjectId is null)

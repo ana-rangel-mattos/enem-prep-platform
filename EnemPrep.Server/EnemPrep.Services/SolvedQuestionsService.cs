@@ -3,6 +3,7 @@ using EnemPrep.Domain.Common;
 using EnemPrep.Domain.DTOS;
 using EnemPrep.Domain.Models;
 using EnemPrep.Domain.Result;
+using EnemPrep.Domain.Extensions;
 using EnemPrep.Persistence;
 using EnemPrep.ServicesContracts;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +14,12 @@ namespace EnemPrep.Services;
 public class SolvedQuestionsService : ISolvedQuestionsService
 {
     private readonly EnemContext _context;
-    private readonly ISessionService _sessionService;
+    private readonly IUserContext _userContext;
     
-    public SolvedQuestionsService(EnemContext context, ISessionService sessionService)
+    public SolvedQuestionsService(EnemContext context, IUserContext userContext)
     {
         _context = context;
-        _sessionService = sessionService;
+        _userContext = userContext;
     }
     
     public async Task<Result> SolveQuestionAsync([FromBody] PostSolvedQuestionDto request, CancellationToken cancellationToken = default)
@@ -31,10 +32,10 @@ public class SolvedQuestionsService : ISolvedQuestionsService
             return Result.Failure(SolvedQuestionErrors.SolvedQuestionQuestionNotFound(request.QuestionId));
         }
         
-        Guid? loggedUserId = _sessionService.GetUserId();
+        Guid loggedUserId = _userContext.UserId;
         
         SolvedQuestion solvedQuestion = request.ToSolvedQuestion();
-        solvedQuestion.UserId = loggedUserId!.Value;
+        solvedQuestion.UserId = loggedUserId;
         
         await _context.SolvedQuestions.AddAsync(solvedQuestion, cancellationToken);
 
@@ -61,7 +62,7 @@ public class SolvedQuestionsService : ISolvedQuestionsService
             return Result.Failure<PagedResponse<GetSolvedQuestionDto>>(SolvedQuestionErrors.SolvedQuestionUserDoesNotExist(userId));
         }
         
-        Guid? loggedUserId = _sessionService.GetUserId();
+        Guid loggedUserId = _userContext.UserId;
 
         if (foundUser.IsPrivate && loggedUserId != foundUser.UserId)
         {
@@ -87,15 +88,11 @@ public class SolvedQuestionsService : ISolvedQuestionsService
             {
                 QuestionId = q.QuestionId,
                 QuestionYear = q.QuestionYear,
-                QuestionText = GetQuestionText(q.Question.Content),
+                QuestionText = q.Question.ExtractEnunciation(),
                 CorrectAlternative = q.CorrectAlternative,
-                CorrectAlternativeText = GetAlternativeText(
-                    q.Question.Content,
-                    q.CorrectAlternative.ToString()),
+                CorrectAlternativeText = q.Question.ExtractAlternativeText(q.CorrectAlternative.ToString()),
                 ChosenAlternative = q.ChosenAlternative,
-                ChosenAlternativeText = GetAlternativeText(
-                    q.Question.Content,
-                    q.ChosenAlternative.ToString()),
+                ChosenAlternativeText = q.Question.ExtractAlternativeText(q.ChosenAlternative.ToString()),
                 TimeSpent = q.TimeSpent,
                 IsCorrect = q.IsCorrect,
                 CreatedAt = q.CreatedAt
@@ -132,25 +129,19 @@ public class SolvedQuestionsService : ISolvedQuestionsService
 
         User foundUser = question.User;
         
-        Guid? loggedUserId = _sessionService.GetUserId();
+        Guid loggedUserId = _userContext.UserId;
 
         if (!foundUser.IsPrivate || loggedUserId == foundUser.UserId)
         {
-            var questionText = GetQuestionText(question.Question.Content);
+            var questionText = question.Question.ExtractEnunciation();
             
             var correctAlternative = question.CorrectAlternative.ToString();
-            string? correctAlternativeText = GetAlternativeText(
-                question.Question.Content,
-                correctAlternative
-            );
+            string? correctAlternativeText = question.Question.ExtractAlternativeText(correctAlternative);
             
             var chosenAlternative = question.ChosenAlternative.ToString();
             string? chosenAlternativeText = correctAlternative.Equals(chosenAlternative)
                 ? correctAlternativeText
-                : GetAlternativeText(
-                    question.Question.Content,
-                    chosenAlternative
-            );
+                : question.Question.ExtractAlternativeText(chosenAlternative);
             
             var dto = new GetSolvedQuestionDto
             {
@@ -169,49 +160,5 @@ public class SolvedQuestionsService : ISolvedQuestionsService
         }
 
         return Result.Failure<GetSolvedQuestionDto>(SolvedQuestionErrors.SolvedQuestionPrivateUser);
-    }
-
-    private static string? GetQuestionText(string content)
-    {
-        return ParseJsonElement(content).TryGetProperty("context", out JsonElement enunciation)
-            ? enunciation.GetString()
-            : string.Empty;
-    }
-
-    private static string? GetAlternativeText(string content, string? alternativeLetter)
-    {
-        var jsonContent = ParseJsonElement(content);
-        var hasValidAlternatives = jsonContent.TryGetProperty("alternatives", out JsonElement alternatives);
-        
-        if (hasValidAlternatives && alternatives.ValueKind == JsonValueKind.Array)
-        {
-            foreach (var alternative in alternatives.EnumerateArray())
-            {
-                var letter = alternative.TryGetProperty("letter", out JsonElement letterElement)
-                    ? letterElement.GetString()
-                    : string.Empty;
-
-                if (!string.IsNullOrEmpty(letter) && letter.Equals(alternativeLetter))
-                {
-                    return alternative.TryGetProperty("text", out JsonElement textElement)
-                        ? textElement.GetString()
-                        : string.Empty;
-                }
-            }
-        }
-
-        return string.Empty;
-    }
-    
-    private static JsonElement ParseJsonElement(string? json)
-    {
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            using var emptyDocument = JsonDocument.Parse("{}");
-            return emptyDocument.RootElement.Clone();
-        }
-
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
     }
 }

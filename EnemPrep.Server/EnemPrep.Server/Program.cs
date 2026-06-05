@@ -31,6 +31,7 @@ builder.Services.AddTransient<GlobalExceptionMiddleware>();
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
 
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 
 builder.Services.AddAuthentication(options =>
@@ -48,6 +49,7 @@ builder.Services.AddTransient<ISolvedQuestionsService, SolvedQuestionsService>()
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserPreferencesService, UserPreferencesService>();
 builder.Services.AddTransient<IUserGoalService, UserGoalService>();
+builder.Services.AddTransient<IExamsService, ExamsService>();
 builder.Services.AddControllers();
 
 if (builder.Environment.IsDevelopment())

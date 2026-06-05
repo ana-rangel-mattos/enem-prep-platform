@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EnemPrep.Domain.Models;
+﻿namespace EnemPrep.Domain.Models;
 
 public partial class ExamQuestion
 {

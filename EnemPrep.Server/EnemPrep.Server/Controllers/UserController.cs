@@ -32,8 +32,28 @@ public class UserController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserUserNotFound => NotFound(error.Description),
                     ErrorNames.UserNullUserId => BadRequest(error.Description),
+                    ErrorNames.UserUserNotFound => NotFound(error.Description),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                };
+            }
+        );
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get([FromQuery] Guid userId, CancellationToken cancellationToken)
+    {
+        var result = await _userService.FetchUserAsync(userId, cancellationToken);
+        
+        return result.Match<IActionResult>(
+            onSuccess: Ok,
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.UserNullUserId => BadRequest(error.Description),
+                    ErrorNames.UserUserNotFound => NotFound(error.Description),
+                    ErrorNames.UserPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
                     _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
                 };
             }

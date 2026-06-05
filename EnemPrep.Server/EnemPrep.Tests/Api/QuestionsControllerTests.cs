@@ -27,7 +27,7 @@ public class QuestionsControllerTests(CustomWebApplicationFactory factory) : Int
         var questionDto = new PostQuestionDto
         {
             ApiIndex = null,
-            Language = Language.Ingles,
+            Language = Language.English,
             Content = ParseJsonElement("""
                                        "year": 2009,
                                        "files": [],

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using EnemPrep.Domain.Common;
 using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Extensions;
 using EnemPrep.Domain.Models;
 using EnemPrep.Domain.Result;
 using EnemPrep.Persistence;
@@ -12,12 +13,12 @@ namespace EnemPrep.Services;
 public class QuestionsService : IQuestionService
 {
     private EnemContext _context;
-    private readonly ISessionService _sessionService;
+    private readonly IUserContext _userContext;
 
-    public QuestionsService(EnemContext context, ISessionService sessionService)
+    public QuestionsService(EnemContext context, IUserContext userContext)
     {
         _context = context;
-        _sessionService = sessionService;
+        _userContext = userContext;
     }
     
     public async Task<Result<QuestionDto>> FetchQuestionByIdAsync(Guid? id, CancellationToken cancellationToken = default)
@@ -41,7 +42,7 @@ public class QuestionsService : IQuestionService
             SubjectId = foundQuestion.SubjectId,
             CreatedAt = foundQuestion.CreatedAt,
             UpdatedAt = foundQuestion.UpdatedAt,
-            Content = ParseJsonElement(foundQuestion.Content)
+            Content = foundQuestion.ExtractContent()
         };
 
         return Result.Success(question);
@@ -98,7 +99,7 @@ public class QuestionsService : IQuestionService
 
     public async Task<Result> CreateQuestionAsync(PostQuestionDto request, CancellationToken cancellationToken = default)
     {
-        if (_sessionService.GetUserId() != request.UploadedById)
+        if (_userContext.UserId != request.UploadedById)
         {
             return Result.Failure(QuestionErrors.PublisherIdDoesNotMatchLoggedUserId);
         }
@@ -138,12 +139,7 @@ public class QuestionsService : IQuestionService
 
     public async Task<Result> SaveQuestionAsync(PostSavedQuestionDto request, CancellationToken cancellationToken = default)
     {
-        Guid? userId = _sessionService.GetUserId();
-
-        if (userId is null)
-        {
-            return Result.Failure(SavedQuestionErrors.UserIsNotLoggedIn);
-        }
+        Guid userId = _userContext.UserId;
 
         Question? question = await _context.Questions.Where(q => q.QuestionId == request.QuestionId)
             .FirstOrDefaultAsync(cancellationToken);
@@ -156,7 +152,7 @@ public class QuestionsService : IQuestionService
         await _context.SavedQuestions.AddAsync(new SavedQuestion
         {
             QuestionId = request.QuestionId,
-            UserId = userId.Value,
+            UserId = userId,
             Notes = request.Notes
         }, cancellationToken);
 
@@ -167,14 +163,9 @@ public class QuestionsService : IQuestionService
 
     public async Task<Result> DeleteSavedQuestionAsync(Guid? savedQuestionId, CancellationToken cancellationToken = default)
     {
-        Guid? userId = _sessionService.GetUserId();
-        
-        if (userId is null)
-        {
-            return Result.Failure(SavedQuestionErrors.UserIsNotLoggedIn);
-        }
+        Guid userId = _userContext.UserId;
 
-        int deletedRows = await _context.SavedQuestions.Where(q => q.QuestionId == savedQuestionId && q.UserId == userId.Value)
+        int deletedRows = await _context.SavedQuestions.Where(q => q.QuestionId == savedQuestionId && q.UserId == userId)
             .ExecuteDeleteAsync(cancellationToken);
 
         if (deletedRows == 0)
@@ -195,7 +186,7 @@ public class QuestionsService : IQuestionService
 
         var query = _context.SavedQuestions.AsNoTracking().AsQueryable();
 
-        query.ApplySearch(filter.SearchTerm);
+        query = query.ApplySearch(filter.SearchTerm);
 
         var totalRecords = await query.CountAsync(cancellationToken);
 
@@ -208,7 +199,7 @@ public class QuestionsService : IQuestionService
                 SavedQuestionId = q.QuestionId,
                 QuestionId = q.Question.QuestionId,
                 Notes = q.Notes,
-                QuestionText = GetQuestionText(q.Question.Content)
+                QuestionText = q.Question.ExtractEnunciation()
             })
             .ToListAsync(cancellationToken);
 
@@ -221,25 +212,6 @@ public class QuestionsService : IQuestionService
             TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize)
         };
     }
-    
-    private static string? GetQuestionText(string content)
-    {
-        return ParseJsonElement(content).TryGetProperty("context", out JsonElement enunciation)
-            ? enunciation.GetString()
-            : string.Empty;
-    }
-
-    private static JsonElement ParseJsonElement(string? json)
-    {
-        if (string.IsNullOrWhiteSpace(json))
-        {
-            using var emptyDocument = JsonDocument.Parse("{}");
-            return emptyDocument.RootElement.Clone();
-        }
-
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
-    }
 
     private sealed class QuestionListRow
     {
@@ -249,5 +221,16 @@ public class QuestionsService : IQuestionService
         public Guid? SubjectId { get; init; }
         public DateTime? CreatedAt { get; init; }
         public DateTime? UpdatedAt { get; init; }
+    }
+    
+    private static JsonElement ParseJsonElement(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return default;
+        }
+
+        using var document = JsonDocument.Parse(json);
+        return document.RootElement.Clone();
     }
 }

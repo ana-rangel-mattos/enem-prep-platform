@@ -1,4 +1,5 @@
 using EnemPrep.Domain.DTOS;
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.ServicesContracts;
 using EnemPrep.Persistence;
@@ -87,6 +88,14 @@ public class AuthService : IAuthService
         User newUser = request.ConvertToUser();
         newUser.HashPassword = hashPassword;
         newUser.Roles.Add(targetRole);
+        
+        UpdateUserPreferencesDto userPreferencesDto = new UpdateUserPreferencesDto
+        {
+            ColorScheme = ColorScheme.OS,
+            ExamLanguage = Language.English,
+            QuestionsPerDay = 5,
+        };
+        newUser.UserPreferences.Add(userPreferencesDto.ConvertToUserPreference());
 
         await _context.Users.AddAsync(newUser);
         await _context.SaveChangesAsync();

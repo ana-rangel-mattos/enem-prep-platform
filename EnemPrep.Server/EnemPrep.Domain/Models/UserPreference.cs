@@ -15,7 +15,7 @@ public partial class UserPreference
     
     [Column("exam_language")]
 
-    public Language ExamLanguage { get; set; } = Language.Ingles;
+    public Language ExamLanguage { get; set; } = Language.English;
 
     [Column("color_scheme")]
     public ColorScheme ColorScheme { get; set; } = ColorScheme.OS;
