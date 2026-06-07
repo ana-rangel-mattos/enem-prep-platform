@@ -53,3 +53,11 @@ CREATE TRIGGER solved_question_updated_at
 CREATE TRIGGER user_profile_updated_at
     BEFORE UPDATE ON tracking.user_profile
     FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER invitation_code_updated_at
+    BEFORE UPDATE ON auth.invitation_code
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+CREATE TRIGGER saved_question_updated_at
+    BEFORE UPDATE ON auth.saved_question
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at();

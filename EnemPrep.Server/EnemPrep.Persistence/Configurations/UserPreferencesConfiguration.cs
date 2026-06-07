@@ -1,3 +1,4 @@
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +13,27 @@ public class UserPreferencesConfiguration: IEntityTypeConfiguration<UserPreferen
         builder.HasKey(e => e.UserPreferencesId).HasName("user_preferences_pkey");
 
         builder.ToTable(TableNames.UserPreferences, SchemaNames.Auth);
-            
+
         builder.Property(u => u.ColorScheme)
             .HasColumnName("color_scheme")
-            .HasColumnType("auth.color_scheme")
-            .HasConversion<string>();
+            .HasConversion(
+                v => v == ColorScheme.OS ? "OS" :
+                    v == ColorScheme.Dark ? "DARK" :
+                    v == ColorScheme.Light ? "LIGHT" : "OS",
+                v => v == "OS" ? ColorScheme.OS :
+                    v == "DARK" ? ColorScheme.Dark :
+                    v == "LIGHT" ? ColorScheme.Light : ColorScheme.OS
+            );
+        
             
         builder.Property(u => u.ExamLanguage)
             .HasColumnName("exam_language")
-            .HasColumnType("content.language")
-            .HasConversion<string>();
+            .HasConversion(
+                v => v == Language.English ? "INGLES" : 
+                    v == Language.Spanish ? "ESPANHOL" : "INGLES",
+                v => v == "INGLES" ? Language.English : 
+                    v == "ESPANHOL" ? Language.Spanish : Language.English
+            );
 
         builder.Property(e => e.UserPreferencesId)
             .HasDefaultValueSql("gen_random_uuid()")

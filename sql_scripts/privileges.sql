@@ -13,7 +13,9 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE auth.sessions TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON TABLE auth."RoleUser" TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON TABLE auth."RolePermission" TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON TABLE auth.invitation_code TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE ON TABLE auth.roles TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON TABLE auth.permissions TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE ON TABLE auth.saved_question TO enem_user_role;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA auth
     GRANT SELECT, INSERT, UPDATE ON TABLES TO enem_user_role;
@@ -24,8 +26,8 @@ GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA content TO enem_admin_role;
 GRANT INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA auth TO enem_admin_role;
 
 -- Users
-CREATE USER enem_user WITH PASSWORD 'secret-user-789633';
-CREATE USER enem_admin WITH PASSWORD 'secret-admin-789633';
+CREATE USER enem_user WITH PASSWORD 'secret-user';
+CREATE USER enem_admin WITH PASSWORD 'secret-admin';
 
 GRANT enem_user_role TO enem_user;
 GRANT enem_admin_role TO enem_admin;

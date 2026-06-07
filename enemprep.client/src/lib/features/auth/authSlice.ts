@@ -12,8 +12,6 @@ interface AuthState {
     user?: UserProfile;
     isAuthenticated: boolean;
     isLoading: boolean;
-    login?: (userData: UserProfile) => void;
-    logout?: () => void;
 }
 
 const initialState: AuthState = {
@@ -25,7 +23,15 @@ export const authSlice = createSlice({
     name: "auth",
     initialState,
     reducers: {
-        loadUser: state => {}
+        loadUser: state => {
+            try {
+                state.isLoading = true;
+            } catch {
+
+            } finally {
+                state.isLoading = false;
+            }
+        }
     }
 })
 

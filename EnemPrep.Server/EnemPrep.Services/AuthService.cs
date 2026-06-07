@@ -68,7 +68,6 @@ public class AuthService : IAuthService
             InvitationCode? invite = await _context.InvitationCodes
                 .Include(invitationCode => invitationCode.InviteRole)
                 .FirstOrDefaultAsync(c => c.Code == request.Code && !c.IsUsed && c.ExpiresAt > DateTime.UtcNow);
-            Console.WriteLine("CODE Block");
 
             if (invite is null)
                 return Result.Failure(AuthErrors.InvalidInvitationCode);
@@ -97,7 +96,7 @@ public class AuthService : IAuthService
         };
         newUser.UserPreferences.Add(userPreferencesDto.ConvertToUserPreference());
 
-        await _context.Users.AddAsync(newUser);
+        _context.Users.Add(newUser);
         await _context.SaveChangesAsync();
 
         return Result.Success();

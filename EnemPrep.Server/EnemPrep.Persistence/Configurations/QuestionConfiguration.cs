@@ -1,3 +1,4 @@
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,12 @@ public class QuestionConfiguration: IEntityTypeConfiguration<Question>
 
         builder.Property(e => e.Language)
             .HasColumnName("language")
-            .HasColumnType("content.language");
+            .HasConversion(
+                v => v == Language.English ? "INGLES" : 
+                    v == Language.Spanish ? "ESPANHOL" : "INGLES",
+                v => v == "INGLES" ? Language.English : 
+                    v == "ESPANHOL" ? Language.Spanish : Language.English
+            );
 
         builder.Property(e => e.QuestionId)
             .HasDefaultValueSql("gen_random_uuid()")

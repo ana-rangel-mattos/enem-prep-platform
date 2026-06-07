@@ -13,10 +13,19 @@ public class SubjectConfiguration : IEntityTypeConfiguration<Subject>
         builder.HasKey(e => e.SubjectId).HasName("subject_pkey");
 
         builder.ToTable(TableNames.Subjects, SchemaNames.Content);
-
+        
         builder.Property(e => e.Name)
             .HasColumnName("name")
-            .HasColumnType("content.subject_name");
+            .HasConversion(
+                v => v == SubjectName.Languages ? "linguagens" :
+                    v == SubjectName.Humanities ? "ciencias-humanas" :
+                    v == SubjectName.NaturalSciences ? "ciencias-natureza" :
+                    v == SubjectName.Mathematics ? "matematica" : "Desconhecido",
+                v => v == "linguagens" ? SubjectName.Languages :
+                    v == "ciencias-humanas" ? SubjectName.Humanities :
+                    v == "ciencias-natureza" ? SubjectName.NaturalSciences :
+                    v == "matematica" ? SubjectName.Mathematics : SubjectName.Languages
+            );
 
         builder.Property(e => e.SubjectId)
             .HasDefaultValueSql("gen_random_uuid()")

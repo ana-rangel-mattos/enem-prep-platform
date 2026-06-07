@@ -14,7 +14,7 @@ INSERT INTO auth.user (
              'Administrador Root',
              'admin_root',
              'admin@example.com',
-             '$2a$12$R9h/lIPzHZ7vGTEyv.S5BeH5A.8bW.fXp9Wb8fU6XW5v7b8fU6XW5', -- Senha: admin123
+             '$2a$12$R9h/lIPzHZ7vGTEyv.S5BeH5A.8bW.fXp9Wb8fU6XW5v7b8fU6XW5',
              '2000-01-01',
              false,
              NOW(),
@@ -45,3 +45,16 @@ INSERT INTO auth.invitation_code (
              NOW(),
              NOW()
          );
+
+SELECT *
+FROM auth.invitation_code
+WHERE not is_used;
+
+INSERT INTO content.subject (name)
+VALUES ('linguagens'),
+       ('ciencias-humanas'),
+       ('ciencias-natureza'),
+       ('matematica');
+
+SELECT *
+FROM content.subject;

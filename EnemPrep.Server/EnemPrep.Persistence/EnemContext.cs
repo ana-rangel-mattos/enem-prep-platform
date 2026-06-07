@@ -48,17 +48,6 @@ public partial class EnemContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresEnum<ColorScheme>
-            (SchemaNames.Auth, "color_scheme");
-        modelBuilder.HasPostgresEnum<Language>
-            (SchemaNames.Content, "language");
-        modelBuilder.HasPostgresEnum<SubjectName>
-            (SchemaNames.Content, "subject_name");
-        modelBuilder.HasPostgresEnum<DayOfTheWeek>
-            (SchemaNames.Planning, "day_of_the_week");
-        modelBuilder.HasPostgresEnum<ExamStatus>
-            (SchemaNames.Tracking, "exam_status");
-        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(EnemContext).Assembly);
     }
 

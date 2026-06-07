@@ -1,3 +1,4 @@
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +16,21 @@ public class ScheduleSubjectConfiguration : IEntityTypeConfiguration<ScheduleSub
             
         builder.Property(e => e.Weekday)
             .HasColumnName("weekday")
-            .HasColumnType("planning.day_of_the_week");
+            .HasConversion(
+                v => v == DayOfTheWeek.Monday ? "MONDAY" :
+                    v == DayOfTheWeek.Tuesday ? "TUESDAY" :
+                    v == DayOfTheWeek.Wednesday ? "WEDNESDAY" :
+                    v == DayOfTheWeek.Thursday ? "THURSDAY" :
+                    v == DayOfTheWeek.Friday ? "FRIDAY" :
+                    v == DayOfTheWeek.Sunday ? "SUNDAY" :
+                    v == DayOfTheWeek.Saturday ? "SATURDAY" : "Invalid",
+                v => v == "MONDAY" ? DayOfTheWeek.Monday :
+                    v == "TUESDAY" ? DayOfTheWeek.Tuesday :
+                    v == "WEDNESDAY" ? DayOfTheWeek.Wednesday :
+                    v == "THURSDAY" ? DayOfTheWeek.Thursday :
+                    v == "FRIDAY" ? DayOfTheWeek.Friday :
+                    v == "SUNDAY" ? DayOfTheWeek.Sunday :
+                    v == "SATURDAY" ? DayOfTheWeek.Saturday : DayOfTheWeek.Monday);
             
         builder.Property(e => e.ScheduleId).HasColumnName("schedule_id");
         builder.Property(e => e.SubjectId).HasColumnName("subject_id");

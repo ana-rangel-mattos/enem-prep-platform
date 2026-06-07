@@ -1,3 +1,4 @@
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.Persistence.Constants;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +16,23 @@ public class ExamConfiguration: IEntityTypeConfiguration<Exam>
             
         builder.Property(e => e.Status)
             .HasColumnName("status")
-            .HasColumnType("tracking.exam_status");
+            .HasConversion(
+                v => v == ExamStatus.NotStarted ? "NOT_STARTED" :
+                    v == ExamStatus.InProgress ? "IN_PROGRESS" :
+                    v == ExamStatus.Finished ? "FINISHED" : "CANCELED",
+                v => v == "NOT_STARTED" ? ExamStatus.NotStarted :
+                    v == "IN_PROGRESS" ? ExamStatus.InProgress :
+                    v == "FINISHED" ? ExamStatus.Finished : ExamStatus.Canceled
+            );
             
         builder.Property(e => e.LanguageChoice)
             .HasColumnName("language_choice")
-            .HasColumnType("content.language");
+            .HasConversion(
+                v => v == Language.English ? "INGLES" : 
+                    v == Language.Spanish ? "ESPANHOL" : "INGLES",
+                v => v == "INGLES" ? Language.English : 
+                    v == "ESPANHOL" ? Language.Spanish : Language.English
+            );
 
         builder.Property(e => e.ExamId)
             .HasDefaultValueSql("gen_random_uuid()")
