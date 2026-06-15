@@ -16,8 +16,7 @@ export default function AuthBootstrap() {
       try {
         const user = await authService.getLoggedUser();
         dispatch(setUser(user));
-      } catch (err) {
-        console.log("AUTH ERROR", err);
+      } catch {
         dispatch(logout());
       }
     }

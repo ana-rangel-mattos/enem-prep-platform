@@ -31,7 +31,7 @@
 ## 3. Evidências de Progresso
 
 - **Repositório GitHub:** [Projeto no GitHub](https://github.com/ana-rangel-mattos/enem-prep-platform)
-- **Planejamento para a entraga final:** [Planejamento final](../../1%20-%20Planejamento/02-planejamento_entrega.md)
+- **Planejamento para a entrega final:** [Planejamento final](../../1%20-%20Planejamento/02-planejamento_entrega.md)
 
 ## 4. Quais foram os principais avanços?
 
