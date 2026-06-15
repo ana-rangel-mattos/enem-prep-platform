@@ -57,7 +57,8 @@ public partial class User
             Username = Username,
             Email = Email,
             DateOfBirth = DateOfBirth,
-            Roles = Roles.Select(r => r.Name).ToList()
+            Roles = Roles.Select(r => r.Name).Distinct().ToList(),
+            Permissions = Roles.SelectMany(r => r.Permissions).Select(p => p.Name).Distinct().ToList()
         };
     }
 }

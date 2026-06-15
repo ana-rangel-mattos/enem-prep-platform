@@ -39,7 +39,7 @@ INSERT INTO auth.invitation_code (
              gen_random_uuid(),
              'F1181460-9376-4BB7-9E3A-B4130FD17BF8',
              2,
-             'ENEM-ROOT-2026',
+             'ENEM-ROOT-2026/4',
              false,
              NOW() + INTERVAL '30 days',
              NOW(),
@@ -49,6 +49,11 @@ INSERT INTO auth.invitation_code (
 SELECT *
 FROM auth.invitation_code
 WHERE not is_used;
+
+SELECT * FROM auth.user;
+
+DELETE FROM auth.user
+WHERE user_id NOT IN ('f1181460-9376-4bb7-9e3a-b4130fd17bf8');
 
 INSERT INTO content.subject (name)
 VALUES ('linguagens'),

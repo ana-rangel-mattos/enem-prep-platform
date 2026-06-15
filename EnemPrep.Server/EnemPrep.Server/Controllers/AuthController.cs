@@ -65,9 +65,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Register([FromBody] PostUserRequest request)
+    public async Task<IActionResult> Register([FromBody] PostUserRequest request, CancellationToken cancellationToken)
     {
-        var result = await _authService.RegisterAsync(request);
+        var result = await _authService.RegisterAsync(request, cancellationToken);
 
         return result.Match<IActionResult>(
             onSuccess: Ok,
@@ -83,6 +83,24 @@ public class AuthController : ControllerBase
                         detail: "Unexpected error occured while registering user.",
                         statusCode: StatusCodes.Status500InternalServerError
                     )
+                };
+            });
+    }
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> GetUser(CancellationToken cancellationToken)
+    {
+        var result = await _authService.FetchLoggedUserAsync(cancellationToken);
+        
+        return result.Match<IActionResult>(
+            onSuccess: () => Ok(result.Value),
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.FetchLoggedUserUserNotFound => NotFound(error.Description),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
                 };
             });
     }

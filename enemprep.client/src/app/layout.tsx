@@ -1,20 +1,31 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Merriweather, Fira_Code } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import {SidebarInset, SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
-import {AppSidebar} from "@/components/app-sidebar";
-import {cn} from "@/lib/utils";
-import Link from "next/link";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
+import StoreProvider from "@/app/StoreProvider";
+import AuthLinks from "@/components/AuthLinks";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontSans = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontSerif = Merriweather({
   subsets: ["latin"],
+  variable: "--font-serif",
+});
+
+const fontMono = Fira_Code({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -26,36 +37,41 @@ interface IRootLayoutProps {
   children: React.ReactNode;
 }
 
-const RootLayout : React.FC<Readonly<IRootLayoutProps>> = ({ children }) => {
+const RootLayout: React.FC<Readonly<IRootLayoutProps>> = ({ children }) => {
   return (
     <html
       lang="pt-BR"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={cn(fontSans.variable, fontSerif.variable, fontMono.variable)}
+      suppressHydrationWarning
     >
-      <body className="bg-background text-foreground antialiased selection:bg-primary/20">
-        <SidebarProvider>
-          <AppSidebar />
-
-          <SidebarInset className="flex flex-col h-screen overflow-hidden">
-            <header className="flex h-14 shrink-0 items-center gap-2 border-b border-sidebar-border px-4 bg-background/50 background-blur-sm">
-              <SidebarTrigger />
-              <div className="w-full flex justify-between items-center">
-                <span className="text-sm font-medium text-muted-foreground">Área Interna</span>
-                <div className="flex gap-x-4 mr-4">
-                  <Link href="/login">Login</Link>
-                  <Link href="/register">Cadastre-se</Link>
+      <body
+        className="bg-background dark text-foreground selection:bg-primary/20 antialiased"
+        suppressHydrationWarning
+      >
+        <StoreProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset className="flex h-screen flex-col overflow-hidden">
+              <header className="border-sidebar-border bg-background/50 background-blur-sm flex h-14 shrink-0 items-center gap-2 border-b px-4">
+                <SidebarTrigger />
+                <div className="flex w-full items-center justify-between">
+                  <span className="text-muted-foreground text-sm font-medium">
+                    Área Interna
+                  </span>
+                  <AuthLinks />
                 </div>
-              </div>
-            </header>
+              </header>
 
-            <main className="flex flex-col items-center justify-center h-full overflow-y-auto p-6 focus:outline-none">
-              {children}
-            </main>
-          </SidebarInset>
-        </SidebarProvider>
+              <main className="flex h-full flex-col items-center justify-start overflow-y-auto p-6 focus:outline-none">
+                {children}
+              </main>
+              <Toaster />
+            </SidebarInset>
+          </SidebarProvider>
+        </StoreProvider>
       </body>
     </html>
   );
-}
+};
 
 export default RootLayout;

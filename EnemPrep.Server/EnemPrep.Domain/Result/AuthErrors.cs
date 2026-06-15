@@ -8,6 +8,10 @@ public static class AuthErrors
             ErrorNames.LoginUserNotFound,
             $"User with username {username} was not found.");
 
+    public static Error UserNotFoundId(Guid userId) => new Error(
+        ErrorNames.FetchLoggedUserUserNotFound,
+        $"User with ID {userId} was not found.");
+
     public static readonly Error InvalidPassword = new Error(
         ErrorNames.LoginInvalidPassword,
         "Invalid password.");

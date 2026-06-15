@@ -3,5 +3,5 @@ LAST_YEAR = 2023
 
 QUESTION_INSERTION_QUERY = """
 INSERT INTO content.question (subject_id, posted_by_id, api_index, language, content)
-VALUES (%s, %s, %s, %s::content.language, %s);"""
+VALUES (%s, %s, %s, %s, %s);"""
 

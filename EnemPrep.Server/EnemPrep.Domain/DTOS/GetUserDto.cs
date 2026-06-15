@@ -7,5 +7,6 @@ public class GetUserDto
     public string Username { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string Email { get; set; }
-    public List<string> Roles = new List<string>();
+    public List<string> Roles { get; set; } = new List<string>();
+    public List<string> Permissions { get; set; } = new List<string>();
 }

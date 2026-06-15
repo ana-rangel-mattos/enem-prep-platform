@@ -10,6 +10,8 @@ public static class ErrorNames
     public const string RegisterUserAlreadyExists = "Register.UserAlreadyExists";
     public const string RegisterInvalidInvitationCode = "Register.InvalidInvitationCode";
     public const string RegisterFailedRegister = "Register.FailedRegister";
+    
+    public const string FetchLoggedUserUserNotFound = "FetchLoggedUser.UserNotFound";
 
     public const string SubjectNotFound = "Subject.NotFound";
     public const string SubjectNullId = "Subject.NullId";

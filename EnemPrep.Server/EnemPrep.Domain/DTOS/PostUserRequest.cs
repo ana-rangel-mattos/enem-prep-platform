@@ -8,7 +8,7 @@ namespace EnemPrep.Domain.DTOS;
 public class PostUserRequest
 {
     [MaxLength(50, ErrorMessage = "Invitation Code must be less than 51 characters.")]
-    public string Code { get; set; }
+    public string? Code { get; set; }
     
     [Required(ErrorMessage = "Full name is required")]
     public string FullName { get; set; }
@@ -27,6 +27,8 @@ public class PostUserRequest
     public string Password { get; set; }
 
     public bool? IsPrivate { get; set; } = false;
+    
+    public byte[]? ProfileImage { get; set; }
 
     public User ConvertToUser()
     {
@@ -34,9 +36,13 @@ public class PostUserRequest
         {
             Email = Email,
             Username = Username,
-            DateOfBirth = DateOfBirth,
+            DateOfBirth = DateTime.SpecifyKind(
+                DateOfBirth,
+                DateTimeKind.Unspecified
+            ),
             FullName = FullName,
-            IsPrivate = IsPrivate ?? false
+            IsPrivate = IsPrivate ?? false,
+            ProfileImage = ProfileImage
         };
     }
 }

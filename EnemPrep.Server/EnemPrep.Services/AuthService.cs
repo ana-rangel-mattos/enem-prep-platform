@@ -5,6 +5,7 @@ using EnemPrep.ServicesContracts;
 using EnemPrep.Persistence;
 using Microsoft.EntityFrameworkCore;
 using EnemPrep.Domain.Result;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 
 namespace EnemPrep.Services;
 
@@ -12,17 +13,19 @@ public class AuthService : IAuthService
 {
     private readonly EnemContext _context;
     private readonly ISessionService _sessionService;
+    private readonly IUserContext _userContext;
 
-    public AuthService(EnemContext context, ISessionService sessionService)
+    public AuthService(EnemContext context, ISessionService sessionService, IUserContext userContext)
     {
         _context = context;
         _sessionService = sessionService;
+        _userContext = userContext;
     }
 
-    public async Task<Result> LoginAsync(LoginUserRequest request)
+    public async Task<Result> LoginAsync(LoginUserRequest request, CancellationToken cancellationToken = default)
     {
         User? user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Username == request.Username);
+            .FirstOrDefaultAsync(u => u.Username == request.Username, cancellationToken);
 
         if (user is null)
         {
@@ -43,7 +46,7 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public Result Logout()
+    public Result Logout(CancellationToken cancellationToken = default)
     {
         _sessionService.RemoveUserSession();
         
@@ -55,38 +58,43 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public async Task<Result> RegisterAsync(PostUserRequest request)
+    public async Task<Result> RegisterAsync(PostUserRequest request, CancellationToken cancellationToken = default)
     {
         if (await UserExists(request.Username, request.Email))
         {
             return Result.Failure(AuthErrors.UserAlreadyExists);
         }
-
-        Role targetRole = Role.Student;
-        if (!string.IsNullOrEmpty(request.Code))
-        {
-            InvitationCode? invite = await _context.InvitationCodes
-                .Include(invitationCode => invitationCode.InviteRole)
-                .FirstOrDefaultAsync(c => c.Code == request.Code && !c.IsUsed && c.ExpiresAt > DateTime.UtcNow);
-
-            if (invite is null)
-                return Result.Failure(AuthErrors.InvalidInvitationCode);
-
-            Console.WriteLine("VALID CODE Block");
-            targetRole = invite.InviteRole;
-            invite.IsUsed = true;
-        }
-
+        
         string? hashPassword = BCrypt.Net.BCrypt.HashPassword(request.Password, 12);
 
         if (hashPassword is null)
         {
             return Result.Failure(AuthErrors.FailedRegister);
         }
-
+        
         User newUser = request.ConvertToUser();
         newUser.HashPassword = hashPassword;
-        newUser.Roles.Add(targetRole);
+
+        var studentRole = await _context.Roles
+            .FirstOrDefaultAsync(r => r.Id == Role.Student.Id, cancellationToken);
+        
+        if (studentRole is not null)
+        {
+            newUser.Roles.Add(studentRole);
+        }
+        
+        if (!string.IsNullOrEmpty(request.Code))
+        {
+            InvitationCode? invite = await _context.InvitationCodes
+                .Include(invitationCode => invitationCode.InviteRole)
+                .FirstOrDefaultAsync(c => c.Code == request.Code && !c.IsUsed && c.ExpiresAt > DateTime.UtcNow, cancellationToken);
+
+            if (invite is null)
+                return Result.Failure(AuthErrors.InvalidInvitationCode);
+            
+            newUser.Roles.Add(invite.InviteRole);
+            invite.IsUsed = true;
+        }
         
         UpdateUserPreferencesDto userPreferencesDto = new UpdateUserPreferencesDto
         {
@@ -97,9 +105,27 @@ public class AuthService : IAuthService
         newUser.UserPreferences.Add(userPreferencesDto.ConvertToUserPreference());
 
         _context.Users.Add(newUser);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
+    }
+
+    public async Task<Result<GetUserDto>> FetchLoggedUserAsync(CancellationToken cancellationToken = default)
+    {
+        Guid userId = _userContext.UserId;
+
+        User? user = await _context.Users
+            .AsNoTracking()
+            .Include(u => u.Roles)
+            .ThenInclude(r => r.Permissions)
+            .FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
+        
+        if (user is null)
+        {
+            return Result.Failure<GetUserDto>(AuthErrors.UserNotFoundId(userId));
+        }
+
+        return Result.Success(user.ToGetUserDto());
     }
 
     private async Task<bool> UserExists(string username, string email)
