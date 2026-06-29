@@ -14,8 +14,7 @@ Plataforma de Preparação para o ENEM (Projeto de Extensão) Desenvolvimento de
 CREATE DATABASE enem_prep_db;
 ```
 
-2. Fazer o Update do Banco de Dados no Back-End:
-    - Fazer o update do Banco de Dados com o usuário postgres e subistiruir a senha:
+2. Fazer o Update do Banco de Dados no Back-End com o usuário postgres e subistiruir a senha:
     ```bash
     cd EnemPrep.Server/
     dotnet ef database update --project EnemPrep.Server/EnemPrep.Server.csproj --startup-project EnemPrep.Server/EnemPrep.Server.csproj --context EnemPrep.Persistence.EnemContext --configuration Debug --framework net9.0 20260521195544_Add_Saved_Question_Table --connection Host=localhost;Database=enem_prep_db;Username=postgres;Password=789633;
