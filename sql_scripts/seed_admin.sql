@@ -39,7 +39,7 @@ INSERT INTO auth.invitation_code (
              gen_random_uuid(),
              'F1181460-9376-4BB7-9E3A-B4130FD17BF8',
              2,
-             'ENEM-ROOT-2026/4',
+             'ENEM-ROOT-2026',
              false,
              NOW() + INTERVAL '30 days',
              NOW(),
@@ -55,11 +55,11 @@ SELECT * FROM auth.user;
 DELETE FROM auth.user
 WHERE user_id NOT IN ('f1181460-9376-4bb7-9e3a-b4130fd17bf8');
 
-INSERT INTO content.subject (name)
-VALUES ('linguagens'),
-       ('ciencias-humanas'),
-       ('ciencias-natureza'),
-       ('matematica');
+INSERT INTO content.subject (subject_id, name)
+VALUES ('25da4bd2-1bc7-4d4b-a448-23a2aa12a70b', 'linguagens'),
+       ('3714344b-f6cf-49b6-85de-cb659ad54850', 'ciencias-humanas'),
+       ('20e9711f-fe09-474e-a25a-0b3d163c61b5', 'ciencias-natureza'),
+       ('6f1d7c77-1f8b-44c7-b409-7d7c20c328c9', 'matematica');
 
 SELECT *
 FROM content.subject;
