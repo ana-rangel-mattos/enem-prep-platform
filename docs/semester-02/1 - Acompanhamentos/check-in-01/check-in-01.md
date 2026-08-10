@@ -42,3 +42,9 @@
 
 - **Mapeamento e Integração de Dados de Histórico:** Ajustes necessários nos DTOs e serviços do back-end (`GetSolvedQuestionDto`, `SolvedQuestionsService`) e no front-end para garantir que os dados do histórico fossem resgatados e exibidos corretamente.
 - **Gestão do Tempo:** Necessidade de organizar e estimar com precisão tarefas menores de interface e refatoração para manter o progresso fluido sem comprometer o planejamento do escopo.
+
+## 6. O que planeja fazer até o próximo check-in?
+
+- **Desenvolvimento da Funcionalidade de Simulados (`ExamRunner`):** Implementação completa do componente e do fluxo de navegação/execução de simulados com múltiplas questões no front-end.
+- **Integração com o Motor de Pontuação:** Conectar a interface de simulados aos endpoints do back-end em .NET para envio de respostas em lote e exibição do cálculo final de desempenho.
+- **Conclusão da Página de Perfil (`/profile`):** Finalizar a interface de perfil do usuário, exibindo as informações cadastrais e métricas consolidadas do estudante.
