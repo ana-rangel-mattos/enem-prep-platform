@@ -15,15 +15,16 @@ CREATE DATABASE enem_prep_db;
 ```
 
 2. Fazer o Update do Banco de Dados no Back-End com o usuário postgres e subistiruir a senha:
-    ```bash
-    cd EnemPrep.Server/
-    dotnet ef database update --project EnemPrep.Server/EnemPrep.Server.csproj --startup-project EnemPrep.Server/EnemPrep.Server.csproj --context EnemPrep.Persistence.EnemContext --configuration Debug --framework net9.0 20260521195544_Add_Saved_Question_Table --connection Host=localhost;Database=enem_prep_db;Username=postgres;Password=789633;
-    ```
+```bash
+cd EnemPrep.Server/
+dotnet ef database update --project EnemPrep.Server/EnemPrep.Server.csproj --startup-project EnemPrep.Server/EnemPrep.Server.csproj --context EnemPrep.Persistence.EnemContext --configuration Debug --framework net9.0 20260521195544_Add_Saved_Question_Table --connection Host=localhost;Database=enem_prep_db;Username=postgres;Password=789633;
+```
 
 3. Com o banco de dados criado, execute os seguites scripts SQL:
 ```bash
 cd ../sql_scripts
 ```
+
 `castings.sql`
 `privileges.sql`
 `updated_at.sql`
@@ -35,6 +36,7 @@ cd ../sql_scripts
 cd ../python_script
 ```
 Preencha as informações do `.env.sample` com as informações do Postgres e o renomeie para `.env`:
+
 ```env
 DB_USER=postgres
 DB_DATABASE=enem_prep_db
@@ -42,10 +44,10 @@ DB_PASSWORD=
 DB_PORT=5432
 DB_HOST=localhost
 
-DB_LANGUAGES_ID=
-DB_SOCIAL_SCIENCES_ID=
-DB_NATURAL_SCIENCES_ID=
-DB_MATH_ID=
+DB_LANGUAGES_ID=25da4bd2-1bc7-4d4b-a448-23a2aa12a70b
+DB_SOCIAL_SCIENCES_ID=3714344b-f6cf-49b6-85de-cb659ad54850
+DB_NATURAL_SCIENCES_ID=20e9711f-fe09-474e-a25a-0b3d163c61b5
+DB_MATH_ID=6f1d7c77-1f8b-44c7-b409-7d7c20c328c9
 DB_POSTED_BY_ID=f1181460-9376-4bb7-9e3a-b4130fd17bf8
 ```
 
