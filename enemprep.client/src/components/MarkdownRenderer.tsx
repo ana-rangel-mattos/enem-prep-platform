@@ -12,7 +12,7 @@ const MarkdownRenderer: React.FC<IMarkdownRendererProps> = ({ content }) => {
     <ReactMarkdown
       components={{
         p: ({ children }) => (
-          <p className="leading-7 not-first:mt-6">{children}</p>
+          <p className="leading-7 not-first:mt-6 text-lg">{children}</p>
         ),
         img: ({ src, alt }) => (
           <span className="border-border bg-muted/30 block max-w-full overflow-hidden rounded-lg border p-2">

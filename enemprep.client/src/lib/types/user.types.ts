@@ -4,6 +4,7 @@ export interface IUser {
   username: string;
   dateOfBirth: Date;
   email: string;
+  imageUrl?: string;
   roles: string[];
   permissions: string[];
 }

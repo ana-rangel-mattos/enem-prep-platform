@@ -63,4 +63,21 @@ public class UserService : IUserService
 
         return Result.Success(user.ToGetUserDto());
     }
+
+    public async Task<Result<GetUserDto>> FetchLoggedUserAsync(CancellationToken cancellationToken = default)
+    {
+        Guid loggedUserId = _userContext.UserId;
+
+        User? user = await _context.Users
+            .Where(e => e.UserId == loggedUserId)
+            .Include(e => e.Roles)
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if (user is null)
+        {
+            return Result.Failure<GetUserDto>(UserErrors.UserNotFound(loggedUserId));
+        }
+
+        return Result.Success(user.ToGetUserDto());
+    }
 }

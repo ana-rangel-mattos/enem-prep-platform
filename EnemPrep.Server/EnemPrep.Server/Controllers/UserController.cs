@@ -40,13 +40,31 @@ public class UserController : ControllerBase
         );
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] Guid userId, CancellationToken cancellationToken)
+    [HttpGet("me")]
+    public async Task<IActionResult> GetLoggedUser(CancellationToken cancellationToken)
+    {
+        var result = await _userService.FetchLoggedUserAsync(cancellationToken);
+        
+        return result.Match<IActionResult>(
+            onSuccess: () => Ok(result.Value),
+            onFailure: error =>
+            {
+                return error.Code switch
+                {
+                    ErrorNames.UserUserNotFound => NotFound(error.Description),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                };
+            }
+        );
+    }
+
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetUserById(Guid userId, CancellationToken cancellationToken)
     {
         var result = await _userService.FetchUserAsync(userId, cancellationToken);
         
         return result.Match<IActionResult>(
-            onSuccess: Ok,
+            onSuccess: () => Ok(result.Value),
             onFailure: error =>
             {
                 return error.Code switch

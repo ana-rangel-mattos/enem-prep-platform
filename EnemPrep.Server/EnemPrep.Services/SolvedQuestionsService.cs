@@ -22,26 +22,27 @@ public class SolvedQuestionsService : ISolvedQuestionsService
         _userContext = userContext;
     }
     
-    public async Task<Result> SolveQuestionAsync([FromBody] PostSolvedQuestionDto request, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid>> SolveQuestionAsync(PostSolvedQuestionDto request, CancellationToken cancellationToken = default)
     {
         var foundQuestion = await _context.Questions
             .FirstOrDefaultAsync(q => q.QuestionId == request.QuestionId, cancellationToken);
 
         if (foundQuestion is null)
         {
-            return Result.Failure(SolvedQuestionErrors.SolvedQuestionQuestionNotFound(request.QuestionId));
+            return Result.Failure<Guid>(SolvedQuestionErrors.SolvedQuestionQuestionNotFound(request.QuestionId));
         }
         
         Guid loggedUserId = _userContext.UserId;
         
         SolvedQuestion solvedQuestion = request.ToSolvedQuestion();
         solvedQuestion.UserId = loggedUserId;
+        solvedQuestion.SolvedQuestionId = Guid.CreateVersion7();
         
         await _context.SolvedQuestions.AddAsync(solvedQuestion, cancellationToken);
 
         await _context.SaveChangesAsync(cancellationToken);
         
-        return Result.Success();
+        return Result.Success(solvedQuestion.SolvedQuestionId);
     }
 
     public async Task<Result<PagedResponse<GetSolvedQuestionDto>>> FetchSolvedQuestionsByUserIdAsync(Guid? userId, SolvedQuestionFilter filter, CancellationToken cancellationToken)
@@ -86,6 +87,7 @@ public class SolvedQuestionsService : ISolvedQuestionsService
             .ApplyPagination(pageNumber, pageSize)
             .Select(q => new GetSolvedQuestionDto
             {
+                SolvedQuestionId = q.SolvedQuestionId,
                 QuestionId = q.QuestionId,
                 QuestionYear = q.QuestionYear,
                 QuestionText = q.Question.ExtractEnunciation(),
@@ -117,7 +119,7 @@ public class SolvedQuestionsService : ISolvedQuestionsService
         }
         
         SolvedQuestion? question = await _context.SolvedQuestions
-            .Where(q => q.QuestionId == id)
+            .Where(q => q.SolvedQuestionId == id)
             .Include(q => q.Question)
             .Include(q => q.User)
             .FirstOrDefaultAsync(cancellationToken);
@@ -145,6 +147,7 @@ public class SolvedQuestionsService : ISolvedQuestionsService
             
             var dto = new GetSolvedQuestionDto
             {
+                SolvedQuestionId = question.SolvedQuestionId,
                 QuestionId = question.QuestionId,
                 QuestionYear = question.QuestionYear,
                 QuestionText = questionText,
@@ -160,5 +163,50 @@ public class SolvedQuestionsService : ISolvedQuestionsService
         }
 
         return Result.Failure<GetSolvedQuestionDto>(SolvedQuestionErrors.SolvedQuestionPrivateUser);
+    }
+
+    public async Task<PagedResponse<GetSolvedQuestionDto>> FetchUserSolvedQuestionsAsync(SolvedQuestionFilter filter, CancellationToken cancellationToken = default)
+    {
+        Guid userId = _userContext.UserId;
+        
+        var pageNumber = Math.Max(1, filter.PageNumber);
+        var pageSize = Math.Clamp(filter.PageSize, 1, 50);
+        
+        var query = _context.SolvedQuestions
+            .AsNoTracking()
+            .Where(q => q.UserId == userId)
+            .AsQueryable();
+        
+        var totalRecords = await query.CountAsync(cancellationToken);
+        
+        query = query.ApplySort(string.IsNullOrWhiteSpace(filter.SortBy) ? "CreatedAt" : filter.SortBy);
+        
+        JsonElement alternativesElement;
+        var questions = await query
+            .ApplyPagination(pageNumber, pageSize)
+            .Select(q => new GetSolvedQuestionDto
+            {
+                SolvedQuestionId = q.SolvedQuestionId,
+                QuestionId = q.QuestionId,
+                QuestionYear = q.QuestionYear,
+                QuestionText = q.Question.ExtractEnunciation(),
+                CorrectAlternative = q.CorrectAlternative,
+                CorrectAlternativeText = q.Question.ExtractAlternativeText(q.CorrectAlternative.ToString()),
+                ChosenAlternative = q.ChosenAlternative,
+                ChosenAlternativeText = q.Question.ExtractAlternativeText(q.ChosenAlternative.ToString()),
+                TimeSpent = q.TimeSpent,
+                IsCorrect = q.IsCorrect,
+                CreatedAt = q.CreatedAt
+            })
+            .ToListAsync(cancellationToken);
+        
+        return new PagedResponse<GetSolvedQuestionDto>
+        {
+            Data = questions,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            TotalRecords = totalRecords,
+            TotalPages = (int) Math.Ceiling(totalRecords / (double) pageSize)
+        };
     }
 }

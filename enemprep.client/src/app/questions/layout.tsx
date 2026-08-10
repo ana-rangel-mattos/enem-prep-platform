@@ -5,7 +5,7 @@ interface IQuestionsLayoutProps {
 }
 
 const QuestionsLayout: React.FC<IQuestionsLayoutProps> = ({ children }) => {
-  return <div className="w-full max-w-full">{children}</div>;
+  return <div className="w-full max-w-full overflow-y-auto">{children}</div>;
 };
 
 export default QuestionsLayout;

@@ -4,6 +4,7 @@ namespace EnemPrep.Domain.DTOS;
 
 public class GetSolvedQuestionDto
 {
+    public Guid SolvedQuestionId { get; init; }
     public Guid QuestionId { get; init; }
     public int QuestionYear { get; init; }
     public char CorrectAlternative { get;init; }

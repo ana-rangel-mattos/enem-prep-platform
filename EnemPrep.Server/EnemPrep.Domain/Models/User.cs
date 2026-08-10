@@ -57,8 +57,10 @@ public partial class User
             Username = Username,
             Email = Email,
             DateOfBirth = DateOfBirth,
+            ImageUrl = Convert.ToBase64String(ProfileImage ?? Array.Empty<byte>()),
             Roles = Roles.Select(r => r.Name).Distinct().ToList(),
-            Permissions = Roles.SelectMany(r => r.Permissions).Select(p => p.Name).Distinct().ToList()
+            Permissions = Roles.SelectMany(r => r.Permissions).Select(p => p.Name).Distinct().ToList(),
+            CreatedAt = CreatedAt
         };
     }
 }

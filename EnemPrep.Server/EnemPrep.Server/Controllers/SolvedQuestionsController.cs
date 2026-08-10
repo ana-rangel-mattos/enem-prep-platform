@@ -20,6 +20,15 @@ public class SolvedQuestionsController : ControllerBase
         _solvedQuestionsService = solvedQuestionsService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> FetchSolvedQuestions([FromQuery] SolvedQuestionFilter filter,
+        CancellationToken cancellationToken)
+    {
+        var response = await _solvedQuestionsService.FetchUserSolvedQuestionsAsync(filter, cancellationToken);
+
+        return Ok(response);
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> FetchSolvedById(Guid id, CancellationToken cancellationToken)
     {
@@ -66,7 +75,7 @@ public class SolvedQuestionsController : ControllerBase
         var result = await _solvedQuestionsService.SolveQuestionAsync(request, cancellationToken);
 
         return result.Match<IActionResult>(
-            onSuccess: Ok,
+            onSuccess: () => Ok(result.Value),
             onFailure: error =>
             {
                 return error.Code switch

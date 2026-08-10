@@ -1,5 +1,5 @@
 import { ApiClient } from "@/lib/api/apiClient";
-import { IQuestionResponse } from "@/lib/types/question.interface";
+import { IQuestionResponse } from "@/lib/types/question.types";
 
 class QuestionsService extends ApiClient {
   constructor() {

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   BookOpen,
-  GraduationCap,
+  GraduationCap, Landmark,
   LayoutDashboard,
   LucideProps,
   ShieldAlert,
@@ -51,13 +51,23 @@ const naviagationItems: INavigationProps[] = [
     icon: GraduationCap,
     requiredRole: "Student",
   },
-  { title: "Perfil", url: "/profile", icon: User, requiredRole: "Student" },
+  { title: "Perfil",
+    url: "/profile",
+    icon: User,
+    requiredRole: "Student"
+  },
   {
     title: "Painel Admin",
     url: "/admin",
     icon: ShieldAlert,
     requiredRole: "Admin",
   },
+  {
+    title: "Questões Resolvidas",
+    url: "/history",
+    icon: Landmark,
+    requiredRole: "Student",
+  }
 ];
 
 export function AppSidebar() {

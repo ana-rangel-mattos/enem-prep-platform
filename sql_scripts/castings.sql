@@ -87,3 +87,9 @@ $$ LANGUAGE plpgsql IMMUTABLE;
 CREATE CAST ( INTEGER AS auth.color_scheme )
 WITH FUNCTION auth.map_integer_color_scheme(integer)
 AS ASSIGNMENT;
+
+DROP FUNCTION planning.map_integer_day_of_the_week(day_int integer) CASCADE;
+DROP FUNCTION tracking.map_integer_exam_status(status_int integer) CASCADE;
+DROP FUNCTION content.map_integer_subject(subject_int integer) CASCADE;
+DROP FUNCTION content.map_integer_exam_language(day_int integer) CASCADE;
+DROP FUNCTION auth.map_integer_color_scheme(color_scheme_int integer) CASCADE;

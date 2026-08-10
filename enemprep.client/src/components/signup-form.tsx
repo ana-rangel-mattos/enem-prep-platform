@@ -35,7 +35,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { IRegisterUser } from "@/lib/types/user.interface";
+import { IRegisterUser } from "@/lib/types/user.types";
 import { fileToBase64 } from "@/lib/helpers";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;

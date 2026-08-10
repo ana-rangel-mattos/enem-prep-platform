@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IQuestionResponse } from "@/lib/types/question.interface";
+import { IQuestionResponse } from "@/lib/types/question.types";
 import { questionsService } from "@/lib/api/questionsService";
 import Loading from "@/components/Loading";
 import { Card } from "@/components/ui/card";
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { PencilLine } from "lucide-react";
 import Link from "next/link";
 import QuestionHeader from "@/components/QuestionHeader";
-import QuestionAlternativesStatic from "@/components/QuestionAlternativesStatic";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
@@ -27,6 +26,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import usePageNumber from "@/hooks/usePageNumber";
+import usePageSize from "@/hooks/usePageSize";
+import useSearchTerm from "@/hooks/useSearchTerm";
+import useSortBy from "@/hooks/useSortBy";
 
 const Questions = () => {
   const [result, setResult] = useState<IPagedResponse<IQuestionResponse>>();
@@ -36,10 +39,10 @@ const Questions = () => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
-  const pageNumber = Number(searchParams.get("pageNumber") ?? 1);
-  const pageSize = Number(searchParams.get("pageSize") ?? 10);
-  const searchTerm = searchParams.get("searchTerm");
-  const sortBy = searchParams.get("sortBy");
+  const pageNumber = usePageNumber(searchParams);
+  const pageSize = usePageSize(searchParams);
+  const searchTerm = useSearchTerm(searchParams);
+  const sortBy = useSortBy(searchParams);
 
   useEffect(() => {
     const loadQuestions = async () => {
@@ -62,7 +65,7 @@ const Questions = () => {
   if (isLoading) return <Loading message="Carregando questões..." />;
 
   return (
-    <div>
+    <>
       <div className="flex flex-wrap items-baseline gap-4">
         {result &&
           result.data.map((question) => (
@@ -80,7 +83,6 @@ const Questions = () => {
                 </Button>
               </Link>
               <QuestionHeader question={question} />
-              <QuestionAlternativesStatic question={question} />
             </Card>
           ))}
       </div>
@@ -88,7 +90,7 @@ const Questions = () => {
       <div className="mt-4 flex">
         <Field orientation="horizontal" className="">
           <FieldLabel htmlFor="select-questions-per-page">
-            Questões por Pagína
+            Questões por Página
           </FieldLabel>
           <Select
             defaultValue="10"
@@ -130,7 +132,7 @@ const Questions = () => {
           </PaginationContent>
         </Pagination>
       </div>
-    </div>
+    </>
   );
 };
 

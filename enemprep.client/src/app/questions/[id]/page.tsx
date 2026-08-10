@@ -1,12 +1,12 @@
 "use client";
 
 import React, { use, useEffect, useState } from "react";
-import { IQuestionResponse } from "@/lib/types/question.interface";
+import { IQuestionResponse } from "@/lib/types/question.types";
 import { questionsService } from "@/lib/api/questionsService";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import { notFound } from "next/navigation";
-import SolveQuestionStartScreen from "@/components/SolveQuestionStartScreen";
+import PracticeQuestionStartScreen from "@/components/PracticeQuestionStartScreen";
 
 interface ISolveQuestionProps {
   params: Promise<{
@@ -48,8 +48,8 @@ const SolveQuestion: React.FC<ISolveQuestionProps> = ({ params }) => {
     return <Loading message="Carregando detalhes da questão..." />;
 
   return (
-    <div className="mx-auto max-w-xl">
-      {!hasStarted && <SolveQuestionStartScreen question={question} />}
+    <div className="mx-auto w-full max-w-4lx px-4 py-6">
+      {!hasStarted && <PracticeQuestionStartScreen question={question} />}
     </div>
   );
 };

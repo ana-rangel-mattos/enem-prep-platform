@@ -1,7 +1,7 @@
 import React from "react";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
-import { IQuestionResponse } from "@/lib/types/question.interface";
+import { IQuestionResponse } from "@/lib/types/question.types";
 
 interface IQuestionHeaderProps {
   question: IQuestionResponse;

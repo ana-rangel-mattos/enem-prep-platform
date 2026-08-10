@@ -14,3 +14,7 @@ export const fileToBase64 = (file: File): Promise<string> => {
     reader.readAsDataURL(file);
   });
 };
+
+export const timeToString = (time: number): string => {
+  return time.toString().slice(0, 8);
+}
