@@ -110,24 +110,6 @@ public class AuthService : IAuthService
         return Result.Success();
     }
 
-    public async Task<Result<GetUserDto>> FetchLoggedUserAsync(CancellationToken cancellationToken = default)
-    {
-        Guid userId = _userContext.UserId;
-
-        User? user = await _context.Users
-            .AsNoTracking()
-            .Include(u => u.Roles)
-            .ThenInclude(r => r.Permissions)
-            .FirstOrDefaultAsync(u => u.UserId == userId, cancellationToken);
-        
-        if (user is null)
-        {
-            return Result.Failure<GetUserDto>(AuthErrors.UserNotFoundId(userId));
-        }
-
-        return Result.Success(user.ToGetUserDto());
-    }
-
     private async Task<bool> UserExists(string username, string email)
     {
         User? existentUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == username || u.Email == email);

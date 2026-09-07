@@ -1,6 +1,6 @@
 namespace EnemPrep.Domain.DTOS;
 
-public class ExamQuestionDto
+public class GetExamQuestionDto
 {
     public Guid ExamQuestionId { get; set; }
     public int Year { get; set; }

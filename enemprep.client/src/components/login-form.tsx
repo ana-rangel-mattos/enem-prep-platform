@@ -22,6 +22,7 @@ import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Loading from "@/components/Loading";
+import { userService } from "@/lib/api/userService";
 
 const schema = z
   .object({
@@ -58,11 +59,7 @@ export const LoginForm: React.FC<React.ComponentProps<"div">> = ({
   const dispatch = useAppDispatch();
   const { control, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-    },
+    defaultValues: { username: "", email: "", password: "" },
   });
 
   const onSubmit = async (data: FormData) => {
@@ -70,7 +67,7 @@ export const LoginForm: React.FC<React.ComponentProps<"div">> = ({
       setIsLoading(true);
 
       await authService.loginUser(data);
-      const userProfile = await authService.getLoggedUser();
+      const userProfile = await userService.getLoggedUser();
       dispatch(setUser(userProfile));
 
       reset();

@@ -20,11 +20,11 @@ namespace EnemPrep.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "9.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "auth", "color_scheme", new[] { "os", "dark", "light" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "content", "language", new[] { "INGLES", "ESPANHOL" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "content", "subject_name", new[] { "linguagens", "ciencias-humanas", "ciencias-natureza", "matematica" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "planning", "day_of_the_week", new[] { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tracking", "exam_status", new[] { "not_started", "in_progress", "finished", "canceled" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "auth", "color_scheme", new[] { "dark", "light", "os" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "content", "language", new[] { "ESPANHOL", "INGLES" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "content", "subject_name", new[] { "ciencias-humanas", "ciencias-natureza", "linguagens", "matematica" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "planning", "day_of_the_week", new[] { "friday", "monday", "saturday", "sunday", "thursday", "tuesday", "wednesday" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tracking", "exam_status", new[] { "canceled", "finished", "in_progress", "not_started" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("EnemPrep.Domain.Models.Exam", b =>
@@ -57,8 +57,9 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("incorrect_questions_count");
 
-                    b.Property<int>("LanguageChoice")
-                        .HasColumnType("content.language")
+                    b.Property<string>("LanguageChoice")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("language_choice");
 
                     b.Property<TimeSpan>("MaxSpentTime")
@@ -69,14 +70,15 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("questions_count");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("tracking.exam_status")
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("status");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("title");
 
                     b.Property<TimeSpan?>("TotalSpentTime")
@@ -303,8 +305,8 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<int?>("Language")
-                        .HasColumnType("content.language")
+                    b.Property<string>("Language")
+                        .HasColumnType("text")
                         .HasColumnName("language");
 
                     b.Property<Guid>("PostedById")
@@ -503,8 +505,9 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnName("updated_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<int>("Weekday")
-                        .HasColumnType("planning.day_of_the_week")
+                    b.Property<string>("Weekday")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("weekday");
 
                     b.HasKey("ScheduleId", "SubjectId")
@@ -616,8 +619,9 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<int>("Name")
-                        .HasColumnType("content.subject_name")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("name");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -757,7 +761,7 @@ namespace EnemPrep.Persistence.Migrations
 
                     b.Property<string>("ColorScheme")
                         .IsRequired()
-                        .HasColumnType("auth.color_scheme")
+                        .HasColumnType("text")
                         .HasColumnName("color_scheme");
 
                     b.Property<DateTime>("CreatedAt")
@@ -768,7 +772,7 @@ namespace EnemPrep.Persistence.Migrations
 
                     b.Property<string>("ExamLanguage")
                         .IsRequired()
-                        .HasColumnType("content.language")
+                        .HasColumnType("text")
                         .HasColumnName("exam_language");
 
                     b.Property<int>("QuestionsPerDay")

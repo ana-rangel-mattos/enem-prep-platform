@@ -83,4 +83,14 @@ public class UserPreferencesService : IUserPreferencesService
 
         return Result.Success();
     }
+
+    public async Task<GetUserPreferencesDto> FetchLoggedUserPreferencesAsync(CancellationToken cancellationToken = default)
+    {
+        Guid userId = _userContext.UserId;
+
+        var preference = await _context.UserPreferences
+            .SingleAsync(e => e.UserId == userId, cancellationToken);
+
+        return preference.ToGetUserPreferencesDto();
+    }
 }

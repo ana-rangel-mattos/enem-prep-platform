@@ -1,7 +1,7 @@
+import Title from "@/components/Title";
+
 const Dashboard = () => {
-    return (
-        <h1>Dashboard do aluno</h1>
-    );
-}
+  return <Title text="Dashboard" />;
+};
 
 export default Dashboard;

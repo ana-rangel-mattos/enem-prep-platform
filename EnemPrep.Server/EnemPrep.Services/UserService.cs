@@ -47,8 +47,14 @@ public class UserService : IUserService
         Guid loggedUserId = _userContext.UserId;
 
         User? user = await _context.Users
-            .Where(e => e.UserId == userId)
+            .AsNoTracking()
+            .AsSplitQuery()
             .Include(e => e.Roles)
+            .ThenInclude(r => r.Permissions)
+            .Include(e => e.SolvedQuestions)
+            .Include(e => e.Exams)
+            .Include(e => e.UserGoal)
+            .Where(e => e.UserId == loggedUserId)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (user is null)
@@ -69,8 +75,14 @@ public class UserService : IUserService
         Guid loggedUserId = _userContext.UserId;
 
         User? user = await _context.Users
-            .Where(e => e.UserId == loggedUserId)
+            .AsNoTracking()
+            .AsSplitQuery()
             .Include(e => e.Roles)
+            .ThenInclude(r => r.Permissions)
+            .Include(e => e.SolvedQuestions)
+            .Include(e => e.Exams)
+            .Include(e => e.UserGoal)
+            .Where(e => e.UserId == loggedUserId)
             .FirstOrDefaultAsync(cancellationToken);
         
         if (user is null)

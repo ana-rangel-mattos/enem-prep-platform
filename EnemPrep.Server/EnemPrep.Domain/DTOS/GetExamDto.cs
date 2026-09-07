@@ -1,5 +1,3 @@
-using EnemPrep.Domain.Enums;
-
 namespace EnemPrep.Domain.DTOS;
 
 public class GetExamDto

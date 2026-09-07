@@ -168,14 +168,15 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
         {
             ExamId = exam.ExamId,
             Title = exam.Title,
-            Questions = exam.ExamQuestions.Select(q => new ExamQuestionDto
+            Questions = exam.ExamQuestions.Select(q => new GetExamQuestionDto
             {
                 ExamQuestionId = q.QuestionId,
                 Year = q.Question.ExtractYear(),
                 Context = q.Question.ExtractContext()!,
                 Enunciation = q.Question.ExtractEnunciation()!,
                 Alternatives = q.Question.ExtractAlternatives()
-            }).ToList()
+            }).ToList(),
+            MaxSpentTime = exam.MaxSpentTime.Seconds
         });
     }
 

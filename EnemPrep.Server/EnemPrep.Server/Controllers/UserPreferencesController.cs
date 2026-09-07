@@ -12,15 +12,23 @@ namespace EnemPrep.Server.Controllers;
 [Authorize]
 public class UserPreferencesController : ControllerBase
 {
-    private IUserPreferencesService _userPreferencesService;
+    private readonly IUserPreferencesService _userPreferencesService;
     
     public UserPreferencesController(IUserPreferencesService userPreferencesService)
     {
         _userPreferencesService = userPreferencesService;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetLoggedUserPreferences(CancellationToken cancellationToken)
+    {
+        var result = await _userPreferencesService.FetchLoggedUserPreferencesAsync(cancellationToken);
+
+        return Ok(result);
+    }
+
     [HttpPut("reset")]
-    public async Task<IActionResult> Reset(CancellationToken cancellationToken)
+    public async Task<IActionResult> ResetLoggedUserPreferences(CancellationToken cancellationToken)
     {
         var result = await _userPreferencesService.ResetUserPreferencesAsync(cancellationToken);
 
@@ -38,7 +46,7 @@ public class UserPreferencesController : ControllerBase
     }
 
     [HttpPut("update")]
-    public async Task<IActionResult> Update(UpdateUserPreferencesDto request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateLoggedUserPreferences(UpdateUserPreferencesDto request, CancellationToken cancellationToken)
     {
         var result = await _userPreferencesService.UpdateUserPreferencesAsync(request, cancellationToken);
 

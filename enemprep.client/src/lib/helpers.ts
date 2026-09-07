@@ -17,4 +17,8 @@ export const fileToBase64 = (file: File): Promise<string> => {
 
 export const timeToString = (time: number): string => {
   return time.toString().slice(0, 8);
-}
+};
+
+export const ISODateToString = (date: string): string => {
+  return date.slice(0, 10).split("-").reverse().join("/");
+};

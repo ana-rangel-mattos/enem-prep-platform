@@ -5,8 +5,17 @@ export interface IUser {
   dateOfBirth: Date;
   email: string;
   imageUrl?: string;
+  attemptedQuestions: number;
+  correctAnswers: number;
+  attemptedExams: number;
+  averageScore: number;
+  highestScore: number;
+  successRate: number;
+  averageTimeSpent: string;
+  hasGoal: boolean;
   roles: string[];
   permissions: string[];
+  createdAt: string;
 }
 
 export interface IRegisterUser {

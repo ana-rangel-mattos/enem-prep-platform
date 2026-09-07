@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@/hooks/use-store";
 import { useEffect, useRef } from "react";
-import { authService } from "@/lib/api/authService";
 import { logout, setUser } from "@/lib/features/auth/authSlice";
+import { userService } from "@/lib/api/userService";
 
 export default function AuthBootstrap() {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ export default function AuthBootstrap() {
 
     async function bootstrapAuth() {
       try {
-        const user = await authService.getLoggedUser();
+        const user = await userService.getLoggedUser();
         dispatch(setUser(user));
       } catch {
         dispatch(logout());

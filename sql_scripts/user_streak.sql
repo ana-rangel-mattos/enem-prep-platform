@@ -39,3 +39,9 @@ AFTER INSERT ON tracking.solved_question
 CREATE TRIGGER track_user_streak_exam_question
     AFTER INSERT ON tracking.exam_question
     FOR EACH ROW EXECUTE FUNCTION tracking.update_user_streak();
+
+DROP TRIGGER IF EXISTS track_user_streak_exam_question on tracking.exam_question;
+
+CREATE TRIGGER track_user_streak_exam
+    AFTER INSERT ON tracking.exam
+    FOR EACH ROW EXECUTE FUNCTION tracking.update_user_streak();

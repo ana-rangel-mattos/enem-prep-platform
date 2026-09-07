@@ -47,7 +47,7 @@ public class ExamConfiguration: IEntityTypeConfiguration<Exam>
         builder.Property(e => e.MaxSpentTime).HasColumnName("max_spent_time");
         builder.Property(e => e.QuestionsCount).HasColumnName("questions_count");
         builder.Property(e => e.Title)
-            .HasMaxLength(20)
+            .HasMaxLength(255)
             .HasColumnName("title");
         builder.Property(e => e.TotalSpentTime).HasColumnName("total_spent_time");
         builder.Property(e => e.UnsolvedQuestionsCount).HasColumnName("unsolved_questions_count");

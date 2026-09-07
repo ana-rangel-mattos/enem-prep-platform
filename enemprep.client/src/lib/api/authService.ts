@@ -6,10 +6,6 @@ class AuthService extends ApiClient {
     super("http://localhost:5265/api/auth/");
   }
 
-  getLoggedUser(): Promise<IUser> {
-    return this.get("me");
-  }
-
   registerUser(request: IRegisterUser): Promise<void> {
     return this.post("register", request);
   }

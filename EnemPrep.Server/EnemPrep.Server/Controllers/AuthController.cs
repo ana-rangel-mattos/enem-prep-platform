@@ -86,22 +86,4 @@ public class AuthController : ControllerBase
                 };
             });
     }
-
-    [Authorize]
-    [HttpGet("me")]
-    public async Task<IActionResult> GetUser(CancellationToken cancellationToken)
-    {
-        var result = await _authService.FetchLoggedUserAsync(cancellationToken);
-        
-        return result.Match<IActionResult>(
-            onSuccess: () => Ok(result.Value),
-            onFailure: error =>
-            {
-                return error.Code switch
-                {
-                    ErrorNames.FetchLoggedUserUserNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
-                };
-            });
-    }
 }
