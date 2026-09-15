@@ -37,6 +37,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IRegisterUser } from "@/lib/types/user.types";
 import { fileToBase64 } from "@/lib/helpers";
+import { AxiosError } from "axios";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_IMAGES_TYPES = [
@@ -166,10 +167,10 @@ const SignupForm: React.FC<React.ComponentProps<"div">> = ({
       await authService.registerUser(payload);
       reset();
       router.push("/login");
-    } catch (error: any) {
-      const backendError =
-        error.response?.data?.details || "Ocorreu um erro inesperado.";
-      toast.error(backendError);
+    } catch (error) {
+      const axiosError = error as AxiosError<ProblemDetails>;
+      const problem = axiosError.response?.data;
+      toast.error(problem?.description || "Falha ao registrar-se.");
     } finally {
       setIsLoading(false);
     }

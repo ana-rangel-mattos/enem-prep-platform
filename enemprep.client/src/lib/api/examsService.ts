@@ -21,7 +21,11 @@ class ExamsService extends ApiClient {
   }
 
   updateExamStatus(request: IExamUpdateStatus): Promise<void> {
-    return this.put(`${request.examId}/update`, request);
+    return this.put(
+      `${request.examId}/update`,
+      {},
+      { newStatus: request.newStatus },
+    );
   }
 
   takeExam(examId: string): Promise<IExamTake> {
@@ -33,7 +37,7 @@ class ExamsService extends ApiClient {
   }
 
   submitExam(examId: string): Promise<IExamResponse> {
-    return this.post(`${examId}/submit-exam`);
+    return this.post(`${examId}/complete`);
   }
 }
 

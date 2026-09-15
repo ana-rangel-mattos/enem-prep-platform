@@ -52,7 +52,11 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserPreferencesService, UserPreferencesService>();
 builder.Services.AddTransient<IUserGoalService, UserGoalService>();
 builder.Services.AddTransient<IExamsService, ExamsService>();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.NumberHandling =
+        System.Text.Json.Serialization.JsonNumberHandling.AllowNamedFloatingPointLiterals;
+});
 
 if (builder.Environment.IsDevelopment())
 {

@@ -30,10 +30,10 @@ public class UserGoalController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserGoalNullUserId => Unauthorized(error.Description),
-                    ErrorNames.UserGoalUserNotFound => NotFound(error.Description),
-                    ErrorNames.UserGoalNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserGoalNullUserId => Unauthorized(error),
+                    ErrorNames.UserGoalUserNotFound => NotFound(error),
+                    ErrorNames.UserGoalNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -50,10 +50,10 @@ public class UserGoalController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserGoalNullUserId => Unauthorized(error.Description),
-                    ErrorNames.UserGoalUserNotFound => NotFound(error.Description),
-                    ErrorNames.UserGoalAlreadyExists => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserGoalNullUserId => Unauthorized(error),
+                    ErrorNames.UserGoalUserNotFound => NotFound(error),
+                    ErrorNames.UserGoalAlreadyExists => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -69,10 +69,10 @@ public class UserGoalController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserGoalNullUserId => Unauthorized(error.Description),
-                    ErrorNames.UserGoalUserNotFound => NotFound(error.Description),
-                    ErrorNames.UserGoalNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserGoalNullUserId => Unauthorized(error),
+                    ErrorNames.UserGoalUserNotFound => NotFound(error),
+                    ErrorNames.UserGoalNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -88,10 +88,10 @@ public class UserGoalController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserGoalNullUserId => Unauthorized(error.Description),
-                    ErrorNames.UserGoalUserNotFound => NotFound(error.Description),
-                    ErrorNames.UserGoalNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserGoalNullUserId => Unauthorized(error),
+                    ErrorNames.UserGoalUserNotFound => NotFound(error),
+                    ErrorNames.UserGoalNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }

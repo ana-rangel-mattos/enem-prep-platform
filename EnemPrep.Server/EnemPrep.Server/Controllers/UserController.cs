@@ -32,9 +32,9 @@ public class UserController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserNullUserId => BadRequest(error.Description),
-                    ErrorNames.UserUserNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserNullUserId => BadRequest(error),
+                    ErrorNames.UserUserNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );
@@ -51,8 +51,8 @@ public class UserController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserUserNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserUserNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );
@@ -69,10 +69,10 @@ public class UserController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserNullUserId => BadRequest(error.Description),
-                    ErrorNames.UserUserNotFound => NotFound(error.Description),
-                    ErrorNames.UserPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserNullUserId => BadRequest(error),
+                    ErrorNames.UserUserNotFound => NotFound(error),
+                    ErrorNames.UserPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );

@@ -10,99 +10,103 @@ import {
 } from "@/components/ui/field";
 import { z } from "zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React from "react";
-import { forEach } from "eslint-config-next";
-import Image from "next/image";
+import React, { useState } from "react";
 import QuestionHeader from "@/components/QuestionHeader";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import MarkdownRenderer from "@/components/MarkdownRenderer";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { examsService } from "@/lib/api/examsService";
+import { toast } from "sonner";
+import QuestionAlternative from "@/components/QuestionAlternative";
 
 interface IExamQuestionProps {
   question: IExamQuestion;
-  examId: string;
+  onNextQuestion: () => void;
 }
 
 const questionSchema = z.object({
   questionId: z.uuid(),
   examId: z.uuid(),
   chosenAlternative: z.enum(["A", "B", "C", "D", "E"]).optional(),
-  timeSpentSeconds: z.number(),
 });
 
 type QuestionFormData = z.infer<typeof questionSchema>;
 
-const ExamQuestion: React.FC<IExamQuestionProps> = ({ question, examId }) => {
+const ExamQuestion: React.FC<IExamQuestionProps> = ({
+  question,
+  onNextQuestion,
+}) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [startedAt] = useState<Date>(new Date());
+
   const { control, reset, handleSubmit } = useForm<QuestionFormData>({
     resolver: zodResolver(questionSchema),
-    defaultValues: { examId: examId, questionId: question.examQuestionId },
+    defaultValues: { examId: question.examId, questionId: question.questionId },
   });
 
-  const onSubmit = async () => {};
+  const onSubmitAnswer = async (data: QuestionFormData) => {
+    try {
+      setIsLoading(true);
+
+      await examsService.submitAnswer({
+        examId: question.examId,
+        questionId: question.questionId,
+        timeSpentInSeconds: Math.abs(
+          Math.floor((new Date().getTime() - startedAt.getTime()) / 1000),
+        ),
+        chosenAlternative: data.chosenAlternative,
+      });
+
+      toast.success("Questão submetida com sucesso!", {
+        position: "top-right",
+      });
+      reset();
+      onNextQuestion();
+    } catch (error: any) {
+      const backendError =
+        error.response?.data || "Ocorreu um erro inesperado.";
+      toast.error(backendError, { position: "top-right" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card>
-      <form className="mt-4" onSubmit={handleSubmit}>
-        <CardHeader>
-          <CardTitle>{question.year}</CardTitle>
-          <MarkdownRenderer content={question.context} />
-          <CardDescription className="text-foreground mt-4 font-semibold">
-            {question.enunciation}
-          </CardDescription>
-        </CardHeader>
-        <Controller
-          name="chosenAlternative"
-          control={control}
-          render={({ field }) => (
-            <FieldGroup>
-              <RadioGroup
-                value={field.value || ""}
-                onValueChange={field.onChange}
-              >
-                {Object.entries(question.alternatives).map(
-                  (alternative, index) => (
-                    <Field
-                      key={`${alternative[0]}-${index}`}
-                      orientation="horizontal"
-                    >
-                      <FieldContent>
-                        <FieldTitle>{alternative[0]}</FieldTitle>
-
-                        <div className="flex flex-1 flex-col gap-2">
-                          <FieldLabel
-                            htmlFor={`${alternative[0]}-${index}`}
-                            className="text-foreground flex-1 cursor-pointer font-normal"
-                          >
-                            {alternative[1]}
-                          </FieldLabel>
-                        </div>
-                      </FieldContent>
-
-                      <RadioGroupItem
-                        value={alternative[0]}
-                        id={`${alternative[0]}-${index}`}
-                        className="mt-1"
-                      />
-                    </Field>
-                  ),
-                )}
-              </RadioGroup>
-            </FieldGroup>
-          )}
-        />
-        <Button
-          size="sm"
-          type="submit"
-          className="bg-secondary hover:bg-chart-3 hover:ring-offset-primary-foreground hover:ring-primary focus:ring-offset-primary-foreground mt-2 ml-auto block border-0 ring-2 ring-transparent transition-all duration-300 ease-out hover:cursor-pointer hover:ring-offset-2 focus:ring-offset-4 focus:outline-none"
-        >
-          Responder
-        </Button>
-      </form>
+      <QuestionHeader question={question} />
+      <CardContent>
+        <form className="mt-4" onSubmit={handleSubmit(onSubmitAnswer)}>
+          <Controller
+            name="chosenAlternative"
+            control={control}
+            render={({ field }) => (
+              <FieldGroup>
+                <RadioGroup
+                  value={field.value || ""}
+                  onValueChange={field.onChange}
+                  className="space-y-2"
+                >
+                  {question.content.alternatives.map((alternative, index) => (
+                    <QuestionAlternative
+                      key={`${alternative.letter}_${index}`}
+                      alternative={alternative}
+                      questionId={question.questionId}
+                    />
+                  ))}
+                </RadioGroup>
+              </FieldGroup>
+            )}
+          />
+          <Button
+            size="sm"
+            type="submit"
+            disabled={isLoading}
+            className="bg-secondary hover:bg-chart-3 hover:ring-offset-primary-foreground hover:ring-primary focus:ring-offset-primary-foreground mt-4 mr-auto block border-0 ring-2 ring-transparent transition-all duration-300 ease-out hover:cursor-pointer hover:ring-offset-2 focus:ring-offset-4 focus:outline-none"
+          >
+            {isLoading ? "Enviando resposta" : "Responder"}
+          </Button>
+        </form>
+      </CardContent>
     </Card>
   );
 };

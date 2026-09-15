@@ -39,9 +39,9 @@ public class SubjectsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.SubjectNotFound => NotFound(error.Description),
-                    ErrorNames.SubjectNullId => BadRequest(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.SubjectNotFound => NotFound(error),
+                    ErrorNames.SubjectNullId => BadRequest(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }

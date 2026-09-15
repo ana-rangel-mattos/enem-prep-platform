@@ -2,9 +2,10 @@ import React from "react";
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { IQuestionResponse } from "@/lib/types/question.types";
+import { IExamQuestion } from "@/lib/types/exams.types";
 
 interface IQuestionHeaderProps {
-  question: IQuestionResponse;
+  question: IQuestionResponse | IExamQuestion;
 }
 
 const QuestionHeader: React.FC<IQuestionHeaderProps> = ({ question }) => {

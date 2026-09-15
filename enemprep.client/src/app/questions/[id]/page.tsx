@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import { notFound } from "next/navigation";
 import PracticeQuestionStartScreen from "@/components/PracticeQuestionStartScreen";
+import { AxiosError } from "axios";
 
 interface ISolveQuestionProps {
   params: Promise<{
@@ -32,10 +33,10 @@ const SolveQuestion: React.FC<ISolveQuestionProps> = ({ params }) => {
       try {
         const result = await questionsService.getQuestionById(questionId);
         setQuestion(result);
-      } catch (error: any) {
-        const backendError =
-          error?.response?.data?.details || "Ocorreu um erro inesperado.";
-        toast.error(backendError);
+      } catch (error) {
+        const axiosError = error as AxiosError<ProblemDetails>;
+        const problem = axiosError.response?.data;
+        toast.error(problem?.description || "Falha ao carregar questão.");
       } finally {
         setIsLoading(false);
       }

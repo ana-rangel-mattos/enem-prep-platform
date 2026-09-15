@@ -40,10 +40,10 @@ public class SolvedQuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.SolvedQuestionNotFound => NotFound(error.Description),
-                    ErrorNames.SolvedQuestionNullId => BadRequest(error.Description),
-                    ErrorNames.SolvedQuestionPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.SolvedQuestionNotFound => NotFound(error),
+                    ErrorNames.SolvedQuestionNullId => BadRequest(error),
+                    ErrorNames.SolvedQuestionPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );
@@ -60,10 +60,10 @@ public class SolvedQuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.SolvedQuestionNullUserId => BadRequest(error.Description),
-                    ErrorNames.SolvedQuestionInexistentUser => NotFound(error.Description),
-                    ErrorNames.SolvedQuestionPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.SolvedQuestionNullUserId => BadRequest(error),
+                    ErrorNames.SolvedQuestionInexistentUser => NotFound(error),
+                    ErrorNames.SolvedQuestionPrivateUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );
@@ -80,8 +80,8 @@ public class SolvedQuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.SolvedQuestionQuestionNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.SolvedQuestionQuestionNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );

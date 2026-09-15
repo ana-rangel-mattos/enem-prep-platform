@@ -23,8 +23,14 @@ export class ApiClient {
     return await this.instance.post<T>(url, body).then(this.responseBody);
   }
 
-  protected async put<T>(url: string, body?: object): Promise<T> {
-    return await this.instance.put<T>(url, body).then(this.responseBody);
+  protected async put<T>(
+    url: string,
+    body?: object,
+    params?: object,
+  ): Promise<T> {
+    return await this.instance
+      .put<T>(url, body, { params })
+      .then(this.responseBody);
   }
 
   protected async delete<T>(url: string, params?: object): Promise<T> {

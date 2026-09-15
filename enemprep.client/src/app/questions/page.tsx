@@ -30,6 +30,8 @@ import usePageNumber from "@/hooks/usePageNumber";
 import usePageSize from "@/hooks/usePageSize";
 import useSearchTerm from "@/hooks/useSearchTerm";
 import useSortBy from "@/hooks/useSortBy";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 const Questions = () => {
   const [result, setResult] = useState<IPagedResponse<IQuestionResponse>>();
@@ -54,6 +56,10 @@ const Questions = () => {
           sortBy: sortBy ?? undefined,
         });
         setResult(results);
+      } catch (error) {
+        const axiosError = error as AxiosError<ProblemDetails>;
+        const problem = axiosError?.response?.data;
+        toast.error(problem?.description || "Falha ao carregar questões.");
       } finally {
         setIsLoading(false);
       }

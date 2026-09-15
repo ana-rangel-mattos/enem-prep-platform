@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
@@ -13,10 +13,12 @@ import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { toast } from "sonner";
 import SolveQuestion from "@/app/questions/[id]/page";
 import SolvedQuestion from "@/components/SolvedQuestion";
+import { AxiosError } from "axios";
 
 const History = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [results, setResults] = useState<IPagedResponse<ISolvedQuestionResponse>>();
+  const [results, setResults] =
+    useState<IPagedResponse<ISolvedQuestionResponse>>();
 
   const router = useRouter();
   const pathName = usePathname();
@@ -35,27 +37,29 @@ const History = () => {
           sortBy: sortBy ?? undefined,
         });
         setResults(result);
-      } catch (error: any) {
-        const backendError =
-          error.response?.data || "Ocorreu um erro inesperado.";
-        console.error(backendError);
-        toast.error(backendError);
+      } catch (error) {
+        const axiosError = error as AxiosError<ProblemDetails>;
+        const problem = axiosError?.response?.data;
+        toast.error(problem?.description || "Erro ao carregar questões.");
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     loadQuestions();
   }, [pageNumber, pageSize, sortBy]);
 
-  if (isLoading) return <Loading message="Carregando histórico..." />
+  if (isLoading) return <Loading message="Carregando histórico..." />;
   return (
     <>
-      <h1 className="text-2xl mb-6">Histórico de Resolução</h1>
-      <div className="flex flex-1 items-center gap-y-6 flex-col">
+      <h1 className="mb-6 text-2xl">Histórico de Resolução</h1>
+      <div className="flex flex-1 flex-col items-center gap-y-6">
         {results?.totalRecords ? (
           results.data.map((solvedQuestion: ISolvedQuestionResponse) => (
-            <SolvedQuestion solvedQuestion={solvedQuestion} key={solvedQuestion.solvedQuestionId} />
+            <SolvedQuestion
+              solvedQuestion={solvedQuestion}
+              key={solvedQuestion.solvedQuestionId}
+            />
           ))
         ) : (
           <p className="mx-auto max-w-max">
@@ -65,6 +69,6 @@ const History = () => {
       </div>
     </>
   );
-}
+};
 
 export default History;

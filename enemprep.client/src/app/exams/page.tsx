@@ -11,13 +11,9 @@ import { IExamResponse } from "@/lib/types/exams.types";
 import { examsService } from "@/lib/api/examsService";
 import Link from "next/link";
 import Title from "@/components/Title";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import ExamCard from "@/components/Exam/ExamCard";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 const Exams = () => {
   const [result, setResult] = useState<IPagedResponse<IExamResponse> | null>(
@@ -44,6 +40,10 @@ const Exams = () => {
           sortBy: sortBy ?? undefined,
         });
         setResult(result);
+      } catch (error) {
+        const axiosError = error as AxiosError<ProblemDetails>;
+        const problem = axiosError?.response?.data;
+        toast.error(problem?.description || "Erro ao carregar simulados.");
       } finally {
         setIsLoading(false);
       }
@@ -63,17 +63,11 @@ const Exams = () => {
       >
         Criar Simulado
       </Link>
-      <div className="flex flex-wrap items-baseline">
+      <div>
         {result?.totalRecords ? (
           <div>
             {result.data.map((exam) => (
-              <Card key={exam.examId}>
-                <CardHeader>
-                  <CardTitle>{exam.title}</CardTitle>{" "}
-                  <Badge>{exam.statusDescription}</Badge>
-                  <CardDescription>{exam.languageDescription}</CardDescription>
-                </CardHeader>
-              </Card>
+              <ExamCard key={exam.examId} exam={exam} />
             ))}
           </div>
         ) : (

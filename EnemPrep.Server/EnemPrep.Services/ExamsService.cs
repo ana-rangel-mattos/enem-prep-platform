@@ -170,11 +170,9 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
             Title = exam.Title,
             Questions = exam.ExamQuestions.Select(q => new GetExamQuestionDto
             {
-                ExamQuestionId = q.QuestionId,
-                Year = q.Question.ExtractYear(),
-                Context = q.Question.ExtractContext()!,
-                Enunciation = q.Question.ExtractEnunciation()!,
-                Alternatives = q.Question.ExtractAlternatives()
+                ExamId = exam.ExamId,
+                QuestionId = q.QuestionId,
+                Content = q.Question.ExtractContent(),
             }).ToList(),
             MaxSpentTime = exam.MaxSpentTime.Seconds
         });
@@ -220,6 +218,8 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
         Exam? exam = await _context.Exams.Where(e => e.ExamId == examId)
             .Include(e => e.ExamQuestions)
             .ThenInclude(e => e.Question.Subject)
+            .ThenInclude(s => s!.ExamSubjects)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
 
         if (exam is null)

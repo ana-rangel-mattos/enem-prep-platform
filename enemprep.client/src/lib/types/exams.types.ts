@@ -1,4 +1,5 @@
 import { ExamLanguage, ExamStatus, SubjectName } from "@/lib/types/enums.types";
+import { IQuestionAlternative } from "@/lib/types/question.types";
 
 export interface IExamResponse {
   examId: string;
@@ -31,11 +32,21 @@ export interface IExamUpdateStatus {
 }
 
 export interface IExamQuestion {
-  examQuestionId: string;
+  examId: string;
+  questionId: string;
+  content: IExamQuestionContent;
+}
+
+interface IExamQuestionContent {
   year: number;
+  files: string[];
+  index: number;
+  title: string;
   context: string;
-  enunciation: string;
-  alternatives: Record<string, string>;
+  language: null | string;
+  discipline: string;
+  alternatives: Omit<IQuestionAlternative, "isCorrect">[];
+  alternativesIntroduction: string;
 }
 
 export interface IExamTake {

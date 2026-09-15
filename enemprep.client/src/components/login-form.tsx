@@ -23,6 +23,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Loading from "@/components/Loading";
 import { userService } from "@/lib/api/userService";
+import { AxiosError } from "axios";
 
 const schema = z
   .object({
@@ -72,10 +73,10 @@ export const LoginForm: React.FC<React.ComponentProps<"div">> = ({
 
       reset();
       router.push("/dashboard");
-    } catch (error: any) {
-      const backendError =
-        error.response?.data || "Ocorreu um erro inesperado.";
-      toast.error(backendError);
+    } catch (error) {
+      const axiosError = error as AxiosError<ProblemDetails>;
+      const problem = axiosError?.response?.data;
+      toast.error(problem?.description || "Erro ao fazer login.");
     } finally {
       setIsLoading(false);
     }

@@ -38,9 +38,9 @@ public class UserPreferencesController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserPreferencesFailedToResetUserPreferences => StatusCode(StatusCodes.Status500InternalServerError, error.Description),
-                    ErrorNames.UserPreferencesUserPreferenceWasNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserPreferencesFailedToResetUserPreferences => StatusCode(StatusCodes.Status500InternalServerError, error),
+                    ErrorNames.UserPreferencesUserPreferenceWasNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -56,9 +56,9 @@ public class UserPreferencesController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.UserPreferencesFailedToUpdateUserPreferences => StatusCode(StatusCodes.Status500InternalServerError, error.Description),
-                    ErrorNames.UserPreferencesUserPreferenceWasNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.UserPreferencesFailedToUpdateUserPreferences => StatusCode(StatusCodes.Status500InternalServerError, error),
+                    ErrorNames.UserPreferencesUserPreferenceWasNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }

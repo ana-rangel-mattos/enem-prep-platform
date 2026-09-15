@@ -37,30 +37,57 @@ import Loading from "@/components/Loading";
 import { useAppSelector } from "@/hooks/use-store";
 import { selectLanguage } from "@/lib/features/preferences/preferencesSlice";
 import { Button } from "@/components/ui/button";
+import { AxiosError } from "axios";
 
-const formScheme = z.object({
-  totalQuestions: z.coerce
-    .number({ error: "O número questões deve ser um número." })
-    .int("O número de questões deve ser um número inteiro.")
-    .min(5, "Mínimo de 5 questões por simulado.")
-    .max(90, "Máximo de 90 questões por simulado.")
-    .positive({ error: "O número de questões deve ser positivo." }),
-  areas: z.preprocess(
-    (value) => {
-      if (!Array.isArray(value)) return [];
-      return value.map((item) => Number(item));
-    },
-    z
-      .array(z.enum(SubjectName))
-      .min(1, "Deve conter ao menos uma área selecionada."),
-  ),
-  language: z
-    .preprocess(
-      (value) => (value === "" ? undefined : Number(value)),
-      z.enum(ExamLanguage),
-    )
-    .optional(),
-});
+const formScheme = z
+  .object({
+    totalQuestions: z.coerce
+      .number({ error: "O número questões deve ser um número." })
+      .int("O número de questões deve ser um número inteiro.")
+      .min(5, "Mínimo de 5 questões por simulado.")
+      .max(90, "Máximo de 90 questões por simulado.")
+      .positive({ error: "O número de questões deve ser positivo." }),
+    areas: z.preprocess(
+      (value) => {
+        if (!Array.isArray(value)) return [];
+        return value.map((item) => Number(item));
+      },
+      z
+        .array(z.enum(SubjectName))
+        .min(1, "Deve conter ao menos uma área selecionada."),
+    ),
+    language: z
+      .preprocess(
+        (value) => (value === "" ? undefined : Number(value)),
+        z.enum(ExamLanguage),
+      )
+      .optional(),
+  })
+  .superRefine((data, context) => {
+    if (
+      !data.areas.includes(SubjectName.Languages) &&
+      data.language?.toString().trim()
+    ) {
+      context.addIssue({
+        code: "custom",
+        message:
+          "Um idioma só pode ser selecionado quando o simulado inclui Linguagens.",
+        path: ["language"],
+      });
+    }
+
+    if (
+      data.areas.includes(SubjectName.Languages) &&
+      !data.language?.toString().trim()
+    ) {
+      context.addIssue({
+        code: "custom",
+        message:
+          "É preciso selecionar um idioma quando o simulado inclui Linguagens.",
+        path: ["language"],
+      });
+    }
+  });
 
 type FormData = z.infer<typeof formScheme>;
 
@@ -77,10 +104,12 @@ const NewExam = () => {
     selectLanguage(state),
   );
 
-  const { control, reset, handleSubmit } = useForm<FormData>({
+  const { control, reset, handleSubmit, watch } = useForm<FormData>({
     resolver: zodResolver(formScheme),
     defaultValues: { areas: [], language: examLanguage ?? 0 },
   });
+
+  const selectedAreas = watch("areas");
 
   const router = useRouter();
 
@@ -92,10 +121,12 @@ const NewExam = () => {
 
       reset();
       router.push(`/exams/${response.examId}/take`);
-    } catch (error: any) {
-      const backendError =
-        error?.response?.data?.details || "Ocorreu um erro inesperado.";
-      toast.error(backendError);
+    } catch (error) {
+      const axiosError = error as AxiosError<ProblemDetails>;
+
+      toast.error(
+        axiosError.response?.data.description || "Erro ao criar um simulado.",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -140,40 +171,42 @@ const NewExam = () => {
                   </Field>
                 )}
               />
-              <Controller
-                name="language"
-                control={control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="foreign-language">
-                      Idioma Estrangeiro
-                    </FieldLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value?.valueOf().toString()}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione o idioma (Opcional)"></SelectValue>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem
-                          value={ExamLanguage.English.valueOf().toString()}
-                        >
-                          Inglês
-                        </SelectItem>
-                        <SelectItem
-                          value={ExamLanguage.Spanish.valueOf().toString()}
-                        >
-                          Espanhol
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
+              {selectedAreas.includes(SubjectName.Languages) && (
+                <Controller
+                  name="language"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="foreign-language">
+                        Idioma Estrangeiro
+                      </FieldLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value?.valueOf().toString()}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o idioma (Opcional)"></SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem
+                            value={ExamLanguage.English.valueOf().toString()}
+                          >
+                            Inglês
+                          </SelectItem>
+                          <SelectItem
+                            value={ExamLanguage.Spanish.valueOf().toString()}
+                          >
+                            Espanhol
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              )}
               <Controller
                 name="areas"
                 control={control}

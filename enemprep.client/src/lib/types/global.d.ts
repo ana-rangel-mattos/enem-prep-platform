@@ -1,6 +1,11 @@
 export {};
 
 declare global {
+  export interface ProblemDetails {
+    code?: number;
+    description?: string;
+  }
+
   interface ISearchParams {
     pageNumber?: number;
     pageSize?: number;

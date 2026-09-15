@@ -1,8 +1,6 @@
 using EnemPrep.Domain.DTOS;
-using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Result;
 using EnemPrep.Persistence.Constants;
-using EnemPrep.Server.Authorization;
 using EnemPrep.ServicesContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +29,8 @@ public class AuthController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.LoginUserNotFound => BadRequest(error.Description),
-                    ErrorNames.LoginInvalidPassword => Unauthorized(error.Description),
+                    ErrorNames.LoginUserNotFound => BadRequest(error),
+                    ErrorNames.LoginInvalidPassword => Unauthorized(error),
                     _ => Problem(
                         title: "Internal Server Error",
                         detail: "Unexpected error occured while logging in user.",
@@ -54,7 +52,7 @@ public class AuthController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.LogoutFailedToLogout => StatusCode(500, error.Description),
+                    ErrorNames.LogoutFailedToLogout => StatusCode(500, error),
                     _ => Problem(
                         title: "Internal Server Error",
                         detail: "Unexpected error occured while logging out user.",
@@ -75,9 +73,9 @@ public class AuthController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.RegisterUserAlreadyExists => BadRequest(error.Description),
-                    ErrorNames.RegisterInvalidInvitationCode => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    ErrorNames.RegisterFailedRegister => StatusCode(500, error.Description),
+                    ErrorNames.RegisterUserAlreadyExists => BadRequest(error),
+                    ErrorNames.RegisterInvalidInvitationCode => StatusCode(StatusCodes.Status403Forbidden, error),
+                    ErrorNames.RegisterFailedRegister => StatusCode(500, error),
                     _ => Problem(
                         title: "Internal Server Error",
                         detail: "Unexpected error occured while registering user.",

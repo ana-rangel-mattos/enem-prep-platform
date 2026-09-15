@@ -33,9 +33,9 @@ public class QuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.QuestionNotFound => NotFound(error.Description),
-                    ErrorNames.QuestionNullId => BadRequest(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.QuestionNotFound => NotFound(error),
+                    ErrorNames.QuestionNullId => BadRequest(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );
@@ -61,9 +61,9 @@ public class QuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.QuestionNullPublisherId => BadRequest(error.Description),
-                    ErrorNames.QuestionPublisherIsNotLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.QuestionNullPublisherId => BadRequest(error),
+                    ErrorNames.QuestionPublisherIsNotLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             }
         );
@@ -81,10 +81,10 @@ public class QuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.QuestionNotFound => NotFound(error.Description),
-                    ErrorNames.QuestionNullId => BadRequest(error.Description),
-                    ErrorNames.QuestionPublisherIsNotLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.QuestionNotFound => NotFound(error),
+                    ErrorNames.QuestionNullId => BadRequest(error),
+                    ErrorNames.QuestionPublisherIsNotLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -108,9 +108,9 @@ public class QuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.SavedQuestionUserIsNotLoggedIn => Unauthorized(error.Description),
-                    ErrorNames.SavedQuestionQuestionNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.SavedQuestionUserIsNotLoggedIn => Unauthorized(error),
+                    ErrorNames.SavedQuestionQuestionNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -126,9 +126,9 @@ public class QuestionsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.SavedQuestionUserIsNotLoggedIn => Unauthorized(error.Description),
-                    ErrorNames.SavedQuestionSavedQuestionNotFound => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.SavedQuestionUserIsNotLoggedIn => Unauthorized(error),
+                    ErrorNames.SavedQuestionSavedQuestionNotFound => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }

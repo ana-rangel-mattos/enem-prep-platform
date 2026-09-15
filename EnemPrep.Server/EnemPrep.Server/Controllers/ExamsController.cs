@@ -32,9 +32,9 @@ public class ExamsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.ExamInvalidSubjects => BadRequest(error.Description),
-                    ErrorNames.ExamNoEnoughQuestionsForSubject => BadRequest(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.ExamInvalidSubjects => BadRequest(error),
+                    ErrorNames.ExamNoEnoughQuestionsForSubject => BadRequest(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -56,10 +56,10 @@ public class ExamsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.ExamExamWasNotFound => NotFound(error.Description),
-                    ErrorNames.ExamInvalidNewStatus => BadRequest(error.Description),
-                    ErrorNames.ExamFailedToUpdateExamStatus => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.ExamExamWasNotFound => NotFound(error),
+                    ErrorNames.ExamInvalidNewStatus => BadRequest(error),
+                    ErrorNames.ExamFailedToUpdateExamStatus => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -75,9 +75,9 @@ public class ExamsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.ExamExamWasNotFound => NotFound(error.Description),
-                    ErrorNames.ExamExamDoesNotBelongToLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.ExamExamWasNotFound => NotFound(error),
+                    ErrorNames.ExamExamDoesNotBelongToLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -95,9 +95,9 @@ public class ExamsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.ExamExamQuestionWasNotFound => NotFound(error.Description),
-                    ErrorNames.ExamFailedToSubmitQuestionAnswer => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.ExamExamQuestionWasNotFound => NotFound(error),
+                    ErrorNames.ExamFailedToSubmitQuestionAnswer => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }
@@ -113,10 +113,10 @@ public class ExamsController : ControllerBase
             {
                 return error.Code switch
                 {
-                    ErrorNames.ExamExamWasNotFound => NotFound(error.Description),
-                    ErrorNames.ExamExamDoesNotBelongToLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error.Description),
-                    ErrorNames.ExamFailedToCompleteExam => NotFound(error.Description),
-                    _ => StatusCode(StatusCodes.Status500InternalServerError, error.Description)
+                    ErrorNames.ExamExamWasNotFound => NotFound(error),
+                    ErrorNames.ExamExamDoesNotBelongToLoggedUser => StatusCode(StatusCodes.Status403Forbidden, error),
+                    ErrorNames.ExamFailedToCompleteExam => NotFound(error),
+                    _ => StatusCode(StatusCodes.Status500InternalServerError, error)
                 };
             });
     }

@@ -19,6 +19,7 @@ import {
 } from "@/lib/types/user-goal.types";
 import DeleteUserGoalForm from "@/components/DeleteUserGoalForm";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 const Profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -34,10 +35,12 @@ const Profile = () => {
           const result = await userGoalService.getUserGoal();
           setUserGoal(result);
         }
-      } catch (error: any) {
-        const backendError =
-          error?.response?.data?.details || "Ocorreu um erro inesperado.";
-        toast.error(backendError);
+      } catch (error) {
+        const axiosError = error as AxiosError<ProblemDetails>;
+        const problem = axiosError?.response?.data;
+        toast.error(
+          problem?.description || "Erro ao carregar objetivo do usuário.",
+        );
       } finally {
         setIsLoading(false);
       }

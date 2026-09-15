@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import { solvedQuestionsService } from "@/lib/api/solvedQuestionsService";
 
 interface IPracticeQuestionSolverProps {
-  question: IQuestionResponse,
+  question: IQuestionResponse;
 }
 
 const schema = z.object({
@@ -34,7 +34,9 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const PracticeQuestionSolver: React.FC<IPracticeQuestionSolverProps> = ({ question }) => {
+const PracticeQuestionSolver: React.FC<IPracticeQuestionSolverProps> = ({
+  question,
+}) => {
   const [hasFinished, setHasFinished] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -45,15 +47,18 @@ const PracticeQuestionSolver: React.FC<IPracticeQuestionSolverProps> = ({ questi
       questionId: question.questionId,
       questionYear: question.content.year,
       correctAlternative: question.content.correctAlternative,
-      startedAt: new Date().toISOString()
-    }
-  })
+      startedAt: new Date().toISOString(),
+    },
+  });
 
   const onSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
 
-      const solvedQuestionId: string = await solvedQuestionsService.postAnswer({ ...data, finishedAt: new Date().toISOString() });
+      const solvedQuestionId: string = await solvedQuestionsService.postAnswer({
+        ...data,
+        finishedAt: new Date().toISOString(),
+      });
       router.push(`/history/${solvedQuestionId}`);
 
       toast.success("Questão submetida com sucesso!");
@@ -65,9 +70,8 @@ const PracticeQuestionSolver: React.FC<IPracticeQuestionSolverProps> = ({ questi
     } finally {
       setHasFinished(false);
       setIsLoading(false);
-      console.log("Finally");
     }
-  }
+  };
 
   if (isLoading) return <Loading message="Enviando Resposta..." />;
 
@@ -89,30 +93,36 @@ const PracticeQuestionSolver: React.FC<IPracticeQuestionSolverProps> = ({ questi
                   const itemId = `alt_${question.questionId}_${alternative.letter}`;
 
                   return (
-                    <Field
-                      key={itemId} orientation="horizontal">
+                    <Field key={itemId} orientation="horizontal">
                       <FieldContent>
-                        <FieldTitle>
-                          {alternative.letter}
-                        </FieldTitle>
+                        <FieldTitle>{alternative.letter}</FieldTitle>
 
-                        <div className="flex flex-col flex-1 gap-2">
+                        <div className="flex flex-1 flex-col gap-2">
                           {alternative?.file && (
-                            <div className="relative w-full max-w-sm h-40">
+                            <div className="relative h-40 w-full max-w-sm">
                               <Image
                                 src={alternative.file}
                                 alt={`Imagem da alternativa ${alternative.letter}.`}
-                                fill className="object-contain" />
+                                fill
+                                className="object-contain"
+                              />
                             </div>
                           )}
 
-                          <FieldLabel htmlFor={itemId} className="text-foreground font-normal cursor-pointer flex-1">
+                          <FieldLabel
+                            htmlFor={itemId}
+                            className="text-foreground flex-1 cursor-pointer font-normal"
+                          >
                             {alternative.text}
                           </FieldLabel>
                         </div>
                       </FieldContent>
-                      
-                      <RadioGroupItem value={alternative.letter} id={itemId} className="mt-1" />
+
+                      <RadioGroupItem
+                        value={alternative.letter}
+                        id={itemId}
+                        className="mt-1"
+                      />
                     </Field>
                   );
                 })}
@@ -130,6 +140,6 @@ const PracticeQuestionSolver: React.FC<IPracticeQuestionSolverProps> = ({ questi
       </form>
     </div>
   );
-}
+};
 
 export default PracticeQuestionSolver;
