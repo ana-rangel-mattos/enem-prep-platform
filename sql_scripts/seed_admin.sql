@@ -64,5 +64,5 @@ VALUES ('25da4bd2-1bc7-4d4b-a448-23a2aa12a70b', 'linguagens'),
 SELECT *
 FROM content.subject;
 
-SELECT exam_id FROM tracking.exam;
+SELECT * FROM tracking.exam;
 SELECT * FROM tracking.exam_question;

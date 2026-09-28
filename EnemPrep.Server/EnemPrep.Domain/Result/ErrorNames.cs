@@ -1,4 +1,4 @@
-namespace EnemPrep.Persistence.Constants;
+namespace EnemPrep.Domain.Result;
 
 public static class ErrorNames
 {
@@ -31,6 +31,8 @@ public static class ErrorNames
     public const string UserUserNotFound = "User.UserNotFound";
     public const string UserNullUserId = "User.NullUserId";
     public const string UserPrivateUser = "User.PrivateUser";
+    public const string UserInvalidPassword = "User.InvalidPassword";
+    public const string UserInvalidRoleInviteCode = "User.InvalidRoleInviteCode";
 
     public const string UserGoalNullUserId = "UserGoal.NullUserId";
     public const string UserGoalUserNotFound = "UserGoal.UserNotFound";
@@ -54,4 +56,9 @@ public static class ErrorNames
     public const string UserPreferencesFailedToUpdateUserPreferences = "UserPreferences.FailedToUpdateUserPreferences";
     public const string UserPreferencesFailedToResetUserPreferences = "UserPreferences.FailedToResetUserPreferences";
     public const string UserPreferencesUserPreferenceWasNotFound = "UserPreferences.UserPreferenceWasNotFound";
+
+    public const string UserProfileUserProfileWasNotFound = "UserProfile.UserProfileWasNotFound";
+
+    public const string ScheduleScheduleWasNotFound = "Schedule.ScheduleWasNotFound";
+    public const string ScheduleScheduleSubjectWasNotFound = "Schedule.ScheduleSubjectWasNotFound";
 }

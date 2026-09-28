@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import QuestionHeader from "@/components/QuestionHeader";
+import QuestionHeader from "@/components/Question/QuestionHeader";
 import { IQuestionResponse } from "@/lib/types/question.types";
 import Stopwatch from "@/components/Stopwatch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

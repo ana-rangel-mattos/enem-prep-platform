@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PencilLine } from "lucide-react";
 import Link from "next/link";
-import QuestionHeader from "@/components/QuestionHeader";
+import QuestionHeader from "@/components/Question/QuestionHeader";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,

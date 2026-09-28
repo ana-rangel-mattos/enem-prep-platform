@@ -1,5 +1,3 @@
-using EnemPrep.Persistence.Constants;
-
 namespace EnemPrep.Domain.Result;
 
 public static class UserErrors
@@ -17,4 +15,12 @@ public static class UserErrors
     public static Error PrivateUser => new Error(
         ErrorNames.UserPrivateUser,
         $"This user is private.");
+
+    public static Error InvalidPassword => new Error(
+        ErrorNames.UserInvalidPassword,
+        "Senha inválida.");
+    
+    public static Error InvalidRoleInviteCode => new Error(
+        ErrorNames.UserInvalidRoleInviteCode,
+        "Código de convite é inválido.");
 }

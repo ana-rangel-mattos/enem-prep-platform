@@ -18,20 +18,38 @@ export default function AuthLinks() {
     await logoutDeleteCookies();
     logout();
     router.push("/login");
+    router.refresh();
   };
 
   return (
-    <div className="flex w-3/5 gap-x-4">
-      {isAuthenticated ? (
-        <Button onClick={onLogout} size="sm" className="cursor-pointer">
-          Logout
-        </Button>
-      ) : (
-        <>
-          <Link href="/login">Login</Link>
-          <Link href="/register">Cadastre-se</Link>
-        </>
-      )}
-    </div>
+    <>
+      <h1 className="text-base font-medium">Documents</h1>
+      <div className="ml-auto flex items-center gap-2">
+        {isAuthenticated ? (
+          <Button onClick={onLogout} size="sm" className="cursor-pointer">
+            Logout
+          </Button>
+        ) : (
+          <>
+            <Button
+              variant="ghost"
+              asChild
+              size="lg"
+              className="hidden lg:flex"
+            >
+              <Link href="/login">Login</Link>
+            </Button>
+            <Button
+              variant="ghost"
+              asChild
+              size="lg"
+              className="hidden lg:flex"
+            >
+              <Link href="/register">Cadastre-se</Link>
+            </Button>
+          </>
+        )}
+      </div>
+    </>
   );
 }

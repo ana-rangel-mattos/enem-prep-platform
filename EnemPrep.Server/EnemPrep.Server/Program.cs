@@ -50,8 +50,10 @@ builder.Services.AddTransient<ISubjectsService, SubjectsServices>();
 builder.Services.AddTransient<ISolvedQuestionsService, SolvedQuestionsService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserPreferencesService, UserPreferencesService>();
+builder.Services.AddTransient<IUserProfileService, UserProfileService>();
 builder.Services.AddTransient<IUserGoalService, UserGoalService>();
 builder.Services.AddTransient<IExamsService, ExamsService>();
+builder.Services.AddTransient<IScheduleService, ScheduleService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.NumberHandling =

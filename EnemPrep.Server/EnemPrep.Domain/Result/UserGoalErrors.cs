@@ -1,5 +1,3 @@
-using EnemPrep.Persistence.Constants;
-
 namespace EnemPrep.Domain.Result;
 
 public static class UserGoalErrors

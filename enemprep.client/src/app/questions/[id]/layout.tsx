@@ -1,12 +1,6 @@
 import React from "react";
 
-interface ISolveQuestionLayoutProps {
-  children: React.ReactNode;
-}
-
-const SolveQuestionLayout: React.FC<ISolveQuestionLayoutProps> = ({
-  children,
-}) => {
+const SolveQuestionLayout: React.FC<ILayout> = ({ children }) => {
   return <div className="w-full max-w-full">{children}</div>;
 };
 

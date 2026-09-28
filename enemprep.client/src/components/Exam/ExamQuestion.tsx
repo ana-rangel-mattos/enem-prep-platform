@@ -11,13 +11,13 @@ import {
 import { z } from "zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React, { useState } from "react";
-import QuestionHeader from "@/components/QuestionHeader";
+import QuestionHeader from "@/components/Question/QuestionHeader";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { examsService } from "@/lib/api/examsService";
 import { toast } from "sonner";
-import QuestionAlternative from "@/components/QuestionAlternative";
+import QuestionAlternative from "@/components/Question/QuestionAlternative";
 
 interface IExamQuestionProps {
   question: IExamQuestion;

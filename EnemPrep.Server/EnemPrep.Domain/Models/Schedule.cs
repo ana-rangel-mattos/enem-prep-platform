@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EnemPrep.Domain.Models;
+﻿namespace EnemPrep.Domain.Models;
 
 public partial class Schedule
 {
@@ -10,6 +7,7 @@ public partial class Schedule
     public Guid UserId { get; set; }
 
     public string Name { get; set; } = null!;
+    public bool HasWeekEnd { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 

@@ -23,6 +23,9 @@ public class ScheduleConfiguration : IEntityTypeConfiguration<Schedule>
             .HasMaxLength(50)
             .HasDefaultValueSql("'Cronograma Semanal'::character varying")
             .HasColumnName("name");
+        builder.Property(e => e.HasWeekEnd)
+            .HasDefaultValueSql("FALSE")
+            .HasColumnName("has_week_end");
         builder.Property(e => e.UpdatedAt)
             .HasDefaultValueSql("now()")
             .HasColumnName("updated_at");

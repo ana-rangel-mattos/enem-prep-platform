@@ -6,13 +6,11 @@ import { questionsService } from "@/lib/api/questionsService";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import { notFound } from "next/navigation";
-import PracticeQuestionStartScreen from "@/components/PracticeQuestionStartScreen";
+import PracticeQuestionStartScreen from "@/components/Question/PracticeQuestionStartScreen";
 import { AxiosError } from "axios";
 
 interface ISolveQuestionProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 const SolveQuestion: React.FC<ISolveQuestionProps> = ({ params }) => {
@@ -49,7 +47,7 @@ const SolveQuestion: React.FC<ISolveQuestionProps> = ({ params }) => {
     return <Loading message="Carregando detalhes da questão..." />;
 
   return (
-    <div className="mx-auto w-full max-w-4lx px-4 py-6">
+    <div className="max-w-4lx mx-auto w-full px-4 py-6">
       {!hasStarted && <PracticeQuestionStartScreen question={question} />}
     </div>
   );

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using EnemPrep.Domain.Enums;
+﻿using EnemPrep.Domain.Enums;
 
 namespace EnemPrep.Domain.Models;
 

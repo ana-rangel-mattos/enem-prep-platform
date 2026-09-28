@@ -1,11 +1,7 @@
 import React from "react";
 import BaseLayout from "@/components/Layouts/BaseLayout";
 
-interface IHistoryLayoutProps {
-  children: React.ReactNode;
-}
-
-const HistoryLayout: React.FC<IHistoryLayoutProps> = ({ children }) => {
+const HistoryLayout: React.FC<ILayout> = ({ children }) => {
   return <BaseLayout>{children}</BaseLayout>;
 };
 

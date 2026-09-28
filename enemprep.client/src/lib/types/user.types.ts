@@ -1,4 +1,4 @@
-export interface IUser {
+export interface IUserResponse {
   userId: string;
   fullName: string;
   username: string;
@@ -33,4 +33,22 @@ export interface ILoginUser {
   username?: string;
   email?: string;
   password: string;
+}
+
+export interface IUserAccountResponse {
+  fullName: string;
+  email: string;
+  username: string;
+  isPrivate: boolean;
+  imageUrl?: string;
+}
+
+export interface IUpdateUserAccountRequest {
+  fullName?: string;
+  email?: string;
+  username?: string;
+  isPrivate?: boolean;
+  profileImage?: string;
+  roleInviteCode?: string;
+  confirmationPassword: string;
 }

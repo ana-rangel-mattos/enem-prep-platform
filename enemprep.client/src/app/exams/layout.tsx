@@ -1,11 +1,7 @@
 import React from "react";
 import BaseLayout from "@/components/Layouts/BaseLayout";
 
-interface IExamsLayoutProps {
-  children: React.ReactNode;
-}
-
-const ExamsLayout: React.FC<IExamsLayoutProps> = ({ children }) => {
+const ExamsLayout: React.FC<ILayout> = ({ children }) => {
   return <BaseLayout>{children}</BaseLayout>;
 };
 

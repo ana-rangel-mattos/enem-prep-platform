@@ -15,8 +15,7 @@ public partial class Exam
     [Column("status")]
     public ExamStatus Status { get; set; } = ExamStatus.NotStarted;
 
-    [Column("language_choice")] 
-    public Language LanguageChoice { get; set; } = Language.English;
+    [Column("language_choice")] public Language? LanguageChoice { get; set; }
 
     public int ExamYear { get; set; }
 

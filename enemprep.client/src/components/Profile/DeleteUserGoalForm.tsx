@@ -13,7 +13,7 @@ import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { userGoalService } from "@/lib/api/userGoalService";
 import { toast } from "sonner";
-import Text from "@/components/Text";
+import Text from "@/components/ui/Text";
 
 interface IDeleteUserGoalProps {
   userGoal: IUserGoalResponse;

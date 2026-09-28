@@ -64,9 +64,9 @@ const registerSchema = z
     password: z
       .string({ error: "Senha é obrigatório." })
       .min(8, "Senha deve ter ao menos 8 caracteres.")
-      .regex(/[A-Z]/, "Must contain one uppercase letter")
-      .regex(/[a-z]/, "Must contain one lowercase letter")
-      .regex(/[0-9]/, "Must contain one number"),
+      .regex(/[A-Z]/, "Deve conter uma letra maiúscula")
+      .regex(/[a-z]/, "Deve conter uma letra minúscula")
+      .regex(/[0-9]/, "Deve conter um número"),
     confirmPassword: z.string({ error: "Confirme a senha." }).optional(),
     isPrivate: z.boolean().optional(),
     dateOfBirth: z.coerce
@@ -129,9 +129,7 @@ const SignupForm: React.FC<React.ComponentProps<"div">> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { control, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      isPrivate: false,
-    },
+    defaultValues: { isPrivate: false },
   });
 
   if (isLoading) return <Loading message="Processando cadastro..." />;

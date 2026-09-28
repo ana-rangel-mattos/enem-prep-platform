@@ -5,82 +5,72 @@ import Image from "next/image";
 import Error from "next/error";
 import { useAppSelector } from "@/hooks/use-store";
 import { selectUser } from "@/lib/features/auth/authSlice";
-import { toast } from "sonner";
-import Loading from "@/components/Loading";
-import Subtitle from "@/components/Subtitle";
-import Title from "@/components/Title";
-import Text from "@/components/Text";
+import Subtitle from "@/components/ui/Subtitle";
+import Title from "@/components/ui/Title";
+import Text from "@/components/ui/Text";
 import { ISODateToString } from "@/lib/helpers";
-import CreateUpdateGoalForm from "@/components/CreateUpdateGoalForm";
-import { userGoalService } from "@/lib/api/userGoalService";
-import {
-  IUserGoalCreateUpdate,
-  IUserGoalResponse,
-} from "@/lib/types/user-goal.types";
-import DeleteUserGoalForm from "@/components/DeleteUserGoalForm";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Cog, Flame, Quote } from "lucide-react";
+import ProfileGoal from "@/components/Profile/ProfileGoal";
+import { IUserProfileResponse } from "@/lib/types/user-profile.types";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
+import { userProfileService } from "@/lib/api/userProfileService";
+import Loading from "@/components/Loading";
+import { Fire } from "@hugeicons/core-free-icons";
 
 const Profile = () => {
+  const [userProfile, setUserProfile] = useState<IUserProfileResponse | null>(
+    null,
+  );
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [userGoal, setUserGoal] = useState<IUserGoalResponse | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const router = useRouter();
+  const [profileError, setProfileError] =
+    useState<AxiosError<ProblemDetails> | null>(null);
   const user = useAppSelector((state) => selectUser(state));
 
   useEffect(() => {
-    const loadUserGoal = async () => {
+    const getUserProfile = async () => {
       try {
-        if (user?.hasGoal) {
-          const result = await userGoalService.getUserGoal();
-          setUserGoal(result);
-        }
+        setProfileError(null);
+        const profile = await userProfileService.getProfile();
+        setUserProfile(profile);
       } catch (error) {
         const axiosError = error as AxiosError<ProblemDetails>;
         const problem = axiosError?.response?.data;
+        setProfileError(axiosError);
         toast.error(
-          problem?.description || "Erro ao carregar objetivo do usuário.",
+          problem?.description || "Erro ao carregar perfil do usuário.",
         );
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadUserGoal();
-  }, [user]);
-
-  if (isLoading) {
-    return <Loading message="Carregando objetivos do usuário..." />;
-  }
+    getUserProfile();
+  }, []);
 
   if (!user) {
     return <Error statusCode={403} />;
   }
 
-  const handleGoalDeleted = () => {
-    setUserGoal(null);
-    setIsEditing(false);
-    router.push("/profile");
-  };
+  if (isLoading) {
+    return <Loading message="Carregando perfil do usuário..." />;
+  }
 
-  const handleGoalSaved = (newGoal: IUserGoalCreateUpdate) => {
-    setUserGoal((prevGoal) => {
-      if (!prevGoal) return null;
-
-      return {
-        userId: prevGoal.userId,
-        userGoalId: prevGoal.userGoalId,
-        universityName: newGoal.universityName,
-        courseName: newGoal.courseName,
-        cutOffScore: newGoal.cutOffScore,
-      };
-    });
-    setIsEditing(false);
-    router.push("/profile");
-  };
+  if (profileError || !userProfile) {
+    return (
+      <Error
+        statusCode={profileError?.response?.data.code || 403}
+        title={profileError?.response?.data.description}
+      />
+    );
+  }
 
   return (
-    <>
+    <div className="relative">
+      <Link className="absolute right-4 flex gap-x-1" href="/settings">
+        <Cog /> Configurações
+      </Link>
       <Title text="Perfil do Usuário" className="mb-5" />
       <div className="bg-card lg:divide-primary flex flex-col items-center gap-y-6 rounded-3xl px-4 py-3.5 lg:flex-row lg:gap-x-6 lg:gap-y-0 lg:divide-x-3 lg:rounded-full">
         <Image
@@ -99,29 +89,18 @@ const Profile = () => {
           <Text size="lg" variant="primary" bold italic>
             @{user.username}
           </Text>
+          <Flame />
+          {userProfile.streakCount}
+          <p className="w-full px-4">
+            <Quote />
+            {userProfile.userBio}
+          </p>
           <Text size="base" variant="secondary" bold italic className="mt-auto">
             {user.email}
           </Text>
         </div>
       </div>
-      <div className="text-primary flex flex-col items-center justify-center">
-        <Subtitle text="Metas" className="my-5" />
-        {user.hasGoal && userGoal && !isEditing && (
-          <DeleteUserGoalForm
-            userGoal={userGoal}
-            setIsEditing={setIsEditing}
-            onGoalDelete={handleGoalDeleted}
-          />
-        )}
-        {(!user.hasGoal || isEditing) && (
-          <CreateUpdateGoalForm
-            isEditing={isEditing}
-            setIsEditing={setIsEditing}
-            userGoal={userGoal ? userGoal : undefined}
-            onSaveGoal={handleGoalSaved}
-          />
-        )}
-      </div>
+      <ProfileGoal user={user} />
       <div className="text-primary flex flex-col items-center">
         <Subtitle text="Estatísticas" className="my-5" />
         <Text size="md" variant="primary" className="mt-1 mb-4">
@@ -152,7 +131,7 @@ const Profile = () => {
           {user.averageTimeSpent.slice(0, 8)}
         </Text>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -10,7 +10,7 @@ import Loading from "@/components/Loading";
 import { IExamResponse } from "@/lib/types/exams.types";
 import { examsService } from "@/lib/api/examsService";
 import Link from "next/link";
-import Title from "@/components/Title";
+import Title from "@/components/ui/Title";
 import ExamCard from "@/components/Exam/ExamCard";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -65,7 +65,7 @@ const Exams = () => {
       </Link>
       <div>
         {result?.totalRecords ? (
-          <div>
+          <div className="space-y-4">
             {result.data.map((exam) => (
               <ExamCard key={exam.examId} exam={exam} />
             ))}

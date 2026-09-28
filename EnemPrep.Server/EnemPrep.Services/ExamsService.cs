@@ -46,21 +46,21 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
                     .Take(foreignLanguageAmount)
                     .ToListAsync(cancellationToken));
                 
-                subjectQuestions = await _context.Questions
+                subjectQuestions.AddRange(await _context.Questions
                     .Include(q => q.Subject)
                     .Where(q => q.Subject!.Name == subject && q.Language == null)
                     .OrderBy(q => Guid.NewGuid())
                     .Take(amountToFetch)
-                    .ToListAsync(cancellationToken);
+                    .ToListAsync(cancellationToken));
             }
             else
             {
-                subjectQuestions = await _context.Questions
+                subjectQuestions.AddRange(await _context.Questions
                     .Include(q => q.Subject)
                     .Where(q => q.Subject!.Name == subject && q.Language == null)
                     .OrderBy(q => Guid.NewGuid())
                     .Take(amountToFetch)
-                    .ToListAsync(cancellationToken);   
+                    .ToListAsync(cancellationToken));   
             }
 
             if (subjectQuestions.Count < amountToFetch)
@@ -152,6 +152,8 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
         Exam? exam = await _context.Exams.Where(e => e.ExamId == examId)
             .Include(e => e.ExamQuestions)
             .ThenInclude(q => q.Question)
+            .AsNoTracking()
+            .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
 
         if (exam is null)
@@ -183,6 +185,7 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
         Guid userId = _userContext.UserId;
         
         ExamQuestion? question = await _context.ExamQuestions
+            .Include(e => e.Question)
             .Where(q => q.ExamId == request.ExamId 
                         && q.QuestionId == request.QuestionId 
                         && q.Exam.UserId == userId)
@@ -216,9 +219,11 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
     public async Task<Result<GetExamDto>> SubmitExam(Guid examId, CancellationToken cancellationToken = default)
     {
         Exam? exam = await _context.Exams.Where(e => e.ExamId == examId)
+            .Include(e => e.ExamSubjects)
+            .ThenInclude(es => es.Subject)
             .Include(e => e.ExamQuestions)
-            .ThenInclude(e => e.Question.Subject)
-            .ThenInclude(s => s!.ExamSubjects)
+            .ThenInclude(eq => eq.Question)
+            .ThenInclude(q => q.Subject)
             .AsSplitQuery()
             .FirstOrDefaultAsync(cancellationToken);
 
@@ -275,38 +280,38 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
         }
 
         int incorrectQuestionsCount = exam.QuestionsCount - correctQuestionsCount - unsolvedQuestionsCount;
-        
-        float finalScore = (ScoreCalculator.CalculateScore(correctMath, SubjectName.Mathematics) 
-                            + ScoreCalculator.CalculateScore(correctNaturalSciences, SubjectName.NaturalSciences) 
-                            + ScoreCalculator.CalculateScore(correctHumanities, SubjectName.Humanities)
-                            + ScoreCalculator.CalculateScore(correctLanguages, SubjectName.Languages)) / exam.ExamSubjects.Count;
 
-        int updatedRows = await _context.Exams
-            .Where(e => e.ExamId == examId && e.UserId == userId)
-            .ExecuteUpdateAsync(
-                e => e
-                    .SetProperty(q => q.Status, ExamStatus.Finished)
-                    .SetProperty(q => q.CorrectQuestionsCount, correctQuestionsCount)
-                    .SetProperty(q => q.IncorrectQuestionsCount, incorrectQuestionsCount)
-                    .SetProperty(q => q.UnsolvedQuestionsCount, unsolvedQuestionsCount)
-                    .SetProperty(q => q.TotalSpentTime, totalSpentTime)
-                    .SetProperty(q => q.EstimatedScore, finalScore), 
-                cancellationToken);
+        float totalScore = 0f;
 
-        if (updatedRows == 0)
+        foreach (var examSubject in exam.ExamSubjects)
         {
-            return Result.Failure<GetExamDto>(ExamErrors.FailedToCompleteExam(examId));
+            var subjectName = examSubject.Subject!.Name;
+
+            int correctCount = subjectName switch
+            {
+                SubjectName.Languages => correctLanguages,
+                SubjectName.Humanities => correctHumanities,
+                SubjectName.Mathematics => correctMath,
+                SubjectName.NaturalSciences => correctNaturalSciences,
+                _ => 0
+            };
+
+            totalScore += ScoreCalculator.CalculateScore(correctCount, subjectName);
         }
+
+        float finalScore = exam.ExamSubjects.Count > 0
+            ? totalScore / exam.ExamSubjects.Count
+            : 0f;
+
+        exam.Status = ExamStatus.Finished;
+        exam.CorrectQuestionsCount = correctQuestionsCount;
+        exam.UnsolvedQuestionsCount = unsolvedQuestionsCount;
+        exam.IncorrectQuestionsCount = incorrectQuestionsCount;
+        exam.MaxSpentTime = TimeSpan.FromSeconds(exam.ExamQuestions.Count * 3 * 60);
+        exam.TotalSpentTime = totalSpentTime;
+        exam.EstimatedScore = finalScore;
 
         await _context.SaveChangesAsync(cancellationToken);
-        
-        exam = await _context.Exams.Where(e => e.ExamId == examId)
-            .FirstOrDefaultAsync(cancellationToken);
-        
-        if (exam is null)
-        {
-            return Result.Failure<GetExamDto>(ExamErrors.ExamWasNotFound(examId));
-        }
 
         return Result.Success(exam.ConvertToDto());
     }

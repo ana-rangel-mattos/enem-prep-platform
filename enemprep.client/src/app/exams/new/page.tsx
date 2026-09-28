@@ -1,6 +1,6 @@
 "use client";
 
-import Title from "@/components/Title";
+import Title from "@/components/ui/Title";
 import { z } from "zod";
 import { ExamLanguage, SubjectName } from "@/lib/types/enums.types";
 import {
@@ -39,55 +39,39 @@ import { selectLanguage } from "@/lib/features/preferences/preferencesSlice";
 import { Button } from "@/components/ui/button";
 import { AxiosError } from "axios";
 
-const formScheme = z
-  .object({
-    totalQuestions: z.coerce
-      .number({ error: "O número questões deve ser um número." })
-      .int("O número de questões deve ser um número inteiro.")
-      .min(5, "Mínimo de 5 questões por simulado.")
-      .max(90, "Máximo de 90 questões por simulado.")
-      .positive({ error: "O número de questões deve ser positivo." }),
-    areas: z.preprocess(
-      (value) => {
-        if (!Array.isArray(value)) return [];
-        return value.map((item) => Number(item));
-      },
-      z
-        .array(z.enum(SubjectName))
-        .min(1, "Deve conter ao menos uma área selecionada."),
-    ),
-    language: z
-      .preprocess(
-        (value) => (value === "" ? undefined : Number(value)),
-        z.enum(ExamLanguage),
-      )
-      .optional(),
-  })
-  .superRefine((data, context) => {
-    if (
-      !data.areas.includes(SubjectName.Languages) &&
-      data.language?.toString().trim()
-    ) {
-      context.addIssue({
-        code: "custom",
-        message:
-          "Um idioma só pode ser selecionado quando o simulado inclui Linguagens.",
-        path: ["language"],
-      });
-    }
+const formScheme = z.object({
+  totalQuestions: z.coerce
+    .number({ error: "O número questões deve ser um número." })
+    .int("O número de questões deve ser um número inteiro.")
+    .min(5, "Mínimo de 5 questões por simulado.")
+    .max(90, "Máximo de 90 questões por simulado.")
+    .positive({ error: "O número de questões deve ser positivo." }),
+  areas: z.preprocess(
+    (value) => {
+      if (!Array.isArray(value)) return [];
+      return value.map((item) => Number(item));
+    },
+    z
+      .array(z.enum(SubjectName))
+      .min(1, "Deve conter ao menos uma área selecionada."),
+  ),
+  language: z
+    .preprocess((value) => {
+      if (
+        value === "" ||
+        value === null ||
+        value === undefined ||
+        value === "none" ||
+        value === "-1"
+      ) {
+        return undefined;
+      }
 
-    if (
-      data.areas.includes(SubjectName.Languages) &&
-      !data.language?.toString().trim()
-    ) {
-      context.addIssue({
-        code: "custom",
-        message:
-          "É preciso selecionar um idioma quando o simulado inclui Linguagens.",
-        path: ["language"],
-      });
-    }
-  });
+      const parsed = Number(value);
+      return isNaN(parsed) ? undefined : parsed;
+    }, z.enum(ExamLanguage).optional())
+    .optional(),
+});
 
 type FormData = z.infer<typeof formScheme>;
 
@@ -188,6 +172,9 @@ const NewExam = () => {
                           <SelectValue placeholder="Selecione o idioma (Opcional)"></SelectValue>
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="none">
+                            Sem Idioma Estrangeiro
+                          </SelectItem>
                           <SelectItem
                             value={ExamLanguage.English.valueOf().toString()}
                           >

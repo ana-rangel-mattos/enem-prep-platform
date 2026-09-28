@@ -12,8 +12,9 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { toast } from "sonner";
 import SolveQuestion from "@/app/questions/[id]/page";
-import SolvedQuestion from "@/components/SolvedQuestion";
+import SolvedQuestion from "@/components/SolvedQuestion/SolvedQuestion";
 import { AxiosError } from "axios";
+import Title from "@/components/ui/Title";
 
 const History = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -52,7 +53,7 @@ const History = () => {
   if (isLoading) return <Loading message="Carregando histórico..." />;
   return (
     <>
-      <h1 className="mb-6 text-2xl">Histórico de Resolução</h1>
+      <Title text="Histórico de Resolução" className="mb-6" />
       <div className="flex flex-1 flex-col items-center gap-y-6">
         {results?.totalRecords ? (
           results.data.map((solvedQuestion: ISolvedQuestionResponse) => (

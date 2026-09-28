@@ -1,8 +1,8 @@
-import QuestionHeader from "@/components/QuestionHeader";
+import QuestionHeader from "@/components/Question/QuestionHeader";
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import { IQuestionResponse } from "@/lib/types/question.types";
-import PracticeQuestionSolver from "@/components/PracticeQuestionSolver";
+import PracticeQuestionSolver from "@/components/Question/PracticeQuestionSolver";
 
 interface IPracticeQuestionStartScreenProps {
   question: IQuestionResponse;

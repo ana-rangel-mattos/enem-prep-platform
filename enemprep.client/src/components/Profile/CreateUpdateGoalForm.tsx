@@ -6,14 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Field,
   FieldError,
@@ -23,7 +16,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { userGoalService } from "@/lib/api/userGoalService";
-import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+import FormCardHeader from "@/components/FormCardHeader";
 
 interface ICreateUpdateGoalProps {
   userGoal?: IUserGoalCreateUpdate;
@@ -72,21 +66,19 @@ const CreateUpdateGoalForm: React.FC<ICreateUpdateGoalProps> = ({
       }
       reset();
       onSaveGoal(data);
-    } catch (error: any) {
-      const backendError =
-        error?.response?.data?.details || "Ocorreu um erro inesperado.";
-      toast.error(backendError);
+    } catch (error) {
+      const axiosError = error as AxiosError<ProblemDetails>;
+      const problem = axiosError.response?.data;
+      toast.error(problem?.description);
     }
   };
 
   return (
     <Card className="w-full sm:max-w-md md:max-w-lg lg:max-w-2xl">
-      <CardHeader>
-        <CardTitle>{!userGoal ? "Atualizar Meta" : "Criar Meta"}</CardTitle>
-        <CardDescription>
-          Crie e atualize as suas metas universitárias aqui!
-        </CardDescription>
-      </CardHeader>
+      <FormCardHeader
+        title={!userGoal ? "Atualizar Meta" : "Criar Meta"}
+        description="Crie e atualize as suas metas universitárias aqui!"
+      />
 
       <CardContent>
         <form

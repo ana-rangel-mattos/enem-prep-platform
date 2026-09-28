@@ -1,21 +1,33 @@
 import { ApiClient } from "@/lib/api/apiClient";
-import { IUser } from "@/lib/types/user.types";
+import {
+  IUpdateUserAccountRequest,
+  IUserAccountResponse,
+  IUserResponse,
+} from "@/lib/types/user.types";
 
 class UserService extends ApiClient {
   constructor() {
     super("http://localhost:5265/api/user/");
   }
 
-  getLoggedUser(): Promise<IUser> {
-    return this.get("me")
+  getLoggedUser(): Promise<IUserResponse> {
+    return this.get("me");
   }
 
-  getUserById(userId: string): Promise<IUser> {
-    return this.get(`${userId}`)
+  getUserById(userId: string): Promise<IUserResponse> {
+    return this.get(`${userId}`);
   }
 
   deleteUserById(userId: string): Promise<void> {
     return this.delete(`${userId}`);
+  }
+
+  getLoggedUserAccount(): Promise<IUserAccountResponse> {
+    return this.get("me/account");
+  }
+
+  updateLoggedUserAccount(request: IUpdateUserAccountRequest): Promise<void> {
+    return this.put("me/account", request);
   }
 }
 

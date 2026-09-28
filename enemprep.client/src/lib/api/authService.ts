@@ -1,4 +1,8 @@
-import { ILoginUser, IRegisterUser, IUser } from "@/lib/types/user.types";
+import {
+  ILoginUser,
+  IRegisterUser,
+  IUserResponse,
+} from "@/lib/types/user.types";
 import { ApiClient } from "@/lib/api/apiClient";
 
 class AuthService extends ApiClient {

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { use, useEffect, useState } from "react";
 import { notFound } from "next/navigation";
@@ -8,19 +8,19 @@ import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import { Card, CardTitle } from "@/components/ui/card";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
-import SolvedQuestionAlternative from "@/components/SolvedQuestionAlternative";
+import SolvedQuestionAlternative from "@/components/SolvedQuestion/SolvedQuestionAlternative";
 import Error from "next/error";
 import { timeToString } from "@/lib/helpers";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 interface ISolvedQuestionDetailsProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
-const SolvedQuestionDetails: React.FC<ISolvedQuestionDetailsProps> = ({ params }) => {
+const SolvedQuestionDetails: React.FC<ISolvedQuestionDetailsProps> = ({
+  params,
+}) => {
   const resolvedParams = use(params);
 
   const solvedQuestionId = resolvedParams["id"];
@@ -29,13 +29,15 @@ const SolvedQuestionDetails: React.FC<ISolvedQuestionDetailsProps> = ({ params }
     notFound();
   }
 
-  const [solvedQuestion, setSolvedQuestion] = useState<ISolvedQuestionResponse | null>(null);
+  const [solvedQuestion, setSolvedQuestion] =
+    useState<ISolvedQuestionResponse | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const loadSolvedQuestion = async () => {
       try {
-        const result = await solvedQuestionsService.getSolvedQuestionById(solvedQuestionId);
+        const result =
+          await solvedQuestionsService.getSolvedQuestionById(solvedQuestionId);
         setSolvedQuestion(result);
       } catch (error: any) {
         const backendError =
@@ -44,17 +46,17 @@ const SolvedQuestionDetails: React.FC<ISolvedQuestionDetailsProps> = ({ params }
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     loadSolvedQuestion();
   }, [solvedQuestionId]);
 
   if (isLoading) {
-    return <Loading message="Carregando questão..." />
+    return <Loading message="Carregando questão..." />;
   }
 
   if (!solvedQuestion) {
-    return <Error statusCode={404} />
+    return <Error statusCode={404} />;
   }
 
   return (
@@ -86,13 +88,13 @@ const SolvedQuestionDetails: React.FC<ISolvedQuestionDetailsProps> = ({ params }
         />
         <Link
           href={`/questions/${solvedQuestion.questionId}`}
-          className="hover:bg-primary hover:text-secondary w-45 text-center block transition-all duration-300 ease-out hover:cursor-pointer rounded-xl p-2 hover:text-lg hover:font-bold"
+          className="hover:bg-primary hover:text-secondary block w-45 rounded-xl p-2 text-center transition-all duration-300 ease-out hover:cursor-pointer hover:text-lg hover:font-bold"
         >
           Resolver Questão
         </Link>
       </Card>
     </div>
   );
-}
+};
 
 export default SolvedQuestionDetails;

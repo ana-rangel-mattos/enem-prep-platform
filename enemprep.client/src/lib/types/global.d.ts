@@ -1,3 +1,5 @@
+import React from "react";
+
 export {};
 
 declare global {
@@ -21,5 +23,9 @@ declare global {
     totalRecords: number;
     hasNextPage: boolean;
     hasPreviousPage: boolean;
+  }
+
+  interface ILayout {
+    children: React.ReactNode;
   }
 }

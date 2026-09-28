@@ -58,7 +58,6 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnName("incorrect_questions_count");
 
                     b.Property<string>("LanguageChoice")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("language_choice");
 
@@ -452,6 +451,12 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("HasWeekEnd")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasColumnName("has_week_end")
+                        .HasDefaultValueSql("FALSE");
 
                     b.Property<string>("Name")
                         .IsRequired()
