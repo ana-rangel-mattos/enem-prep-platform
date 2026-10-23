@@ -1,7 +1,8 @@
 import React from "react";
+import BaseLayout from "@/components/Layouts/BaseLayout";
 
 const DashboardLayout: React.FC<ILayout> = ({ children }) => {
-  return <div className="w-full max-w-sm">{children}</div>;
+  return <BaseLayout>{children}</BaseLayout>;
 };
 
 export default DashboardLayout;

@@ -34,4 +34,6 @@ public partial class Question
     public virtual Subject? Subject { get; set; }
 
     public virtual ICollection<SavedQuestion> SavedQuestions { get; set; } = new List<SavedQuestion>();
+    
+    public virtual ICollection<PlaylistQuestion> PlaylistQuestions { get; set; } = new List<PlaylistQuestion>();
 }

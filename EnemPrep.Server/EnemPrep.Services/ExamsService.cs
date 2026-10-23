@@ -10,10 +10,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EnemPrep.Services;
 
-public class ExamsService(EnemContext context, IUserContext userContext) : IExamsService
+public class ExamsService : IExamsService
 {
-    private readonly EnemContext _context = context;
-    private readonly IUserContext _userContext = userContext;
+    private readonly EnemContext _context;
+    private readonly IUserContext _userContext;
+
+    public ExamsService(EnemContext context, IUserContext userContext)
+    {
+        _context = context;
+        _userContext = userContext;
+    }
 
     public async Task<Result<GetExamDto>> GenerateExamAsync(PostExamDto request, CancellationToken cancellationToken = default)
     {
@@ -332,7 +338,7 @@ public class ExamsService(EnemContext context, IUserContext userContext) : IExam
 
         var totalRecords = await query.CountAsync(cancellationToken);
         
-        query = query.ApplySort(string.IsNullOrWhiteSpace(filter.SortBy) ? "CreatedAt" : filter.SortBy);
+        query = query.ApplySort(string.IsNullOrWhiteSpace(filter.SortBy) ? "CreatedAt desc" : filter.SortBy);
 
         var exams = await query
             .ApplyPagination(pageNumber, pageSize)

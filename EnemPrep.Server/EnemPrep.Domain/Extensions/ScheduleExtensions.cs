@@ -19,7 +19,7 @@ public static class ScheduleExtensions
     {
         Dictionary<DayOfTheWeek, IReadOnlyCollection<GetScheduleSubjectDto>> subjects = new();
 
-        for (int i = 0; i < (schedule.HasWeekEnd ? 7 : 6); i++)
+        for (int i = 0; i < (schedule.HasWeekEnd ? 7 : 5); i++)
         {
             subjects.Add((DayOfTheWeek) i, schedule.ScheduleSubjects.Where(ss => (int) ss.Weekday == i).OrderBy(ss => ss.SubjectOrder).Select(ss => ss.ToGetScheduleSubjectDto()).ToList());
         }
@@ -29,6 +29,7 @@ public static class ScheduleExtensions
             ScheduleId = schedule.ScheduleId,
             UserId = schedule.UserId,
             Name = schedule.Name,
+            HasWeekEnd = schedule.HasWeekEnd,
             Schedule = subjects
         };
     }

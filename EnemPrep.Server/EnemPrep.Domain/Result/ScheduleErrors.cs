@@ -9,6 +9,6 @@ public static class ScheduleErrors
     
     public static Error ScheduleSubjectWasNotFound(Guid subjectId) => new Error(
         ErrorNames.ScheduleScheduleSubjectWasNotFound,
-        $"Could not find schedule with ID {subjectId}."
+        $"Could not find subject with ID {subjectId}."
     );
 }

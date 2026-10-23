@@ -88,7 +88,7 @@ const NewExam = () => {
     selectLanguage(state),
   );
 
-  const { control, reset, handleSubmit, watch } = useForm<FormData>({
+  const { control, reset, handleSubmit, watch } = useForm({
     resolver: zodResolver(formScheme),
     defaultValues: { areas: [], language: examLanguage ?? 0 },
   });

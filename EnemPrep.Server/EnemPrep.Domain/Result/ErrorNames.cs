@@ -61,4 +61,7 @@ public static class ErrorNames
 
     public const string ScheduleScheduleWasNotFound = "Schedule.ScheduleWasNotFound";
     public const string ScheduleScheduleSubjectWasNotFound = "Schedule.ScheduleSubjectWasNotFound";
+
+    public const string ArticleInvalidPlaylistReference = "Article.InvalidPlaylistReference";
+    public const string ArticleArticleWasNotFound = "Article.ArticleWasNotFound";
 }

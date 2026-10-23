@@ -27,6 +27,85 @@ namespace EnemPrep.Persistence.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "tracking", "exam_status", new[] { "canceled", "finished", "in_progress", "not_started" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("EnemPrep.Domain.Models.Article", b =>
+                {
+                    b.Property<Guid>("ArticleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("article_id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("BlocksJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("blocks_json");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Subtitle")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("subtitle");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("ArticleId")
+                        .HasName("article_pkey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("article", "content");
+                });
+
+            modelBuilder.Entity("EnemPrep.Domain.Models.ArticlePlaylist", b =>
+                {
+                    b.Property<Guid>("ArticleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("article_id");
+
+                    b.Property<Guid>("PlaylistId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("playlist_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("ArticleId", "PlaylistId")
+                        .HasName("article_playlist_pk");
+
+                    b.HasIndex("PlaylistId");
+
+                    b.ToTable("article_playlist", "content");
+                });
+
             modelBuilder.Entity("EnemPrep.Domain.Models.Exam", b =>
                 {
                     b.Property<Guid>("ExamId")
@@ -278,7 +357,121 @@ namespace EnemPrep.Persistence.Migrations
                         {
                             Id = 5,
                             Name = "EditQuestion"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "CreateArticle"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "DeleteArticle"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "EditArticle"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "CreateExerciseList"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "DeleteExerciseList"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "EditExerciseList"
                         });
+                });
+
+            modelBuilder.Entity("EnemPrep.Domain.Models.Playlist", b =>
+                {
+                    b.Property<Guid>("PlaylistId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("playlist_id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsPublic")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_public")
+                        .HasDefaultValueSql("TRUE");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("title");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("PlaylistId")
+                        .HasName("playlist_pkey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("playlist", "content");
+                });
+
+            modelBuilder.Entity("EnemPrep.Domain.Models.PlaylistQuestion", b =>
+                {
+                    b.Property<Guid>("PlaylistId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("playlist_id");
+
+                    b.Property<Guid>("QuestionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("question_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("integer")
+                        .HasColumnName("order_index");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.HasKey("PlaylistId", "QuestionId")
+                        .HasName("playlist_question_pk");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("playlist_question", "content");
                 });
 
             modelBuilder.Entity("EnemPrep.Domain.Models.Question", b =>
@@ -358,6 +551,11 @@ namespace EnemPrep.Persistence.Migrations
                         {
                             Id = 2,
                             Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Teacher"
                         });
                 });
 
@@ -400,6 +598,36 @@ namespace EnemPrep.Persistence.Migrations
                         {
                             RoleId = 2,
                             PermissionId = 5
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 6
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 7
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 8
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 9
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 11
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 10
                         });
                 });
 
@@ -866,6 +1094,39 @@ namespace EnemPrep.Persistence.Migrations
                     b.ToTable("RoleUser", "auth");
                 });
 
+            modelBuilder.Entity("EnemPrep.Domain.Models.Article", b =>
+                {
+                    b.HasOne("EnemPrep.Domain.Models.User", "User")
+                        .WithMany("Articles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EnemPrep.Domain.Models.ArticlePlaylist", b =>
+                {
+                    b.HasOne("EnemPrep.Domain.Models.Article", "Article")
+                        .WithMany("ArticlePlaylists")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("article_playlist_article_id_fkey");
+
+                    b.HasOne("EnemPrep.Domain.Models.Playlist", "Playlist")
+                        .WithMany("ArticlePlaylists")
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("article_playlist_playlist_id_fkey");
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Playlist");
+                });
+
             modelBuilder.Entity("EnemPrep.Domain.Models.Exam", b =>
                 {
                     b.HasOne("EnemPrep.Domain.Models.User", "User")
@@ -939,6 +1200,39 @@ namespace EnemPrep.Persistence.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("InviteRole");
+                });
+
+            modelBuilder.Entity("EnemPrep.Domain.Models.Playlist", b =>
+                {
+                    b.HasOne("EnemPrep.Domain.Models.User", "User")
+                        .WithMany("Playlists")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_id");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("EnemPrep.Domain.Models.PlaylistQuestion", b =>
+                {
+                    b.HasOne("EnemPrep.Domain.Models.Playlist", "Playlist")
+                        .WithMany("PlaylistQuestions")
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("playlist_question_playlist_id_fkey");
+
+                    b.HasOne("EnemPrep.Domain.Models.Question", "Question")
+                        .WithMany("PlaylistQuestions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("playlist_question_question_id_fkey");
+
+                    b.Navigation("Playlist");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("EnemPrep.Domain.Models.Question", b =>
@@ -1102,6 +1396,11 @@ namespace EnemPrep.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("EnemPrep.Domain.Models.Article", b =>
+                {
+                    b.Navigation("ArticlePlaylists");
+                });
+
             modelBuilder.Entity("EnemPrep.Domain.Models.Exam", b =>
                 {
                     b.Navigation("ExamQuestions");
@@ -1109,9 +1408,18 @@ namespace EnemPrep.Persistence.Migrations
                     b.Navigation("ExamSubjects");
                 });
 
+            modelBuilder.Entity("EnemPrep.Domain.Models.Playlist", b =>
+                {
+                    b.Navigation("ArticlePlaylists");
+
+                    b.Navigation("PlaylistQuestions");
+                });
+
             modelBuilder.Entity("EnemPrep.Domain.Models.Question", b =>
                 {
                     b.Navigation("ExamQuestions");
+
+                    b.Navigation("PlaylistQuestions");
 
                     b.Navigation("SavedQuestions");
 
@@ -1139,9 +1447,13 @@ namespace EnemPrep.Persistence.Migrations
 
             modelBuilder.Entity("EnemPrep.Domain.Models.User", b =>
                 {
+                    b.Navigation("Articles");
+
                     b.Navigation("CreatedInvitations");
 
                     b.Navigation("Exams");
+
+                    b.Navigation("Playlists");
 
                     b.Navigation("Questions");
 

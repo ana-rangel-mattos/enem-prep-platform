@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import StoreProvider from "@/app/StoreProvider";
 import { SiteHeader } from "@/components/site-header";
 import { AppSidebar } from "@/components/app-sidebar";
+import { ThemeProvider } from "next-themes";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -35,27 +36,29 @@ const RootLayout: React.FC<Readonly<IRootLayoutProps>> = ({ children }) => {
       suppressHydrationWarning
     >
       <body
-        className="bg-background dark text-foreground selection:bg-primary/20 antialiased"
+        className="bg-background text-foreground selection:bg-primary/20 antialiased"
         suppressHydrationWarning
       >
         <StoreProvider>
-          <SidebarProvider
-            style={
-              {
-                "--sidebar-width": "calc(var(--spacing) * 72)",
-                "--header-height": "calc(var(--spacing) * 12)",
-              } as React.CSSProperties
-            }
-          >
-            <AppSidebar />
-            <SidebarInset>
-              <SiteHeader />
-              <main className="flex h-full flex-col items-center justify-start overflow-y-auto p-6 focus:outline-none">
-                {children}
-              </main>
-              <Toaster />
-            </SidebarInset>
-          </SidebarProvider>
+          <ThemeProvider attribute="class">
+            <SidebarProvider
+              style={
+                {
+                  "--sidebar-width": "calc(var(--spacing) * 72)",
+                  "--header-height": "calc(var(--spacing) * 12)",
+                } as React.CSSProperties
+              }
+            >
+              <AppSidebar />
+              <SidebarInset>
+                <SiteHeader />
+                <main className="flex h-full flex-col items-center justify-start overflow-y-auto p-6 focus:outline-none">
+                  {children}
+                </main>
+                <Toaster />
+              </SidebarInset>
+            </SidebarProvider>
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

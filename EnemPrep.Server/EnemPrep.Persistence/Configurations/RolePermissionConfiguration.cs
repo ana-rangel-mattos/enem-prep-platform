@@ -13,7 +13,7 @@ internal sealed class RolePermissionConfiguration
         builder.HasKey(x => new 
             { x.RoleId, x.PermissionId });
 
-        builder.HasData(Create(Role.Student, Permission.ReadContent), Create(Role.Admin, Permission.CreateQuestions), Create(Role.Admin, Permission.DeleteQuestion), Create(Role.Admin, Permission.DeleteUser), Create(Role.Admin, Permission.EditQuestion));
+        builder.HasData(Create(Role.Student, Permission.ReadContent), Create(Role.Admin, Permission.CreateQuestions), Create(Role.Admin, Permission.DeleteQuestion), Create(Role.Admin, Permission.DeleteUser), Create(Role.Admin, Permission.EditQuestion), Create(Role.Teacher, Permission.CreateArticle), Create(Role.Teacher, Permission.DeleteArticle), Create(Role.Teacher, Permission.EditArticle), Create(Role.Teacher, Permission.CreateExerciseList), Create(Role.Teacher, Permission.EditExerciseList), Create(Role.Teacher, Permission.DeleteExerciseList));
     }
 
     private static RolePermission Create(Role role, Permission permission)

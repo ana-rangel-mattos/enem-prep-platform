@@ -45,6 +45,10 @@ public partial class EnemContext : DbContext
     public virtual DbSet<Permission> Permissions { get; set; }
     public virtual DbSet<InvitationCode> InvitationCodes { get; set; }
     public virtual DbSet<SavedQuestion> SavedQuestions { get; set; }
+    public virtual DbSet<Article> Articles { get; set; }
+    public virtual DbSet<ArticlePlaylist> ArticlePlaylists { get; set; }
+    public virtual DbSet<Playlist> Playlists { get; set; }
+    public virtual DbSet<PlaylistQuestion> PlaylistQuestions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

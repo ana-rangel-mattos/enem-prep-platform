@@ -1,6 +1,6 @@
 using EnemPrep.Domain.Enums;
 
-namespace EnemPrep.Domain.Models;
+namespace EnemPrep.Domain.DTOS;
 
 public class GetScheduleSubjectDto
 {

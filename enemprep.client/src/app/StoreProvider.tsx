@@ -4,7 +4,6 @@ import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "@/lib/store";
 import AuthBootstrap from "@/components/State/AuthBootstrap";
-import PreferencesBootstrap from "@/components/State/PreferencesBootstrap";
 
 const StoreProvider = ({ children }: { children: React.ReactNode }) => {
   const storeRef = useRef<AppStore | null>(null);
@@ -16,7 +15,6 @@ const StoreProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={storeRef.current}>
       <AuthBootstrap />
-      <PreferencesBootstrap />
       {children}
     </Provider>
   );

@@ -17,6 +17,8 @@ GRANT SELECT, INSERT, UPDATE ON TABLE auth.roles TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON TABLE auth.permissions TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE ON TABLE auth.saved_question TO enem_user_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE planning.user_goal TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE planning.schedule TO enem_user_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE planning.schedule_subject TO enem_user_role;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA auth
     GRANT SELECT, INSERT, UPDATE ON TABLES TO enem_user_role;

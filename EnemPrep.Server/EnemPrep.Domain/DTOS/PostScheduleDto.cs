@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using EnemPrep.Domain.Models;
 
 namespace EnemPrep.Domain.DTOS;
 

@@ -43,4 +43,8 @@ public partial class User
     public virtual ICollection<InvitationCode> CreatedInvitations { get; set; } = new List<InvitationCode>();
 
     public virtual ICollection<SavedQuestion> SavedQuestions { get; set; } = new List<SavedQuestion>();
+    
+    public virtual ICollection<Article> Articles { get; set; } = new List<Article>();
+    
+    public virtual ICollection<Playlist> Playlists { get; set; } = new List<Playlist>();
 }

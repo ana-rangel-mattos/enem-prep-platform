@@ -54,6 +54,7 @@ builder.Services.AddTransient<IUserProfileService, UserProfileService>();
 builder.Services.AddTransient<IUserGoalService, UserGoalService>();
 builder.Services.AddTransient<IExamsService, ExamsService>();
 builder.Services.AddTransient<IScheduleService, ScheduleService>();
+builder.Services.AddTransient<IArticleService, ArticleService>();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.NumberHandling =
@@ -125,8 +126,6 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromHours(2);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-    // options.Cookie.SameSite = SameSiteMode.None;
-    // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddHttpContextAccessor();
