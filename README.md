@@ -1,72 +1,63 @@
-# enem-prep-platform
-Plataforma de Preparação para o ENEM (Projeto de Extensão) Desenvolvimento de uma ferramenta Full-Stack voltada para a democratização do acesso ao estudo para o ENEM.
+# EnemPrep
 
-## 🛠️ Pré-requisitos
-- Docker Compose
-- PostgreSQL (porta padrão `5432`)
-- .NET SDK (Versão 9)
-- Node.js & pnpm
-- Python 3.x
+EnemPrep is a full-stack study and exam preparation platform built with **ASP.NET Core (.NET)**, **Entity Framework Core**, **PostgreSQL**, and **Next.js (React, TypeScript, Tailwind CSS)**. It features weekly study schedule management with drag-and-drop Kanban reordering, exam/question practice, and a rich-text article and playlist authoring experience powered by TipTap.
 
-## Configurar a Applicação:
+---
 
-1. Abra o seu banco de dados de preferência e execute o seguite comando:
-```postgres
-CREATE DATABASE enem_prep_db;
-```
+## Architecture & Tech Stack
 
-2. Fazer o Update do Banco de Dados no Back-End com o usuário postgres e subistiruir a senha:
+### Backend (`EnemPrep.Server`)
+* **API Layer (`EnemPrep.Api`)**: REST controllers (`Auth`, `Schedules`, `Subjects`, `Articles`, `Playlists`, `Exams`, `Questions`, `SolvedQuestions`, `User`, `UserGoal`, `UserPreferences`, `UserProfile`), global exception middleware, Swagger/OpenAPI documentation, and session-based authentication/authorization.
+* **Application Layer (`EnemPrep.Application`)**: Feature-organized business logic using plain services and interfaces (`IScheduleService`, `IArticleService`, `IPlaylistService`, etc.), DTOs, mapping extensions, pagination/filtering utilities, and domain result handling.
+* **Domain Layer (`EnemPrep.Domain`)**: Core entities, enums, permissions, and domain error definitions.
+* **Infrastructure & Persistence (`EnemPrep.Infrastructure`, `EnemPrep.Persistence`)**: EF Core with PostgreSQL, database migrations, session/permission authorization handlers, and `UserContext`.
+* **Testing (`EnemPrep.Tests`)**: Integration testing suite built with `WebApplicationFactory`.
+
+### Frontend (`enemprep.client`)
+* **Framework & Styling**: Next.js (App Router), React, TypeScript, and Tailwind CSS.
+* **Study Scheduler Kanban**: Custom drag-and-drop board built with `@dnd-kit/react`, paired with schedule selection, editing, and subject creation popovers.
+* **Rich-Text Editor**: TipTap-based editor (`ArticleEditor`) with custom extensions (such as playlist blocks) and article creation page (`/articles/new`).
+
+---
+
+## Key Features
+
+* **Weekly Study Schedules**: Create and manage study schedules, toggle weekend inclusion, add subjects to specific weekdays (including repeating a subject across multiple days), and reorder/move items across columns with drag-and-drop synced to the backend.
+* **Content & Playlists**: Organize subjects, articles, and playlists, with an interactive editor for creating articles.
+* **Exams & Question Bank**: Browse questions, take exams, track solved questions, and configure study goals and preferences.
+* **Session Authentication & Permissions**: Cookie-based session authentication with permission-based endpoint authorization.
+
+---
+
+## Running with Docker
+
+The repository provides Dockerfiles and Docker Compose configurations for running the full stack or individual services.
+
+### Prerequisites
+* [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/) installed.
+
+### 1. Clone this Application
+Clone the repository with git and enter in the root directory.
+
 ```bash
-cd EnemPrep.Server/
-dotnet ef database update --project EnemPrep.Server/EnemPrep.Server.csproj --startup-project EnemPrep.Server/EnemPrep.Server.csproj --context EnemPrep.Persistence.EnemContext --configuration Debug --framework net9.0 20260521195544_Add_Saved_Question_Table --connection Host=localhost;Database=enem_prep_db;Username=postgres;Password=789633;
-```
-
-3. Com o banco de dados criado, execute os seguites scripts SQL:
-```bash
-cd ../sql_scripts
-```
-
-`castings.sql`
-`privileges.sql`
-`updated_at.sql`
-`seed_admin.sql`
-`user_streak.sql`
-
-4. Execute o script python para popular a tabela das questões:
-```bash
-cd ../python_script
-```
-Preencha as informações do `.env.sample` com as informações do Postgres e o renomeie para `.env`:
-
-```env
-DB_USER=postgres
-DB_DATABASE=enem_prep_db
-DB_PASSWORD=
-DB_PORT=5432
-DB_HOST=localhost
-
-DB_LANGUAGES_ID=25da4bd2-1bc7-4d4b-a448-23a2aa12a70b
-DB_SOCIAL_SCIENCES_ID=3714344b-f6cf-49b6-85de-cb659ad54850
-DB_NATURAL_SCIENCES_ID=20e9711f-fe09-474e-a25a-0b3d163c61b5
-DB_MATH_ID=6f1d7c77-1f8b-44c7-b409-7d7c20c328c9
-DB_POSTED_BY_ID=f1181460-9376-4bb7-9e3a-b4130fd17bf8
+git clone https://github.com/ana-rangel-mattos/enem-prep-platform.git
 ```
 
 ```bash
-uv sync
-python3 main.py
+cd enem-prep-platform
 ```
 
-5. Inicie o Back-End:
-```bash
-cd ../EnemPrep.Server/EnemPrep.Server
-dotnet run
-```
+### 2. Fill the .env files
 
-6. Inicie o Front-End:
+* Filling the `.env.example` of each project (when necessary) and renaming it to `.env`.
+  * `infra/seed_db/.env.example`.
+  * `infra/postgres/.env.example`.
+  * `enemprep.client/.env.example`.
+  * `EnemPrep.Server/.env.example`.
+
+### 3. Run the Full Stack
+From the root of the repository, start the services using the root `compose.yaml`:
+
 ```bash
-cd ../enemprep.client
-pnpm install
-pnpm dev
-Abra http://localhost:3000 no navegador.
+docker compose up --build -d
 ```
