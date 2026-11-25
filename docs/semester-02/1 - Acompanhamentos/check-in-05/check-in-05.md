@@ -16,7 +16,7 @@
 
 ### 2.1 Horas Alcançadas
 
-- **Ana Beatriz:** Total : horas.
+- **Ana Beatriz:** Total 88:18 horas.
 
 ### 2.2 Horas Pretendidas
 
