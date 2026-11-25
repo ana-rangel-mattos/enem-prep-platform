@@ -61,3 +61,9 @@ From the root of the repository, start the services using the root `compose.yaml
 ```bash
 docker compose up --build -d
 ```
+
+To remove the container:
+
+```bash
+docker compose down -v
+```
