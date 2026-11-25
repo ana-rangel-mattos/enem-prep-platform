@@ -4,6 +4,7 @@ namespace EnemPrep.Domain.Models;
 
 public partial class ScheduleSubject
 {
+    public Guid ScheduleSubjectId { get; set; }
     public Guid ScheduleId { get; set; }
 
     public Guid SubjectId { get; set; }

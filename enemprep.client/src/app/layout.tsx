@@ -6,8 +6,8 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import StoreProvider from "@/app/StoreProvider";
-import { SiteHeader } from "@/components/site-header";
-import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/Navigation/site-header";
+import { AppSidebar } from "@/components/Navigation/app-sidebar";
 import { ThemeProvider } from "next-themes";
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });

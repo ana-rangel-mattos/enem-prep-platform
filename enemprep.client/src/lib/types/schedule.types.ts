@@ -14,7 +14,8 @@ export interface IGetScheduleDetailsResponse {
 }
 
 export interface IScheduleSubjectResponse {
-  weekday: DayOfTheWeek;
+  scheduleSubjectId: string;
+  subjectName: string;
   orderIndex: number;
 }
 
@@ -34,7 +35,7 @@ export interface IPutScheduleRequest {
 }
 
 export interface IPutScheduleOrderRequest {
-  subjectId: string;
-  newDay: DayOfTheWeek;
+  scheduleSubjectId: string;
+  newDay: string;
   newIndex: number;
 }

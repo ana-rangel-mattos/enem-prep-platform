@@ -1,7 +1,7 @@
 using EnemPrep.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 
-namespace EnemPrep.Server.Authorization;
+namespace EnemPrep.Infrastructure.Authorization;
 
 public sealed class HasPermissionAttribute : AuthorizeAttribute
 {

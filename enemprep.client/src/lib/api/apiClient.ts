@@ -1,11 +1,13 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
+const baseUrl = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
+
 export class ApiClient {
   protected readonly instance: AxiosInstance;
 
-  constructor(baseURL: string) {
+  constructor(controllerName: string) {
     this.instance = axios.create({
-      baseURL,
+      baseURL: `${baseUrl}/${controllerName}`,
       timeout: 10000,
       withCredentials: true,
     });

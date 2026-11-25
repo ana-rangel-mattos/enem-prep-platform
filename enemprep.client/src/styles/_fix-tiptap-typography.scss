@@ -1,0 +1,38 @@
+/* List Fix */
+.tiptap ul li p,
+.tiptap ol li p {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.tiptap ul li > p:first-child,
+.tiptap ol li > p:first-child {
+  margin-top: -0.5rem;
+}
+
+.tiptap ul li > p:last-child,
+.tiptap ol li > p:last-child {
+  margin-bottom: 0;
+}
+
+/* Task List Fix */
+.tiptap ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+}
+
+.tiptap ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+}
+
+.tiptap ul[data-type="taskList"] li p {
+  margin-left: 0.4rem;
+  margin-top: 0;
+}
+
+.tiptap ul[data-type="taskList"] li > label,
+.tiptap ul[data-type="taskList"] li p {
+  margin-right: 0.0rem;
+  margin-top: -0.25rem;
+}

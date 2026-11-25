@@ -10,7 +10,7 @@ public class ScheduleSubjectConfiguration : IEntityTypeConfiguration<ScheduleSub
 {
     public void Configure(EntityTypeBuilder<ScheduleSubject> builder)
     {
-        builder.HasKey(e => new { e.ScheduleId, e.SubjectId }).HasName("pk_schedule_subject");
+        builder.HasKey(e => e.ScheduleSubjectId).HasName("pk_schedule_subject");
 
         builder.ToTable(TableNames.ScheduleSubjects, SchemaNames.Planning);
             
@@ -31,7 +31,8 @@ public class ScheduleSubjectConfiguration : IEntityTypeConfiguration<ScheduleSub
                     v == "FRIDAY" ? DayOfTheWeek.Friday :
                     v == "SUNDAY" ? DayOfTheWeek.Sunday :
                     v == "SATURDAY" ? DayOfTheWeek.Saturday : DayOfTheWeek.Monday);
-            
+
+        builder.Property(e => e.ScheduleSubjectId).HasColumnName("schedule_subject_id");
         builder.Property(e => e.ScheduleId).HasColumnName("schedule_id");
         builder.Property(e => e.SubjectId).HasColumnName("subject_id");
         builder.Property(e => e.CreatedAt)

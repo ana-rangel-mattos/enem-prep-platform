@@ -11,4 +11,8 @@ public static class ScheduleErrors
         ErrorNames.ScheduleScheduleSubjectWasNotFound,
         $"Could not find subject with ID {subjectId}."
     );
+
+    public static readonly Error ScheduleSubjectDeleteAccessForbidden = new Error(
+        ErrorNames.ScheduleSubjectDeleteAccessForbidden,
+        "You are not allowed to delete this schedule subject.");
 }

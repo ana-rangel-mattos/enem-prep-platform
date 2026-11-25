@@ -1,6 +1,6 @@
 namespace EnemPrep.Domain.Models;
 
-public class ArticlePlaylist
+public partial class ArticlePlaylist
 {
     public Guid ArticleId { get; set; }
     public Guid PlaylistId { get; set; }

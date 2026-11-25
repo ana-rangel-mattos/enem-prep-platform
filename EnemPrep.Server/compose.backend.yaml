@@ -1,0 +1,46 @@
+services:
+  db-migrator:
+    build:
+      context: .
+      target: migrator
+    env_file:
+      - .env
+      - ../infra/postgres/.env
+    networks:
+      - internal_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >
+        dotnet ef database update
+        --project EnemPrep.Api/EnemPrep.Api.csproj
+        --startup-project EnemPrep.Api/EnemPrep.Api.csproj
+        --context EnemPrep.Persistence.EnemContext
+        --configuration Debug
+        --framework net9.0
+        --connection "Host=postgres;Database=$${POSTGRES_DB};Username=$${POSTGRES_USER};Password=$${POSTGRES_PASSWORD};"
+
+  backend:
+    build:
+      context: .
+      target: final
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+        ASPNETCORE_HTTP_PORTS: "8080"
+    ports:
+      - "8080:8080"
+    networks:
+      - internal_net
+      - public_net
+    depends_on:
+      db-python-seeder:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

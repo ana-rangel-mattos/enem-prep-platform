@@ -61,7 +61,16 @@ public static class ErrorNames
 
     public const string ScheduleScheduleWasNotFound = "Schedule.ScheduleWasNotFound";
     public const string ScheduleScheduleSubjectWasNotFound = "Schedule.ScheduleSubjectWasNotFound";
+    public const string ScheduleSubjectDeleteAccessForbidden = "Schedule.ScheduleSubjectDeleteAccessForbidden";
 
     public const string ArticleInvalidPlaylistReference = "Article.InvalidPlaylistReference";
     public const string ArticleArticleWasNotFound = "Article.ArticleWasNotFound";
+    public const string ArticleCannotDeleteForbiddenAccess = "Article.CannotDeleteForbiddenAccess";
+
+    public const string PlaylistPlaylistWasNotFound = "Playlist.PlaylistWasNotFound";
+    public const string PlaylistQuestionWasNotFound = "Playlist.QuestionWasNotFound";
+    public const string PlaylistPlaylistAccessForbidden = "Playlist.CannotAccessPlaylistAccessForbidden";
+    public const string PlaylistDeleteAccessForbidden = "Playlist.CannotDeleteAccessForbidden";
+    public const string PlaylistDeleteQuestionAccessForbidden = "Playlist.CannotDeleteQuestionAccessForbidden";
+    public const string PlaylistAddQuestionAccessForbidden = "Playlist.CannotAddQuestionAccessForbidden";
 }

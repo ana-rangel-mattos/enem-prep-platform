@@ -10,7 +10,7 @@ import {
 
 class SchedulesService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/schedules/");
+    super("schedules/");
   }
 
   GetAllSchedules(): Promise<IGetScheduleResponse[]> {

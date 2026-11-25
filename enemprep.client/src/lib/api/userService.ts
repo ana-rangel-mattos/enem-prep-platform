@@ -7,7 +7,7 @@ import {
 
 class UserService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/user/");
+    super("user/");
   }
 
   getLoggedUser(): Promise<IUserResponse> {

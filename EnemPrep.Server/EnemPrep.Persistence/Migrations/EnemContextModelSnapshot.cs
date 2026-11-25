@@ -375,18 +375,38 @@ namespace EnemPrep.Persistence.Migrations
                         },
                         new
                         {
-                            Id = 9,
-                            Name = "CreateExerciseList"
+                            Id = 12,
+                            Name = "ReadArticle"
                         },
                         new
                         {
-                            Id = 10,
-                            Name = "DeleteExerciseList"
+                            Id = 13,
+                            Name = "ReadPlaylist"
                         },
                         new
                         {
-                            Id = 11,
-                            Name = "EditExerciseList"
+                            Id = 14,
+                            Name = "CreatePlaylist"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "DeletePlaylist"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "EditPlaylist"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "CreateSubject"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "DeleteSubject"
                         });
                 });
 
@@ -455,10 +475,6 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
-
-                    b.Property<int>("OrderIndex")
-                        .HasColumnType("integer")
-                        .HasColumnName("order_index");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -581,6 +597,31 @@ namespace EnemPrep.Persistence.Migrations
                         },
                         new
                         {
+                            RoleId = 1,
+                            PermissionId = 12
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 13
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 14
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 15
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 16
+                        },
+                        new
+                        {
                             RoleId = 2,
                             PermissionId = 1
                         },
@@ -601,6 +642,21 @@ namespace EnemPrep.Persistence.Migrations
                         },
                         new
                         {
+                            RoleId = 2,
+                            PermissionId = 17
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 18
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 12
+                        },
+                        new
+                        {
                             RoleId = 3,
                             PermissionId = 6
                         },
@@ -617,17 +673,22 @@ namespace EnemPrep.Persistence.Migrations
                         new
                         {
                             RoleId = 3,
-                            PermissionId = 9
+                            PermissionId = 14
                         },
                         new
                         {
                             RoleId = 3,
-                            PermissionId = 11
+                            PermissionId = 15
                         },
                         new
                         {
                             RoleId = 3,
-                            PermissionId = 10
+                            PermissionId = 16
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            PermissionId = 13
                         });
                 });
 
@@ -714,6 +775,17 @@ namespace EnemPrep.Persistence.Migrations
 
             modelBuilder.Entity("EnemPrep.Domain.Models.ScheduleSubject", b =>
                 {
+                    b.Property<Guid>("ScheduleSubjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("schedule_subject_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
                     b.Property<Guid>("ScheduleId")
                         .HasColumnType("uuid")
                         .HasColumnName("schedule_id");
@@ -721,12 +793,6 @@ namespace EnemPrep.Persistence.Migrations
                     b.Property<Guid>("SubjectId")
                         .HasColumnType("uuid")
                         .HasColumnName("subject_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("now()");
 
                     b.Property<int>("SubjectOrder")
                         .HasColumnType("integer")
@@ -743,8 +809,10 @@ namespace EnemPrep.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("weekday");
 
-                    b.HasKey("ScheduleId", "SubjectId")
+                    b.HasKey("ScheduleSubjectId")
                         .HasName("pk_schedule_subject");
+
+                    b.HasIndex("ScheduleId");
 
                     b.HasIndex("SubjectId");
 

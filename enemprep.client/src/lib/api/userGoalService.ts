@@ -6,7 +6,7 @@ import {
 
 class UserGoalService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/UserGoal/");
+    super("UserGoal/");
   }
 
   getUserGoal(): Promise<IUserGoalResponse> {

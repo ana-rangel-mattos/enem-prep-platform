@@ -1,0 +1,11 @@
+[project]
+name = "seed_db"
+version = "0.1.0"
+description = "This project is responsible for seeding the database with the initial data from API ENEM (https://enem.dev)."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "psycopg2-binary>=2.9.12",
+    "python-dotenv>=1.2.2",
+    "requests>=2.33.1",
+]

@@ -9,7 +9,7 @@ import {
 
 class ExamsService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/exams/");
+    super("exams/");
   }
 
   getAllExams(params: ISearchParams): Promise<IPagedResponse<IExamResponse>> {

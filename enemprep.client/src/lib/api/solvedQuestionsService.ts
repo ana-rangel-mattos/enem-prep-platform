@@ -8,7 +8,7 @@ type QuestionParams = Omit<ISearchParams, "searchTerm">;
 
 class SolvedQuestionsService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/SolvedQuestions");
+    super("SolvedQuestions");
   }
 
   getSolvedQuestions(

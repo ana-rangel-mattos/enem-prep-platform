@@ -12,9 +12,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EnemPrep.Application\EnemPrep.Application.csproj" />
       <ProjectReference Include="..\EnemPrep.Domain\EnemPrep.Domain.csproj" />
       <ProjectReference Include="..\EnemPrep.Persistence\EnemPrep.Persistence.csproj" />
-      <ProjectReference Include="..\EnemPrep.ServicesContracts\EnemPrep.ServicesContracts.csproj" />
     </ItemGroup>
 
 </Project>

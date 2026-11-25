@@ -1,0 +1,14 @@
+
+services:
+  db-python-seeder:
+    build:
+      context: .
+    env_file:
+      - .env
+    networks:
+      - internal_net
+      - public_net
+    depends_on:
+      db-sql-runner:
+        condition: service_completed_successfully
+    command: ["uv", "run", "--frozen", "main.py"]

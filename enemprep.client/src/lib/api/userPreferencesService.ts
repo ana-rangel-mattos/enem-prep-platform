@@ -6,7 +6,7 @@ import {
 
 class UserPreferencesService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/UserPreferences/");
+    super("UserPreferences/");
   }
 
   getLoggedUserPreferences(): Promise<IUserPreferencesResponse> {

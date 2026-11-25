@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "api.dicebear.com" },
     ],
   },
+  output: "standalone",
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;

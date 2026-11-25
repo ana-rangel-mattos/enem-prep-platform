@@ -1,0 +1,13 @@
+include:
+  - infra/postgres/compose.db.yaml
+  - infra/seed_db/compose.seed.yaml
+  - EnemPrep.Server/compose.backend.yaml
+  - enemprep.client/compose.frontend.yaml
+
+volumes:
+  postgres_data:
+
+networks:
+  internal_net:
+    internal: true
+  public_net:

@@ -7,7 +7,7 @@ import { ApiClient } from "@/lib/api/apiClient";
 
 class AuthService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/auth/");
+    super("auth/");
   }
 
   registerUser(request: IRegisterUser): Promise<void> {

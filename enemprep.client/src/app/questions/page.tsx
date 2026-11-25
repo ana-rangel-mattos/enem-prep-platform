@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { IQuestionResponse } from "@/lib/types/question.types";
 import { questionsService } from "@/lib/api/questionsService";
 import Loading from "@/components/Loading";
@@ -33,7 +33,7 @@ import useSortBy from "@/hooks/useSortBy";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 
-const Questions = () => {
+const QuestionsContent = () => {
   const [result, setResult] = useState<IPagedResponse<IQuestionResponse>>();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -83,7 +83,7 @@ const Questions = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="absolute top-2 right-2 text-emerald-500"
+                  className="absolute top-7 right-6 text-emerald-500"
                 >
                   <PencilLine /> Resolver Questão
                 </Button>
@@ -139,6 +139,14 @@ const Questions = () => {
         </Pagination>
       </div>
     </>
+  );
+};
+
+const Questions = () => {
+  return (
+    <Suspense fallback={<Loading message="Carregando questões..." />}>
+      <QuestionsContent />
+    </Suspense>
   );
 };
 

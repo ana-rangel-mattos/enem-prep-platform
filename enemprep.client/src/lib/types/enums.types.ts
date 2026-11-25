@@ -5,6 +5,13 @@ export enum SubjectName {
   Mathematics = 3,
 }
 
+export const SUBJECT_OPTIONS = [
+  { id: SubjectName.Languages, label: "Linguagens" },
+  { id: SubjectName.Humanities, label: "Humanidades" },
+  { id: SubjectName.NaturalSciences, label: "Natureza" },
+  { id: SubjectName.Mathematics, label: "Matemática" },
+] as const;
+
 export enum ExamLanguage {
   English = 0,
   Spanish = 1,

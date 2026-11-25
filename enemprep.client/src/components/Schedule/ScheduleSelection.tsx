@@ -73,6 +73,19 @@ const ScheduleSelection = () => {
     }
   };
 
+  const handleRefreshSchedule = async () => {
+    if (!selectedSchedule) return;
+
+    try {
+      const freshDetails = await schedulesService.GetScheduleById(
+        selectedSchedule.scheduleId,
+      );
+      setSelectedSchedule(freshDetails);
+    } catch {
+      toast.error("Falha ao carregar o cronograma");
+    }
+  };
+
   if (isLoading) return <Loading message="Carregando cronogramas..." />;
 
   if (error) {
@@ -116,11 +129,16 @@ const ScheduleSelection = () => {
           <EditSchedulePopover schedule={selectedSchedule} />
         )}
       </div>
-      {selectedSchedule && (
+      {selectedSchedule ? (
         <ScheduleKanban
           selectedSchedule={selectedSchedule}
           isLoadingSchedule={isLoadingSchedule}
+          onScheduleUpdated={handleRefreshSchedule}
         />
+      ) : (
+        <div className="text-muted-foreground rounded-xl border border-dashed py-12 text-center">
+          Selecione um cronograma para vizualizar o quadro kanban.
+        </div>
       )}
     </div>
   );

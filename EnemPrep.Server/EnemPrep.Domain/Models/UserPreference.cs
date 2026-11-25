@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using EnemPrep.Domain.DTOS;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using EnemPrep.Domain.Enums;
 
 namespace EnemPrep.Domain.Models;
@@ -26,16 +23,4 @@ public partial class UserPreference
     public DateTime CreatedAt { get; set; }
 
     public virtual User User { get; set; } = null!;
-
-    public GetUserPreferencesDto ToGetUserPreferencesDto()
-    {
-        return new GetUserPreferencesDto
-        {
-            UserPreferencesId = UserPreferencesId,
-            UserId = UserId,
-            QuestionsPerDay = QuestionsPerDay,
-            ExamLanguage = ExamLanguage,
-            ColorScheme = ColorScheme
-        };
-    }
 }

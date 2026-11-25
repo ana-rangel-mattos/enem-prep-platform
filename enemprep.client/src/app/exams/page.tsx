@@ -5,7 +5,7 @@ import usePageNumber from "@/hooks/usePageNumber";
 import usePageSize from "@/hooks/usePageSize";
 import useSearchTerm from "@/hooks/useSearchTerm";
 import useSortBy from "@/hooks/useSortBy";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { IExamResponse } from "@/lib/types/exams.types";
 import { examsService } from "@/lib/api/examsService";
@@ -15,7 +15,7 @@ import ExamCard from "@/components/Exam/ExamCard";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 
-const Exams = () => {
+const ExamsContent = () => {
   const [result, setResult] = useState<IPagedResponse<IExamResponse> | null>(
     null,
   );
@@ -55,7 +55,7 @@ const Exams = () => {
   if (isLoading) return <Loading message="Carregando simulados..." />;
 
   return (
-    <div>
+    <>
       <Title text="Histórico de Simulados" />
       <Link
         href="/exams/new"
@@ -76,7 +76,15 @@ const Exams = () => {
           </div>
         )}
       </div>
-    </div>
+    </>
+  );
+};
+
+const Exams = () => {
+  return (
+    <Suspense fallback={<Loading message="Carregando simulados..." />}>
+      <ExamsContent />
+    </Suspense>
   );
 };
 

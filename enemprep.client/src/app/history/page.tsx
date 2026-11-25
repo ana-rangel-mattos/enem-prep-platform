@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Loading from "@/components/Loading";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import usePageNumber from "@/hooks/usePageNumber";
@@ -16,7 +16,7 @@ import SolvedQuestion from "@/components/SolvedQuestion/SolvedQuestion";
 import { AxiosError } from "axios";
 import Title from "@/components/ui/Title";
 
-const History = () => {
+const HistoryContent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [results, setResults] =
     useState<IPagedResponse<ISolvedQuestionResponse>>();
@@ -69,6 +69,14 @@ const History = () => {
         )}
       </div>
     </>
+  );
+};
+
+const History = () => {
+  return (
+    <Suspense fallback={<Loading message="Carregando histórico..." />}>
+      <HistoryContent />
+    </Suspense>
   );
 };
 

@@ -3,7 +3,7 @@ import { IQuestionResponse } from "@/lib/types/question.types";
 
 class QuestionsService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/questions/");
+    super("questions/");
   }
 
   getQuestions(

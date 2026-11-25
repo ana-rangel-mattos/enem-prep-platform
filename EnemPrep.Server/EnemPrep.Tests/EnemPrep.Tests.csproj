@@ -8,12 +8,13 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\EnemPrep.Server\EnemPrep.Server.csproj" />
+        <ProjectReference Include="..\EnemPrep.Api\EnemPrep.Api.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Community.Microsoft.Extensions.Caching.PostgreSql" Version="6.0.2" />
         <PackageReference Include="coverlet.collector" Version="6.0.2" />
+        <PackageReference Include="dotenv.net" Version="4.2.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
         <PackageReference Include="Respawn" Version="7.0.0" />
         <PackageReference Include="Testcontainers.PostgreSql" Version="4.11.0" />

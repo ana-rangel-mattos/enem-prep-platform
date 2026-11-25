@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
-using EnemPrep.Domain.DTOS;
+using EnemPrep.Application.Features.Auth;
+using EnemPrep.Application.Features.Questions;
 using EnemPrep.Domain.Enums;
 
 namespace EnemPrep.Tests.Api;
@@ -10,13 +11,36 @@ public class QuestionsControllerTests(CustomWebApplicationFactory factory) : Int
     [Fact]
     public async Task CreateQuestion_WithoutSession_ReturnsUnauthorized()
     {
-        throw new NotImplementedException();
+        var questionDto = new PostQuestionDto { Language = Language.English };
+
+        var response = await Client.PostAsJsonAsync("/api/questions/new", questionDto);
+        
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
     
     [Fact]
     public async Task CreateQuestion_WithStudentSession_ReturnsUnauthorized()
     {
-        throw new NotImplementedException();
+        var userRequest = new PostUserRequest
+        {
+            Username = "student_test",
+            Email = "student@test.com",
+            Password = "student.123password",
+            FullName = "Student Test Create Question"
+        };
+
+        await SeedUserAsync(userRequest);
+
+        await Client.PostAsJsonAsync("/api/auth/login", new LoginUserRequest
+        {
+            Username = userRequest.Username,
+            Password = userRequest.Password
+        });
+
+        var questionDto = new PostQuestionDto { Language = Language.Spanish };
+        var response = await Client.PostAsJsonAsync("/api/questions/new", questionDto);
+        
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
     
     [Fact]

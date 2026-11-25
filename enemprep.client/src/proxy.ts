@@ -18,6 +18,7 @@ const proxy = (request: NextRequest) => {
       "/admin",
       "/history",
       "/exams",
+      "/articles",
     ].some((route) => pathname.startsWith(route));
 
     if (isProtectedRoute) {

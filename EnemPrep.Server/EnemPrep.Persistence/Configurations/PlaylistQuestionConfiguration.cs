@@ -17,10 +17,6 @@ public class PlaylistQuestionConfiguration : IEntityTypeConfiguration<PlaylistQu
         builder.Property(e => e.PlaylistId).HasColumnName("playlist_id");
         builder.Property(e => e.QuestionId).HasColumnName("question_id");
 
-        builder.Property(e => e.OrderIndex)
-            .HasColumnName("order_index")
-            .IsRequired();
-        
         builder.Property(e => e.UpdatedAt)
             .HasDefaultValueSql("now()")
             .HasColumnName("updated_at");

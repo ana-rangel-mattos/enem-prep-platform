@@ -1,6 +1,4 @@
-﻿using EnemPrep.Domain.DTOS;
-
-namespace EnemPrep.Domain.Models;
+﻿namespace EnemPrep.Domain.Models;
 
 public partial class UserProfile
 {
@@ -19,16 +17,4 @@ public partial class UserProfile
     public DateTime UpdatedAt { get; set; }
 
     public virtual User User { get; set; } = null!;
-
-    public GetUserProfile ToGetUserProfile()
-    {
-        return new GetUserProfile
-        {
-            UserBio = UserBio,
-            StreakCount = StreakCount,
-            ExperiencePoints = ExperiencePoints,
-            CurrentLevel = CurrentLevel,
-            LastActivityDate = LastActivityDate
-        };
-    }
 }

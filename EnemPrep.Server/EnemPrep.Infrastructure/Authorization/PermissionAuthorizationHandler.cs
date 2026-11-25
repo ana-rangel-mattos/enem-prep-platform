@@ -1,8 +1,6 @@
 using System.Security.Claims;
-using EnemPrep.Persistence;
-using EnemPrep.ServicesContracts;
+using EnemPrep.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace EnemPrep.Infrastructure.Authorization;
 

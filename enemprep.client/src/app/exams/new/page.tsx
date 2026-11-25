@@ -2,7 +2,11 @@
 
 import Title from "@/components/ui/Title";
 import { z } from "zod";
-import { ExamLanguage, SubjectName } from "@/lib/types/enums.types";
+import {
+  ExamLanguage,
+  SUBJECT_OPTIONS,
+  SubjectName,
+} from "@/lib/types/enums.types";
 import {
   Card,
   CardContent,
@@ -38,6 +42,7 @@ import { useAppSelector } from "@/hooks/use-store";
 import { selectLanguage } from "@/lib/features/preferences/preferencesSlice";
 import { Button } from "@/components/ui/button";
 import { AxiosError } from "axios";
+import { unknownEnumToNumber } from "@/lib/helpers";
 
 const formScheme = z.object({
   totalQuestions: z.coerce
@@ -56,31 +61,14 @@ const formScheme = z.object({
       .min(1, "Deve conter ao menos uma área selecionada."),
   ),
   language: z
-    .preprocess((value) => {
-      if (
-        value === "" ||
-        value === null ||
-        value === undefined ||
-        value === "none" ||
-        value === "-1"
-      ) {
-        return undefined;
-      }
-
-      const parsed = Number(value);
-      return isNaN(parsed) ? undefined : parsed;
-    }, z.enum(ExamLanguage).optional())
+    .preprocess(
+      (value) => unknownEnumToNumber(value),
+      z.enum(ExamLanguage).optional(),
+    )
     .optional(),
 });
 
 type FormData = z.infer<typeof formScheme>;
-
-const SUBJECT_OPTIONS = [
-  { id: SubjectName.Languages, label: "Linguagens" },
-  { id: SubjectName.Humanities, label: "Humanidades" },
-  { id: SubjectName.NaturalSciences, label: "Natureza" },
-  { id: SubjectName.Mathematics, label: "Matemática" },
-];
 
 const NewExam = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -119,7 +107,7 @@ const NewExam = () => {
   if (isLoading) return <Loading message="Criando o simulado..." />;
 
   return (
-    <div>
+    <>
       <Title text="Começe um novo Simulado" />
 
       <Card className="mx-auto mt-5 w-full sm:max-w-md md:max-w-lg lg:max-w-2xl">
@@ -268,7 +256,7 @@ const NewExam = () => {
           </CardFooter>
         </CardContent>
       </Card>
-    </div>
+    </>
   );
 };
 

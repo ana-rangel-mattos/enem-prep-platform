@@ -6,7 +6,7 @@ import {
 
 class UserProfileService extends ApiClient {
   constructor() {
-    super("http://localhost:5265/api/UserProfile/");
+    super("UserProfile/");
   }
 
   getProfile(): Promise<IUserProfileResponse> {
@@ -14,7 +14,7 @@ class UserProfileService extends ApiClient {
   }
 
   updateUserBio(request: IUpdateUserProfileBio): Promise<void> {
-    return this.put("", request)
+    return this.put("", request);
   }
 }
 

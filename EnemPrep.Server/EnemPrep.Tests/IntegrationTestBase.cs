@@ -1,8 +1,8 @@
-﻿using EnemPrep.Domain.DTOS;
+﻿using EnemPrep.Application.Features.Auth;
+using EnemPrep.Domain.Enums;
 using EnemPrep.Domain.Models;
 using EnemPrep.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EnemPrep.Tests;
 
@@ -53,7 +53,7 @@ public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFa
         {
             var context = scope.ServiceProvider.GetRequiredService<EnemContext>();
 
-            var roleID = Role.Student.Id;
+            var roleId = Role.Student.Id;
 
             var user = request.ConvertToUser();
             user.HashPassword = BCrypt.Net.BCrypt.HashPassword(request.Password);
@@ -63,7 +63,7 @@ public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFa
             
             await context.Database.ExecuteSqlRawAsync(
                 "INSERT INTO auth.\"RoleUser\" (\"RolesId\", \"UsersUserId\") VALUES ({0}, {1})",
-                roleID, user.UserId);
+                roleId, user.UserId);
 
             return user;
         }
@@ -84,53 +84,48 @@ public abstract class IntegrationTestBase : IClassFixture<CustomWebApplicationFa
         response.EnsureSuccessStatusCode();
     }
 
-    private async Task<Role> GetRequiredRoleAsync(EnemContext context, Role expectedRole)
+    protected async Task<Schedule> SeedScheduleAsync(User owner)
     {
-        var role = await context.Set<Role>()
-            .SingleOrDefaultAsync(role => role.Id == expectedRole.Id);
-
-        if (role is not null)
+        using var scope = Factory.Services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<EnemContext>();
+        
+        var subject = await context.Subjects.FirstOrDefaultAsync();
+        Guid subject1Guid = Guid.CreateVersion7();
+        Guid subject2Guid = Guid.CreateVersion7();
+        if (subject is null)
         {
-            return role;
+            context.Subjects.Add(new Subject
+            {
+                SubjectId = subject1Guid,
+                Name = SubjectName.Mathematics
+            });
+            context.Subjects.Add(new Subject
+            {
+                SubjectId = subject2Guid,
+                Name = SubjectName.Humanities
+            });
+            
+            await context.SaveChangesAsync();
         }
 
-        var availableRoles = await context.Set<Role>()
-            .Select(role => $"{role.Id}:{role.Name}")
-            .OrderBy(role => role)
-            .ToListAsync();
-
-        throw new InvalidOperationException(
-            $"Required role '{expectedRole.Name}' with ID '{expectedRole.Id}' was not found. Available roles: [{string.Join(", ", availableRoles)}].");
-    }
-    
-    private static async Task<Role> GetRequiredTrackedRoleAsync(EnemContext context, Role expectedRole)
-    {
-        var localRole = context.Set<Role>()
-            .Local
-            .FirstOrDefault(role => role.Id == expectedRole.Id);
-
-        if (localRole is not null)
+        var schedule = new Schedule
         {
-            context.Entry(localRole).State = EntityState.Unchanged;
-            return localRole;
-        }
+            ScheduleId = Guid.CreateVersion7(),
+            UserId = owner.UserId,
+            Name = "Default Schedule",
+            HasWeekEnd = true,
+            CreatedAt = DateTime.UtcNow,
+            ScheduleSubjects = new List<ScheduleSubject>
+            {
+                new() {SubjectId = subject2Guid, Weekday = DayOfTheWeek.Monday, SubjectOrder = 1},
+                new() {SubjectId = subject1Guid, Weekday = DayOfTheWeek.Monday, SubjectOrder = 2},
+                new() {SubjectId = subject2Guid, Weekday = DayOfTheWeek.Tuesday, SubjectOrder = 1}
+            }
+        };
 
-        var role = await context.Set<Role>()
-            .SingleOrDefaultAsync(role => role.Id == expectedRole.Id);
+        context.Schedules.Add(schedule);
+        await context.SaveChangesAsync();
 
-        if (role is null)
-        {
-            var availableRoles = await context.Set<Role>()
-                .Select(role => $"{role.Id}:{role.Name}")
-                .OrderBy(role => role)
-                .ToListAsync();
-
-            throw new InvalidOperationException(
-                $"Required role '{expectedRole.Name}' with ID '{expectedRole.Id}' was not found. Available roles: [{string.Join(", ", availableRoles)}].");
-        }
-
-        context.Entry(role).State = EntityState.Unchanged;
-
-        return role;
+        return schedule;
     }
 }

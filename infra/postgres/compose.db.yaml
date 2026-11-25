@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - internal_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-sql-runner:
+    image: postgres:18-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./scripts:/scripts:ro
+    networks:
+      - internal_net
+    depends_on:
+      db-migrator:
+        condition: service_completed_successfully
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        export PGPASSWORD=$$POSTGRES_PASSWORD
+        for f in /scripts/*.sql; do
+          [ "$$f" = "/scripts/database_creation.sql" ] && continue
+          echo "Running $$f..."
+          psql -h postgres -U "$$POSTGRES_USER" -d "$$POSTGRES_DB" -v ON_ERROR_STOP=1 -f "$$f"
+        done
+        echo "All SQL files executed successfully."

@@ -1,6 +1,4 @@
-﻿using EnemPrep.Domain.DTOS;
-
-namespace EnemPrep.Domain.Models;
+﻿namespace EnemPrep.Domain.Models;
 
 public partial class User
 {

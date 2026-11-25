@@ -2,6 +2,7 @@
 Plataforma de Preparação para o ENEM (Projeto de Extensão) Desenvolvimento de uma ferramenta Full-Stack voltada para a democratização do acesso ao estudo para o ENEM.
 
 ## 🛠️ Pré-requisitos
+- Docker Compose
 - PostgreSQL (porta padrão `5432`)
 - .NET SDK (Versão 9)
 - Node.js & pnpm

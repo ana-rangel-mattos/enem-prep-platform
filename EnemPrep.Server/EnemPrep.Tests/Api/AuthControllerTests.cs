@@ -1,5 +1,5 @@
 using System.Net;
-using EnemPrep.Domain.DTOS;
+using EnemPrep.Application.Features.Auth;
 
 namespace EnemPrep.Tests.Api;
 

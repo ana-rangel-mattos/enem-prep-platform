@@ -21,7 +21,7 @@ public sealed class CustomWebApplicationFactory
         .WithImage("postgres:17-alpine")
         .WithDatabase("enem_prep_test_db")
         .WithUsername("postgres")
-        .WithPassword("password")
+        .WithPassword("postgres")
         .Build();
 
     private Respawner _respawner = null!;

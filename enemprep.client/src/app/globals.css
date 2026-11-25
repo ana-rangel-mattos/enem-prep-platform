@@ -1,4 +1,10 @@
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+@import '../styles/_fix-tiptap-typography.scss';
+
 @import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
 
 *, *::before, *::after {
     box-sizing: border-box;
@@ -206,6 +212,6 @@ html, body {
 
     body {
         @apply bg-background text-foreground;
-    letter-spacing: var(--tracking-normal);
+        letter-spacing: var(--tracking-normal);
     }
 }
